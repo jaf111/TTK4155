@@ -2,6 +2,7 @@
 #include "uart.h"
 #include <stdint.h>
 #include <avr/io.h>
+#include <stdio.h>
 
 
 
@@ -26,14 +27,24 @@ void USART_Transmit(unsigned char data){
 	
 	/* Put data into buffer, sends the data */
 	UDR0 = data;
+
 }
 
+unsigned char UDR0_old = 0;
 
 unsigned char USART_Receive(void){
 	
 	/* Wait for data to be received*/
-	while(!(UCSR0A & (1<<RXC0)));
+	//while(!(UCSR0A & (1<<RXC0)));
 	
+	if (UDR0_old != UDR0);
+	UDR0_old = UDR0;
+
 	/* Get and return received data from buffer*/
+	fdevopen(USART_Transmit, NULL);
+
 	return UDR0;
+
 }
+
+
