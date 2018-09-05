@@ -1,24 +1,20 @@
 
 #include "uart.h"
 #include <stdint.h>
+#include <avr/io.h>
 
 
-unsigned char UBRRH = 0;
-unsigned char UBRRL = 0;
-unsigned char UCSRB = 0;
-unsigned char UCSRC = 0;
-unsigned char UDR = 0;
 
 
 void USART_Init(unsigned int ubrr){
 
 	/* Set baud rate*/
-	UBRRH = (unsigned char)(ubrr>>8);
-	UBRRL = (unsigned char)ubrr;
+	UBRR0H = (unsigned char)(ubrr>>8);
+	UBRR0L = (unsigned char)ubrr;
 	/* Enable receiver and transmitter */
-	UCSRB = (1<<RXEN)|(1<<TXEN);
+	UCSR0B = (1<<RXEN0)|(1<<TXEN0);
 	/* 	Set frame format: 8data, 2stop bit*/
-	UCSRC = (1<<URSEL)|(1<<USBS)|(3<<UCSZ0); // 3 beacuse activationg UCZ00 && UCSZ01
+	UCSR0C = (1<<URSEL0)|(1<<USBS0)|(3<<UCSZ00); // 3 beacuse activating UCZ00 && UCSZ01
 
 }
 
@@ -26,18 +22,18 @@ void USART_Init(unsigned int ubrr){
 void USART_Transmit(unsigned char data){
 	
 	/* Wait for empty transmit buffer*/
-	while (!( UCSRA & (1<<UDRE)));
+	while (!( UCSR0A & (1<<UDRE0)));
 	
 	/* Put data into buffer, sends the data */
-	UDR = data;
+	UDR0 = data;
 }
 
 
 unsigned char USART_Receive(void){
 	
 	/* Wait for data to be received*/
-	while(!(UCSRA & (1<<RXC)));
+	while(!(UCSR0A & (1<<RXC0)));
 	
 	/* Get and return received data from buffer*/
-	return UDR;
+	return UDR0;
 }

@@ -8,26 +8,22 @@
 #include "uart.h"
 
 int main(){
-	/*led_init();
-
-	while(1){
-		led_turn_on();
-		_delay_ms(1000);
-
-		led_turn_off();
-		_delay_ms(1000);
-	}*/
-
+	led_init();
 
 	//USART
 	USART_Init (MYUBRR);
 
 
-	unsigned char data = 0;
+	unsigned char data = 45;
 
 	while(1){
-		USART_Transmit(data++);
-		_delay_ms(1000);
+		led_turn_on();
+		_delay_ms(2000);
+
+		led_turn_off();
+		USART_Transmit(data);
+		_delay_ms(2000);
+
 	}
 
 	return 0;
