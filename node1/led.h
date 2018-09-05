@@ -24,4 +24,4 @@ void led_turn_on();
  */
 void led_turn_off();
 
-#endif
+#endif // LED_H
