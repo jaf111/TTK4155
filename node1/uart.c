@@ -41,7 +41,7 @@ unsigned char USART_Receive(void){
 	UDR0_old = UDR0;
 
 	/* Get and return received data from buffer*/
-	fdevopen(USART_Transmit, NULL);
+	fdevopen(USART_Transmit, USART_Receive);
 
 	return UDR0;
 
