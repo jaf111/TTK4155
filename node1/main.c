@@ -2,32 +2,41 @@
 #define F_CPU 4915200
 
 
-
 #include <util/delay.h>
 #include "led.h"
 #include "uart.h"
+#include "sram.h"
 
 
+unsigned int test = 0;
 
 int main(){
 	led_init();
 
 	//USART
 	USART_Init (MYUBRR);
+	USART_Transmit(USART_Receive());
 
-	unsigned char data = 'F';
+	SRAM_test();
 
 	while(1){
-		led_turn_on();
-		_delay_ms(100);
+		//SRAM_test();
+		//simple led test PC0 in
+		//led_turn_on();  
+		//delay_ms(100);
+		//led_turn_off();
+		//UART test
+		//printf("Hello world\n"); //scanner() works to
+		
+		_delay_ms(1000);
 
-		led_turn_off();
-		USART_Transmit(USART_Receive());
-		printf("Hello wolrd\n");
-		//USART_Transmit(printf(data));
-		//USART_Transmit(data);
-		_delay_ms(100);
+		
 
+		//SRAM_write(123, 0x1805);
+		//test = SRAM_read(0x1805);
+
+		if (test == 123) led_turn_off();
+		else led_turn_on();
 	}
 
 	return 0;

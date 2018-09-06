@@ -5,8 +5,6 @@
 #include <stdio.h>
 
 
-
-
 void USART_Init(unsigned int ubrr){
 
 	/* Set baud rate*/
