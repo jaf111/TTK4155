@@ -2,8 +2,8 @@
 
 Authors: 
     
-    - Cristian Gil
+  	- Cristian Gil
     
-    - Jan A Fijalkowski
+   	- Jan A Fijalkowski
     
-    - Lars Martin Moe
+   	- Lars Martin Moe

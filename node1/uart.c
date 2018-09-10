@@ -15,6 +15,7 @@ void USART_Init(unsigned int ubrr){
 	/* 	Set frame format: 8data, 2stop bit*/
 	UCSR0C = (1<<URSEL0)|(1<<USBS0)|(3<<UCSZ00); // 3 beacuse activating UCZ00 && UCSZ01
 
+	fdevopen(USART_Transmit, USART_Receive);
 }
 
 
@@ -39,7 +40,7 @@ unsigned char USART_Receive(void){
 	UDR0_old = UDR0;
 
 	/* Get and return received data from buffer*/
-	fdevopen(USART_Transmit, USART_Receive);
+	
 
 	return UDR0;
 

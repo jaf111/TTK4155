@@ -16,27 +16,23 @@ int main(){
 	//USART
 	USART_Init (MYUBRR);
 	USART_Transmit(USART_Receive());
-
-	SRAM_test();
+	SRAM_init();
+	
+	
 
 	while(1){
-		//SRAM_test();
-		//simple led test PC0 in
-		//led_turn_on();  
-		//delay_ms(100);
-		//led_turn_off();
-		//UART test
-		//printf("Hello world\n"); //scanner() works to
 		
-		_delay_ms(1000);
-
-		
-
 		//SRAM_write(123, 0x1805);
 		//test = SRAM_read(0x1805);
 
-		if (test == 123) led_turn_off();
-		else led_turn_on();
+
+		SRAM_test();
+
+
+		led_turn_on();
+		_delay_ms(100);
+		led_turn_off();
+		_delay_ms(100);
 	}
 
 	return 0;
