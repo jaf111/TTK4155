@@ -1,42 +1,42 @@
 #include <stdio.h>
 #include <avr/io.h> 
 
-
-#define sram_init_address 0x1800;
+#define sram_init_address 0x1800
 
 //enables external memory for MCU
-void SRAM_init(void){
+void SRAM_init(void) {
 	//EMCUCR &= ~(1 << SRL2)|( 1<<SRL1 )|(1 << SRL0); //They are initialy 0 so no point setting them
 	MCUCR |= (1 << SRE); 
 	SFIOR |= (1 << XMM2);
-
 }
 
-
-/*void SRAM_write(unsigned int data, unsigned int address){
+void SRAM_write(unsigned int data, unsigned int address){
 	
 	// Start address for the SRAM
 	volatile char *ext_ram = (char *) sram_init_address;
-	ext_ram[address - sram_init_address] = data;
-}
+	ext_ram[address] = data; //- sram_init_address
 
+	printf("SENT data: %04u, address: %04X \n\r", data, address);
+	//printf("POINTERRR: %04X, %04u \n", ext_ram[address - sram_init_address], ext_ram[address - sram_init_address]);
+}
 
 unsigned int SRAM_read(unsigned int address){
 	
 	volatile char *ext_ram = (char *) sram_init_address;
-	unsigned int data = ext_ram[address - sram_init_address];
-	
-	return data;
-}*/
+	unsigned int data = ext_ram[address]; //- sram_init_address
 
+	printf("RECEIVED data: %04u, address: %04X \n\r", data, address);
+	
+	return ext_ram[address];// data;
+}
 
 void SRAM_test(void){
 	
-	volatile char *ext_ram = (char *) 0x1800; // Start address for the SRAM
+	volatile char *ext_ram = (char *) sram_init_address; // Start address for the SRAM
 	uint16_t ext_ram_size = 0x800;
 	uint16_t write_errors = 0;
 	uint16_t retrieval_errors = 0;
-	printf("Starting SRAM test...\n");
+	printf("Starting SRAM test...\n\r");
 
 	// rand() stores some internal state, so calling this function in a loop will
 	// yield different seeds each time (unless srand() is called before this function)
@@ -51,11 +51,10 @@ void SRAM_test(void){
 		uint8_t retreived_value = ext_ram[i];
 		
 		if (retreived_value != some_value) {
-			printf("Write phase error: ext_ram[%4d] = %02X (should be %02X)\n", i, retreived_value, some_value);
+			printf("Write phase error: ext_ram[%d] = %02X (should be %02X)\n\r", i, retreived_value, some_value);
 			write_errors++;
 		}
 	}
-	
 
 	// Retrieval phase: Check that no values were changed during or after the write phase
 	srand(seed); // reset the PRNG to the state it had before the write phase
@@ -65,11 +64,11 @@ void SRAM_test(void){
 		uint8_t retreived_value = ext_ram[i];
 		
 		if (retreived_value != some_value) {
-			printf("Retrieval phase error: ext_ram[%4d] = %02X (should be %02X)\n", i, retreived_value, some_value);
+			printf("Retrieval phase error: ext_ram[%4d] = %02X (should be %02X)\n\r", i, retreived_value, some_value);
 			retrieval_errors++;
 		}
 	}
 
-
-	printf("SRAM test completed with\n %4d errors in write phase and\n%4d errors in retrieval phase \n \n", write_errors, retrieval_errors);
+	printf("SRAM test completed with\n %4d errors in write phase and\n%4d errors in retrieval phase \n \n\r", write_errors, retrieval_errors);
 }
+
