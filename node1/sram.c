@@ -20,14 +20,14 @@ void SRAM_write(unsigned int data, unsigned int address){
 	//printf("POINTERRR: %04X, %04u \n", ext_ram[address - sram_init_address], ext_ram[address - sram_init_address]);
 }
 
-unsigned int SRAM_read(unsigned int address){
+uint8_t SRAM_read(unsigned int address){
 	
 	volatile char *ext_ram = (char *) sram_init_address;
-	unsigned int data = ext_ram[address]; //- sram_init_address
+	uint8_t data = ext_ram[address]; //- sram_init_address
 
 	printf("RECEIVED data: %04u, address: %04X \n\r", data, address);
 	
-	return ext_ram[address];// data;
+	return data;
 }
 
 void SRAM_test(void){

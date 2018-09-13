@@ -17,12 +17,14 @@ int main(){
 	SRAM_init();
 
 	while(1){
-		SRAM_write(131, 0x1800);
-		_delay_ms(100);
-		SRAM_read(0x1800);
-
 		
-		_delay_ms(200);
+		SRAM_read(0x1400);
+		_delay_ms(100);
+
+		//SRAM_write(0b10011010, 0x1810);
+		//_delay_ms(100);
+		//SRAM_read(0x1800);
+		//_delay_ms(2000);
 
 		//SRAM_test();
 
