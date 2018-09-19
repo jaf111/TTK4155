@@ -10,7 +10,7 @@ entity address_decoder is
 		
 		ram_cs  : Out std_logic;
 		adc_cs  : Out std_logic;
-		oled_cs : Out std_logic;
+		oled_cs : Out std_logic
 	);
 	attribute LOC : string;
 	attribute LOC of a11 : signal is "P1";
@@ -28,10 +28,10 @@ begin
 	oled_cs <= '1' when (a11 = '0' and a10 = '0')
 				else '0';
 			   
-	adc_cs 	<= '1' when (a11 = '0' and a10 = '1')
-				else '0';
+	adc_cs 	<= '0' when (a11 = '0' and a10 = '1')
+				else '1';
 			   
-	ram_cs 	<= '1' when (a11 = '1')
-				else '0';
+	ram_cs 	<= '0' when (a11 = '1')
+				else '1';
 
 end behave;
