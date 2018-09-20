@@ -20,60 +20,9 @@
 
 int16_t JoyX = 0;
 int16_t JoyY = 0;
+int16_t JoyX_init = 0;
+int16_t JoyY_init = 0;
 
-typedef struct {
-	int16_t XX;
-	int16_t YY;
-} position;
-
-enum JoyDir{NEUTRAL, RIGHT, UP, LEFT, DOWN} direction; 
-
-position coord = {0, 0};
-
-void getJoyCoord(int16_t X_coord, int16_t Y_coord) {
-	if (X_coord < 127) {X_coord -= 127;}
-	else {X_coord /= 2;}
-	if (Y_coord < 127) {Y_coord -= 127;}
-	else {Y_coord /= 2;}
-
-	coord.XX = X_coord*100/127;
-	coord.YY = Y_coord*100/127;
-
-	printf("LEFT/RIGHT SIDE: %4d     ", coord.XX);
-	printf("DOWN/UP SIDE: %4d     \n\r", coord.YY);
-}
-
-void getJoyDirection(int16_t X_coord, int16_t Y_coord) {
-
-	if (X_coord>190) {
-		if (Y_coord>190) {
-			if (X_coord>Y_coord) {direction = RIGHT;}
-			else {direction = UP;}
-		} else if (Y_coord<64) {
-			if (X_coord>2*Y_coord) {direction = RIGHT;}
-			else {direction = DOWN;}
-		} else {direction = RIGHT;}
-	}
-	else if (X_coord<64) {
-		if (Y_coord>190) {
-			if (2*X_coord>Y_coord) {direction = LEFT;}
-			else {direction = UP;}
-		} else if (Y_coord<64) {
-			if (X_coord>Y_coord) {direction = LEFT;}
-			else {direction = DOWN;}
-		} else {direction = LEFT;}
-	}
-	else if (Y_coord>190) {
-			direction = UP;
-		} else if (Y_coord<64) {
-			direction = DOWN;
-		}
-	else {direction = NEUTRAL;}
-
-	printf("LEFT/RIGHT SIDE: %4d     ", X_coord);
-	printf("DOWN/UP SIDE: %4d     ", Y_coord);
-	printf("DIRECTION: %d \n\r", direction);
-}
 
 int main(){
 	//led_init();
@@ -89,9 +38,10 @@ int main(){
 	ADC_init();
 
 	button_init();
+	JoyX_init, JoyY_init = JoyCoord_init(ADC_read(JOY_LR), ADC_read(JOY_DU));
 
 	while(1){
-		_delay_ms(1000);
+		_delay_ms(300);
 		
 		JoyX = ADC_read(JOY_LR);
 		JoyY = ADC_read(JOY_DU);
@@ -101,7 +51,7 @@ int main(){
 		if (BUTTON_R) {printf("RIGHT BUTTON \n\r");}
 		if (BUTTON_L) {printf("LEFT BUTTON \n\r");}
 
-		//getJoyCoord(JoyX, JoyY);
+		getJoyCoord2(JoyX, JoyY, JoyX_init, JoyY_init);
 		getJoyDirection(JoyX, JoyY);
 
 		/*SRAM_write(120, 0x1800);

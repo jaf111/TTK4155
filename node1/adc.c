@@ -34,12 +34,12 @@ void ADC_init(void){
 
 
 uint8_t ADC_read(uint8_t channel){
-	volatile uint8_t *adc = (uint8_t *) 0x1400;
+	volatile uint8_t *adc = (uint8_t *) adc_init_address;
 	_delay_us(1);		//Courtesy time to ensure ADC doesnt get stuck
 
 	adc[channel] = channel;
 	
-	while (PINE & (1<<PE0));	//We wait until ADC conversion process finishes (supposedly 40us)
+	while (PINE & (1<<PE0)); //We wait until ADC conversion process finishes (supposedly 40us)
 	
 	/*
 	channel 1 = 0100 0x4
@@ -49,10 +49,10 @@ uint8_t ADC_read(uint8_t channel){
 	*/
 	
 	_delay_us(60);
-	/*if (channel==0x04) printf("LEFT/RIGHT SIDE: %4d     ", *adc);
-	if (channel==0x05) printf("DOWN/UP SIDE: %4d     ", *adc);
-	if (channel==0x06) printf("Slider RIGHT: %4d     ", *adc);
-	if (channel==0x07) printf("Slider LEFT: %4d \n\n\r", *adc);*/
+	//if (channel==0x04) printf("LEFT/RIGHT SIDE: %4d    ", *adc);
+	//if (channel==0x05) printf("DOWN/UP SIDE: %4d \n\n\r", *adc);
+	//if (channel==0x06) printf("Slider RIGHT: %4d       ", *adc);
+	//if (channel==0x07) printf("Slider LEFT: %4d \n\n\r ", *adc);
 	
 	return *adc;
 }

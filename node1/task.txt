@@ -3,6 +3,6 @@ Question 3e)
 Resistor = 2K
 Capacitor = 100 nF
 
-Wc = 1/(2*pi*R*C)
+Fc = 1/(2*pi*R*C)
 
 Cutoff frequency = 795,77 Hz
