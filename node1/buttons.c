@@ -15,61 +15,27 @@ void button_init(void){
 }
 
 
-typedef struct {
-	int16_t XX;
-	int16_t YY;
-} position;
-
 enum JoyDir{NEUTRAL, RIGHT, UP, LEFT, DOWN} direction; 
 
 position coord = {0, 0};
 
 
-int16_t JoyCoord_init(int16_t X_coord, int16_t Y_coord){
-	return X_coord, Y_coord;
+int16_t JoyCoord_init(int16_t XY){
+	return XY;
 }
 
 
-void getJoyCoord(int16_t X_coord, int16_t Y_coord) {
-	if (X_coord < 127) {X_coord -= 127;}
-	else {X_coord /= 2;}
-	if (Y_coord < 127) {Y_coord -= 127;}
-	else {Y_coord /= 2;}
-
-	coord.XX = X_coord*100/127;
-	coord.YY = Y_coord*100/127;
+position getJoyCoord(int16_t X_coord, int16_t Y_coord, int16_t JoyX_init, int16_t JoyY_init) {	
+	X_coord -= JoyX_init;
+	Y_coord -= JoyY_init;
+	coord.XX = (X_coord*100/JoyX_init);
+	coord.YY = (Y_coord*100/JoyY_init);
 
 	printf("LEFT/RIGHT SIDE: %4d     ", coord.XX);
 	printf("DOWN/UP SIDE: %4d     \n\r", coord.YY);
+
+	return coord;
 }
-
-
-void getJoyCoord2(int16_t X_coord, int16_t Y_coord, int16_t JoyX_init, JoyY_init) {
-
-
-
-	coord.XX = X_coord*100/128 -100;
-	coord.YY = Y_coord*100/128 -100;
-
-	if (Y_coord == 255){
-		coord.YY = 100;
-	}
-
-	if (X_coord == 255){
-		coord.XX = 100;	
-	}
-	//if (X_coord < 127) {coord.XX = -coord.XX;}
-	//else {X_coord /= 2;}
-	//if (Y_coord < 127) {coord.YY = -coord.YY;}
-	//else {Y_coord /= 2;}
-
-
-	printf("LEFT/RIGHT SIDE: %4d     ", coord.XX);
-	printf("DOWN/UP SIDE: %4d     \n\r", coord.YY);
-}
-
-
-
 
 
 void getJoyDirection(int16_t X_coord, int16_t Y_coord) {
@@ -102,4 +68,11 @@ void getJoyDirection(int16_t X_coord, int16_t Y_coord) {
 	//printf("LEFT/RIGHT SIDE: %4d     ", X_coord);
 	//printf("DOWN/UP SIDE: %4d     ", Y_coord);
 	printf("DIRECTION: %d \n\r", direction);
+}
+
+
+void sliders(/*int16_t SLIDER_R, int16_t SLIDER_L*/){
+	printf("Slider LEFT: %4d  ", ADC_read(SLIDER_L));
+	printf("Slider RIGHT: %4d \n\n\r ", ADC_read(SLIDER_R));
+
 }

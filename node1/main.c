@@ -10,6 +10,7 @@
 #include "sram.h"
 #include "adc.h"
 #include "buttons.h"
+//#include "oled.h"
 
 #define JOY_LR 0x04
 #define JOY_DU 0x05
@@ -37,22 +38,32 @@ int main(){
 	//ADC
 	ADC_init();
 
+	//Button init
 	button_init();
-	JoyX_init, JoyY_init = JoyCoord_init(ADC_read(JOY_LR), ADC_read(JOY_DU));
+	JoyX_init = JoyCoord_init(ADC_read(JOY_LR));
+	JoyY_init = JoyCoord_init(ADC_read(JOY_DU));
+
+	//OLED init
+	//OLED_init();
+
 
 	while(1){
-		_delay_ms(300);
+		_delay_ms(600);
 		
 		JoyX = ADC_read(JOY_LR);
 		JoyY = ADC_read(JOY_DU);
-		ADC_read(SLIDER_R);
-		ADC_read(SLIDER_L);
-
+		
 		if (BUTTON_R) {printf("RIGHT BUTTON \n\r");}
 		if (BUTTON_L) {printf("LEFT BUTTON \n\r");}
 
-		getJoyCoord2(JoyX, JoyY, JoyX_init, JoyY_init);
+		//getJoyCoord2(JoyX, JoyY, JoyX_init, JoyY_init);
+		getJoyCoord(JoyX, JoyY, JoyX_init, JoyY_init);
 		getJoyDirection(JoyX, JoyY);
+
+		sliders();
+
+		//OLED_pos(0xB0, 0x00);
+		//OLED_write_data(0x8);
 
 		/*SRAM_write(120, 0x1800);
 		_delay_ms(100);

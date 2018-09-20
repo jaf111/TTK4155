@@ -49,10 +49,6 @@ uint8_t ADC_read(uint8_t channel){
 	*/
 	
 	_delay_us(60);
-	//if (channel==0x04) printf("LEFT/RIGHT SIDE: %4d    ", *adc);
-	//if (channel==0x05) printf("DOWN/UP SIDE: %4d \n\n\r", *adc);
-	//if (channel==0x06) printf("Slider RIGHT: %4d       ", *adc);
-	//if (channel==0x07) printf("Slider LEFT: %4d \n\n\r ", *adc);
-	
+		
 	return *adc;
 }
