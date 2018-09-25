@@ -6,11 +6,10 @@
 #define adc_init_address 0x1400
 
 void ADC_init(void){
-	//Happens in sram init to
+	//Happens in sram init too
 	MCUCR |= (1 << SRE);
 	SFIOR |= (1 << XMM2);
 	
-
 	// Button input
 	DDRE &= ~(1<<PE0);
 

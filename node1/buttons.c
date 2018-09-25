@@ -73,6 +73,6 @@ void getJoyDirection(int16_t X_coord, int16_t Y_coord) {
 
 void sliders(/*int16_t SLIDER_R, int16_t SLIDER_L*/){
 	printf("Slider LEFT: %4d  ", ADC_read(SLIDER_L));
-	printf("Slider RIGHT: %4d \n\n\r ", ADC_read(SLIDER_R));
+	printf("Slider RIGHT: %4d \n\n\r", ADC_read(SLIDER_R));
 
 }

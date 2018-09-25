@@ -10,7 +10,7 @@
 #include "sram.h"
 #include "adc.h"
 #include "buttons.h"
-//#include "oled.h"
+#include "oled.h"
 
 #define JOY_LR 0x04
 #define JOY_DU 0x05
@@ -44,24 +44,87 @@ int main(){
 	JoyY_init = JoyCoord_init(ADC_read(JOY_DU));
 
 	//OLED init
-	//OLED_init();
-
-
+	OLED_init();
+	uint8_t i = 1;
+	
 	while(1){
-		_delay_ms(600);
 		
-		JoyX = ADC_read(JOY_LR);
+		/*OLED_pos(line, ADC_read(SLIDER_L)/2);
+		write_d(0xFF);
+		_delay_ms(100);
+		OLED_clear_line(line);
+		if (ADC_read(JOY_DU) > 230) {line++;}
+		if (ADC_read(JOY_DU) < 25) {line--;}
+		if (line > 7) {line = 0;}
+		if (line < 0) {line = 7;}*/
+
+		//Why is this so hard to print?
+		OLED_pos(0, i);
+		OLED_print_char('1');
+		_delay_ms(100);
+
+		OLED_pos(1, i);
+		OLED_print_char('2');
+		_delay_ms(100);
+
+		OLED_pos(2, i);
+		OLED_print_char('3');
+		_delay_ms(100);
+
+		OLED_pos(3, i);
+		OLED_print_char('4');
+		_delay_ms(100);
+
+		OLED_pos(4, i);
+		OLED_print_char('5');
+		_delay_ms(100);
+
+		OLED_pos(5, i);
+		OLED_print_char('6');
+		_delay_ms(100);
+
+		OLED_pos(6, i);
+		OLED_print_char('7');
+		_delay_ms(100);
+
+		OLED_pos(7, i);
+		OLED_print_char('8');
+		_delay_ms(100);
+		printf(i);
+		if (i < 128){
+			i++;
+		} else {
+			i = 0;
+			OLED_clear();
+		}
+
+
+		//font_byte = pgm_read_byte(&(font4[1][1]));	//To take data saved in Flash (PROGMEM)
+		//OLED_pos(line, 2);		//To print font4 (4 columns per character)
+		
+
+		/*_delay_ms(1000);
+		OLED_clear_line(6);
+
+		_delay_ms(1000);
+		OLED_home();
+		write_d(0xFF);
+
+		_delay_ms(1000);
+		OLED_clear_line(0);*/
+
+		
+		/*JoyX = ADC_read(JOY_LR);
 		JoyY = ADC_read(JOY_DU);
 		
 		if (BUTTON_R) {printf("RIGHT BUTTON \n\r");}
 		if (BUTTON_L) {printf("LEFT BUTTON \n\r");}
 
-		//getJoyCoord2(JoyX, JoyY, JoyX_init, JoyY_init);
 		getJoyCoord(JoyX, JoyY, JoyX_init, JoyY_init);
 		getJoyDirection(JoyX, JoyY);
 
-		sliders();
-
+		sliders();*/
+		
 		//OLED_pos(0xB0, 0x00);
 		//OLED_write_data(0x8);
 
