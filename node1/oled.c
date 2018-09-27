@@ -6,6 +6,8 @@
 #include "fonts.h"
 
 #define FONTWIDTH 8 //change font
+		
+//#define OLED = FDEV_SETUP_STREAM 	(OLED_print(), NULL, _FDEV_SETUP_WRITE) 
 
 volatile uint8_t *oled_cmd = (uint8_t *) 0x1000; //OLED Command start address
 volatile uint8_t *oled_data = (uint8_t *) 0x1200; //OLED Data start address
@@ -36,7 +38,7 @@ void OLED_init(void) {
 	write_c(0xd9);	//Set Pre-charge period  
 	write_c(0x21);		//Value
 	write_c(0x20);	//Set Memory Addressing Mode (AM)
-	write_c(0x02);		//Value. 2h->Page AM 1h->Vertical AM 0h->Horizontal AM
+	write_c(0x02);		//Value. 02h->Page AM 01h->Vertical AM 00h->Horizontal AM
 	write_c(0xdb);        //VCOM  deselect  level  mode  
 	write_c(0x30);          
 	write_c(0xad);        //master  configuration
@@ -82,8 +84,6 @@ void OLED_home(void) {
 	//write_c(0x10); //
 	//write_c(0xB0); //to 0 (B0h)
 	
-	
-	
 	/*write_c(0x21);		//Set column address
 	write_c(0x00);		//to 0 (00h)
 	write_c(0x7f);
@@ -116,10 +116,10 @@ void OLED_pos(uint8_t line, uint8_t column) {
 
 	OLED_goto_line(line);
 
-	//something is wrong here
 	if (column < 128){
-		uint8_t lower_nibble = (0x00 & column); 
-		uint8_t upper_nibble = 0x10 + (0x0F & (column >> 4));
+		uint8_t lower_nibble = (0x0F & column); 
+		uint8_t upper_nibble = (0x10 + (0x0F & (column >> 4)));
+		
 
 		write_c(lower_nibble);		//Set first 4 bits of column address
 		write_c(upper_nibble);		//Set last 4 bits of column address
@@ -128,12 +128,7 @@ void OLED_pos(uint8_t line, uint8_t column) {
 		
 }
 
-
 void OLED_clear_line(uint8_t line){		
-	//Note: This function clears an entire page (line = page)
-	//which means that it clears 8 bits in each column.
-	//Want to only erase one bit in a line across the screen? no -Jan F
-	//Solution: copy oled ram content over to sram, mask bits and send new byte to oled
 
 	OLED_goto_line(line);	
 
@@ -149,7 +144,6 @@ void OLED_clear(void){
 		OLED_clear_line(p);
 	}
 }
-
 
 
 void OLED_set_brightness(uint8_t lvl) {

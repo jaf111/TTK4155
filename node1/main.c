@@ -45,7 +45,7 @@ int main(){
 
 	//OLED init
 	OLED_init();
-	uint8_t i = 1;
+	uint8_t i = 0;
 	
 	while(1){
 		
@@ -58,47 +58,58 @@ int main(){
 		if (line > 7) {line = 0;}
 		if (line < 0) {line = 7;}*/
 
+		/*
+		for (int i = 64; i > 0; i--){
+			OLED_pos(4,i);
+			write_d(0xFF);
+		}*/
+
 		//Why is this so hard to print?
+		
+		//OLED_print("HEllo");
+		//_delay_ms(10);
+		
 		OLED_pos(0, i);
 		OLED_print_char('1');
-		_delay_ms(100);
+		_delay_ms(10);
 
 		OLED_pos(1, i);
 		OLED_print_char('2');
-		_delay_ms(100);
+		_delay_ms(10);
 
 		OLED_pos(2, i);
 		OLED_print_char('3');
-		_delay_ms(100);
+		_delay_ms(10);
 
 		OLED_pos(3, i);
 		OLED_print_char('4');
-		_delay_ms(100);
+		_delay_ms(10);
 
 		OLED_pos(4, i);
 		OLED_print_char('5');
-		_delay_ms(100);
+		_delay_ms(10);
 
 		OLED_pos(5, i);
 		OLED_print_char('6');
-		_delay_ms(100);
+		_delay_ms(10);
 
 		OLED_pos(6, i);
 		OLED_print_char('7');
-		_delay_ms(100);
+		_delay_ms(10);
 
 		OLED_pos(7, i);
 		OLED_print_char('8');
-		_delay_ms(100);
-		printf(i);
+		_delay_ms(10);
+
+
 		if (i < 128){
-			i++;
+			i = i + 7;
 		} else {
 			i = 0;
 			OLED_clear();
 		}
-
-
+		
+		
 		//font_byte = pgm_read_byte(&(font4[1][1]));	//To take data saved in Flash (PROGMEM)
 		//OLED_pos(line, 2);		//To print font4 (4 columns per character)
 		

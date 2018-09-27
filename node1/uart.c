@@ -3,6 +3,7 @@
 #include <avr/io.h>
 #include <stdio.h>
 
+//#define  UART = FDEV_SETUP_STREAM (USART_Transmit, ,USART_Receive) 
 
 void USART_Init(unsigned int ubrr){
 
