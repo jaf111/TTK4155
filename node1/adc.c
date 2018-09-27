@@ -27,8 +27,6 @@ void ADC_init(void){
 
 	// Set sleep mode to power save
 	//set_sleep_mode(SLEEP_MODE_PWR_SAVE);
-
-
 }
 
 

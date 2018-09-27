@@ -1,19 +1,12 @@
 #include <avr/io.h>
 #include "buttons.h"
 
-#define JOY_LR 0x04
-#define JOY_DU 0x05
-#define SLIDER_R 0x06
-#define SLIDER_L 0x07
-
-
 //Using Port B, pin PB0 & PB1 on ATmega162
 void button_init(void){
 	DDRB |= (1 << DDB0);
 	DDRB |= (1 << DDB1);
 
 }
-
 
 enum JoyDir{NEUTRAL, RIGHT, UP, LEFT, DOWN} direction; 
 

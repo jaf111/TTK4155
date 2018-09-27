@@ -1,6 +1,12 @@
 #ifndef BUTTONS_H
 #define BUTTONS_H
 
+#define JOY_LR 0x04
+#define JOY_DU 0x05
+#define SLIDER_R 0x06
+#define SLIDER_L 0x07
+
+
 typedef struct {
 	int16_t XX;
 	int16_t YY;

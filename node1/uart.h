@@ -5,14 +5,15 @@
 #define BAUD 9600
 #define MYUBRR (FOSC/16/BAUD)-1
 
-//typedef struct __file FILE;
-
 void USART_Init(unsigned int ubrr);
 
 void USART_Transmit(unsigned char data);
 
 unsigned char USART_Receive(void);
 
-//FILE* fdevopen (int(*USART_Transmit)(char, FILE *), int(*USART_Receive)(FILE *));
+static FILE uart_out = FDEV_SETUP_STREAM (USART_Transmit, NULL, _FDEV_SETUP_WRITE);
+static FILE uart_in = FDEV_SETUP_STREAM (NULL, USART_Receive, _FDEV_SETUP_READ);
+
+#define UART_p (&uart_out)
 
 #endif // UART_H

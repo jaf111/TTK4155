@@ -19,11 +19,14 @@
 #define BUTTON_R PINB & (1<<PB0)
 #define BUTTON_L PINB & (1<<PB1)
 
+#define MENU1 0
+#define MENU2 4
+#define MENU3 10
+
 int16_t JoyX = 0;
 int16_t JoyY = 0;
 int16_t JoyX_init = 0;
 int16_t JoyY_init = 0;
-
 
 int main(){
 	//led_init();
@@ -46,8 +49,17 @@ int main(){
 	//OLED init
 	OLED_init();
 	uint8_t i = 0;
+
+	//Menu init
+	menu_init();
 	
 	while(1){
+
+		print_sub_menu(MENU3);
+		cursor_move();
+		//fprintf(OLED_p, "A");
+		//fprintf(UART_p, "B\n");
+		
 		
 		/*OLED_pos(line, ADC_read(SLIDER_L)/2);
 		write_d(0xFF);
@@ -66,10 +78,22 @@ int main(){
 
 		//Why is this so hard to print?
 		
-		//OLED_print("HEllo");
-		//_delay_ms(10);
+		/*OLED_pos(0, 0);
+		OLED_print("Hello");
+		_delay_ms(100);*/
+
+		/*print_sub_menu(1, 3);
+		_delay_ms(2000);
+		OLED_clear_all();
+		print_sub_menu(2, 4);
+		_delay_ms(2000);
+		OLED_clear_all();
+		print_sub_menu(3, 5);
+		_delay_ms(2000);
+		OLED_clear_all();
 		
-		OLED_pos(0, i);
+		
+		/*OLED_pos(0, i);
 		OLED_print_char('1');
 		_delay_ms(10);
 
@@ -107,7 +131,7 @@ int main(){
 		} else {
 			i = 0;
 			OLED_clear();
-		}
+		}*/
 		
 		
 		//font_byte = pgm_read_byte(&(font4[1][1]));	//To take data saved in Flash (PROGMEM)
