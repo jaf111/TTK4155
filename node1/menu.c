@@ -1,4 +1,3 @@
-#include <util/delay.h>
 #include <stdio.h>
 #include <avr/io.h>
 #include "menu.h"
@@ -12,8 +11,41 @@
 uint8_t pointerUP = 1;
 uint8_t pointerLR = 0;
 
-char* menu_print[15][menu_col_max] = {
-	{"MENU 1", "sub1_opt1", "sub1_opt2", "sub2_opt3", "", ""},
+
+typedef struct menu {
+	char* name[];
+	struct menu* parent;
+	struct menu* children;
+	int8_t num_sub;
+	void *(*menu_list)();
+
+} menu;
+
+
+menu* create_menu(char name, int8_t num_sub){
+	menu* new_menu;
+	new_menu.name = name;
+	new_menu.num_sub = num_sub;
+	new_menu.parent = NULL;
+	new_menu.children = NULL;
+	new_menu.menu_list = NULL;
+
+	return new_menu;
+}
+
+menu* insert_menu(menu* main, char* name, int menu_col, int8_t num_sub, void (*menu_list)()){
+	main.num_sub += num_sub;   
+	main.children[menu_col].name = name;
+	main.children[menu_col].parent = main;
+	main.children[menu_col].menu_list = (void*) menu_list;
+
+	return main.children;
+	
+}
+
+
+char* menu_matrix[15][menu_col_max] = {
+	{"MENU 1", "    sub1_opt1", "sub1_opt2", "sub2_opt3", "", ""},
 	{"SUB1 OPT1", "a", "b", "c", "", ""},
 	{"SUB1 OPT2", "a", "b", "c", "d", ""},
 	{"SUB1 OPT3", "a", "b", "c", "d", "e"},
@@ -50,20 +82,20 @@ void print_sub_menu(uint8_t menNum) {
 	menNum = menNum + pointerLR;
 
 	OLED_pos(0, 0);
-	OLED_print(menu_print[menNum][0]);
+	OLED_print(menu_matrix[menNum][0]);
 	
 	//size_t n = sizeof(menu_print[menNum]) / sizeof(char*);
 	//fprintf(UART_p, "Util: %4d \n\r", n);
 
 	menu_length = 0;		//To know how many positions inside the array are really valid
 	for(int j=0; j < menu_col_max; j++) {
-		if (menu_print[menNum][j] != "") menu_length++;
+		if (menu_matrix[menNum][j] != "") menu_length++;
 	}
 	//fprintf(UART_p, "Util: %4d \n\r", menu_length);
 
 	for(int i = 1; i < menu_length; i++){
 		OLED_pos(i, 20);
-		OLED_print(menu_print[menNum][i]);
+		OLED_print(menu_matrix[menNum][i]);
 	}
 
 	fprintf(UART_p, "menNum: %4d     ", menNum);
@@ -105,15 +137,5 @@ void cursor_move() {
 
 //void print_highscore();
 
-/*
-struct  menu {
-	char name[]
-	int* parent
-	int* children
-	function
-	function2
-};
-
-*/
 
 

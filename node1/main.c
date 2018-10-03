@@ -55,6 +55,8 @@ int main(){
 	
 	while(1){
 
+		menu* menu = MENU_create_menu(menu_matrix[0][0], 3);
+		insert_menu(menu, menu_matrix[0][1], 0, fprintf(OLED_p));
 		//fprintf(OLED_p, "Hello");
 		fprintf(UART_p, "Hello: %d \r\n");
 		//print_sub_menu(MENU3);
