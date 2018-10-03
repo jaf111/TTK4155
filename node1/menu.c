@@ -12,8 +12,8 @@ uint8_t pointerUP = 1;
 uint8_t pointerLR = 0;
 
 
-typedef struct menu {
-	char* name[];
+typedef struct menu{
+	char name[];
 	struct menu* parent;
 	struct menu* children;
 	int8_t num_sub;
@@ -23,23 +23,24 @@ typedef struct menu {
 
 
 menu* create_menu(char name, int8_t num_sub){
-	menu* new_menu;
-	new_menu.name = name;
-	new_menu.num_sub = num_sub;
-	new_menu.parent = NULL;
-	new_menu.children = NULL;
-	new_menu.menu_list = NULL;
+	menu* new_menu = malloc(sizeof(new_menu));
+	new_menu->name = name;
+	new_menu->num_sub = num_sub;
+	new_menu->parent = NULL;
+	new_menu->children = NULL;
+	new_menu->menu_list = NULL;
 
 	return new_menu;
 }
 
 menu* insert_menu(menu* main, char* name, int menu_col, int8_t num_sub, void (*menu_list)()){
-	main.num_sub += num_sub;   
-	main.children[menu_col].name = name;
-	main.children[menu_col].parent = main;
-	main.children[menu_col].menu_list = (void*) menu_list;
+	main = malloc(sizeof(main));
+	main->num_sub += num_sub;   
+	main->children[menu_col].name = name;
+	main->children[menu_col].parent = main;
+	main->children[menu_col].menu_list = (void*) menu_list;
 
-	return main.children;
+	return main->children;
 	
 }
 

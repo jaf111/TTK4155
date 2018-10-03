@@ -11,6 +11,7 @@
 #include "adc.h"
 #include "buttons.h"
 #include "oled.h"
+#include "menu.h"
 
 #define JOY_LR 0x04
 #define JOY_DU 0x05
@@ -51,14 +52,14 @@ int main(){
 	uint8_t i = 23;
 
 	//Menu init
-	menu_init();
+	//menu_init();
 	
 	while(1){
 
-		menu* menu = MENU_create_menu(menu_matrix[0][0], 3);
-		insert_menu(menu, menu_matrix[0][1], 0, fprintf(OLED_p));
+		//menu* menu = MENU_create_menu(menu_matrix[0][0], 3);
+		//insert_menu(menu, menu_matrix[0][1], 0, fprintf(OLED_p));
 		//fprintf(OLED_p, "Hello");
-		fprintf(UART_p, "Hello: %d \r\n");
+		//fprintf(UART_p, "Hello: %d \r\n");
 		//print_sub_menu(MENU3);
 		//cursor_move();
 		//fprintf(OLED_p, "A");
