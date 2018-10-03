@@ -24,6 +24,8 @@ void OLED_set_brightness(uint8_t lvl);
 void OLED_print_arrow(uint8_t row, uint8_t col);
 void OLED_clear_arrow(uint8_t row, uint8_t col);
 
+void OLED_screen_Saver();
+
 static FILE oled_out = FDEV_SETUP_STREAM (OLED_print_char, NULL, _FDEV_SETUP_WRITE);
 
 #define OLED_p (&oled_out)

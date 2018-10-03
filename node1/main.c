@@ -52,19 +52,29 @@ int main(){
 	uint8_t i = 23;
 
 	//Menu init
-	//menu_init();
+	menu main_menu;
+	menu_init();
+	menu* new_menu = init_menu1(main_menu);
 	
+	//struct menu* menu = create_menu("Main menu", NULL, NULL, NULL, &option, 3);
+
+	
+	//OLED_screen_Saver();
+
 	while(1){
 
-		//menu* menu = MENU_create_menu(menu_matrix[0][0], 3);
-		//insert_menu(menu, menu_matrix[0][1], 0, fprintf(OLED_p));
-		//fprintf(OLED_p, "Hello");
+
+		//fprintf(OLED_p, main_menu.name);
+		//_delay_ms(100);
+		//insert_menu(menu, menu_matrix[0][1], 1, 0, NULL); 
+		
 		//fprintf(UART_p, "Hello: %d \r\n");
-		//print_sub_menu(MENU3);
-		//cursor_move();
+		print_sub_menu(MENU1);
+		cursor_move();
+		//fprintf(OLED_p, "%d", (main_menu.select));
 		//fprintf(OLED_p, "A");
 		//fprintf(UART_p, "B\n");''
-		
+		//OLED_screen_Saver();
 		
 		/*OLED_pos(line, ADC_read(SLIDER_L)/2);
 		write_d(0xFF);
@@ -81,23 +91,8 @@ int main(){
 			write_d(0xFF);
 		}*/
 
-		//Why is this so hard to print?
 		
-		/*OLED_pos(0, 0);
-		OLED_print("Hello");
-		_delay_ms(100);*/
 
-		/*print_sub_menu(1, 3);
-		_delay_ms(2000);
-		OLED_clear_all();
-		print_sub_menu(2, 4);
-		_delay_ms(2000);
-		OLED_clear_all();
-		print_sub_menu(3, 5);
-		_delay_ms(2000);
-		OLED_clear_all();
-
-		
 		//font_byte = pgm_read_byte(&(font4[1][1]));	//To take data saved in Flash (PROGMEM)
 		//OLED_pos(line, 2);		//To print font4 (4 columns per character)
 		

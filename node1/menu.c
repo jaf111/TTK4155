@@ -1,3 +1,4 @@
+#include <util/delay.h>
 #include <stdio.h>
 #include <avr/io.h>
 #include "menu.h"
@@ -6,76 +7,78 @@
 #include "buttons.h"
 #include "adc.h"
 
-#define menu_col_max 6
-
 uint8_t pointerUP = 1;
 uint8_t pointerLR = 0;
 
 
-typedef struct menu{
-	char name[];
-	struct menu* parent;
-	struct menu* children;
-	int8_t num_sub;
-	void *(*menu_list)();
+menu main_menu, game, scores, hacking, options;
 
-} menu;
-
-
-menu* create_menu(char name, int8_t num_sub){
-	menu* new_menu = malloc(sizeof(new_menu));
-	new_menu->name = name;
-	new_menu->num_sub = num_sub;
-	new_menu->parent = NULL;
-	new_menu->children = NULL;
-	new_menu->menu_list = NULL;
-
+/*struct menu* create_menu(char name, struct menu* parent, struct menu* child1, struct menu* child2, struct menu* child3, int8_t num_sub){
+	//menu* new_menu = malloc(sizeof(new_menu));
+	new_menu.name = name;
+	new_menu.parent = &parent;
+	new_menu.children[0] = child1;
+	new_menu.children[1] = child2;
+	new_menu.children[2] = child3;
+	new_menu.children[3] = NULL;
+	new_menu.num_sub = num_sub;
+	
 	return new_menu;
+}*/
+
+/*menu* init_menu1(menu* new_menu){
+	new_menu->name = "Main menu";
+	new_menu->parent = NULL;
+	new_menu->children[0] = &game;
+	new_menu->children[1] = NULL;
+	new_menu->children[2] = NULL;
+	new_menu->num_sub = 0;
+
+	fprintf(OLED_p, "%d\n", (new_menu->num_sub));
+
+}*/
+
+menu* init_menu1(menu new_menu){
+	new_menu.name = "Main menu";
+	new_menu.parent = NULL;
+	new_menu.children[0] = &game;
+	new_menu.children[1] = NULL;
+	new_menu.children[2] = &hacking;
+	new_menu.children[3] = NULL;
+	new_menu.select = 0;
+
+	//fprintf(OLED_p, "%d", (new_menu.select));
+
+
 }
 
-menu* insert_menu(menu* main, char* name, int menu_col, int8_t num_sub, void (*menu_list)()){
+
+
+/*struct menu* insert_menu(struct menu* main, char* name, int menu_col, int8_t num_sub){
 	main = malloc(sizeof(main));
 	main->num_sub += num_sub;   
 	main->children[menu_col].name = name;
 	main->children[menu_col].parent = main;
-	main->children[menu_col].menu_list = (void*) menu_list;
-
+	
 	return main->children;
 	
-}
+}*/
 
 
-char* menu_matrix[15][menu_col_max] = {
-	{"MENU 1", "    sub1_opt1", "sub1_opt2", "sub2_opt3", "", ""},
-	{"SUB1 OPT1", "a", "b", "c", "", ""},
-	{"SUB1 OPT2", "a", "b", "c", "d", ""},
-	{"SUB1 OPT3", "a", "b", "c", "d", "e"},
-	{"MENU 2", "sub2_opt1", "sub2_opt2", "sub2_opt3", "sub2_opt4", "sub2_opt5"},
-	{"SUB2 OPT1", "a", "b", "c", "", ""},
-	{"SUB2 OPT2", "a", "b", "c", "d", ""},
-	{"SUB2 OPT3", "a", "b", "c", "d", "e"},
-	{"SUB2 OPT4", "a", "b", "c", "", ""},
-	{"SUB2 OPT5", "a", "b", "c", "d", "e"},
-	{"MENU 3", "sub3_opt1", "sub3_opt2", "sub3_opt3", "sub3_opt4", ""},
-	{"SUB3 OPT1", "a", "b", "c", "d", ""},
-	{"SUB3 OPT2", "a", "b", "", "", ""},
-	{"SUB3 OPT3", "a", "b", "c", "d", "e"},
-	{"SUB3 OPT4", "a", "b", "c", "", ""}
+char* menu_matrix[5][menu_col_max] = {
+	{"---Main Menu---", "Game", "Scores", "Hacking", "Options", ""},
+	{"Game", "a", "b", "c", "", ""},
+	{"Scores", "a", "b", "c", "d", ""},
+	{"Hacking", "Screensaver", "b", "c", "d", "e"},
+	{"Options", "Change font", "Brightness", "sub2_opt3", "sub2_opt4", "sub2_opt5"},
 };
 
-//menu_sys[3][menu_col_max = {"", "print_highscore"}
 
 void menu_init(){
-	/*node * head = NULL
-
-	head = malloc(sizeof(node));
-
-	head->name = "Main Menu";
-	head->parent = NULL;*/
-	
-
 	OLED_clear_all();
 }
+
+
 
 size_t menu_length = 0;
 
@@ -106,7 +109,7 @@ void cursor_move() {
 	OLED_pos(pointerUP, 5);
 	OLED_print_arrow(pointerUP, 5);
 
-	if (ADC_read(JOY_DU) >= 250) {		//UP
+	if (ADC_read(JOY_DU) >= 255) {		//UP
 		OLED_clear_arrow(pointerUP, 5);
 		pointerUP--;
 		if (pointerUP < 1) {pointerUP = menu_length-1;}
@@ -116,7 +119,7 @@ void cursor_move() {
 		pointerUP++;
 		if (pointerUP > menu_length-1) {pointerUP = 1;}
 	}
-	else if (ADC_read(JOY_LR) >= 250) {	//RIGHT
+	else if (ADC_read(JOY_LR) >= 255) {	//RIGHT
 		if (pointerLR == 0) {
 			OLED_clear_all();
 			pointerLR = pointerUP;
@@ -136,7 +139,7 @@ void cursor_move() {
 	fprintf(UART_p, "pointerLR: %4d \n\r", pointerLR);
 }
 
-//void print_highscore();
+
 
 
 

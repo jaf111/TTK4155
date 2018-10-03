@@ -152,3 +152,13 @@ void OLED_clear_arrow(uint8_t row, uint8_t col){
 	write_d(0b00000000);
 	write_d(0b00000000);
 }
+
+void OLED_screen_Saver() {
+	OLED_clear_all();
+	for(int p=0; p<8; p++) {
+		OLED_pos(p, 0);
+		for(int c=0; c<128; c++) {
+			write_d(pgm_read_byte(&(screenSaver2[p][c])));
+		}
+	}
+}
