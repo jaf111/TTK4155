@@ -47,7 +47,6 @@ void OLED_init(void) {
 	//kinda explained 9.1.3	
 	write_c(0xB0);		//Set page Start Address for page Addressing Mod
 	write_c(0x00);   	//Set Lower Column Start Address for page Addressing
-						//NEED TO ASK ABOUT THIS
 	write_c(0x10);		//Set Higher Column Start Address for page Addressing Mode
 	
 	OLED_clear_all();

@@ -39,6 +39,8 @@ void menu_init(){
 
 	head->name = "Main Menu";
 	head->parent = NULL;*/
+	
+
 	OLED_clear_all();
 }
 
@@ -71,24 +73,24 @@ void cursor_move() {
 	OLED_pos(pointerUP, 5);
 	OLED_print_arrow(pointerUP, 5);
 
-	if (ADC_read(JOY_DU) >= 255) {		//UP
+	if (ADC_read(JOY_DU) >= 250) {		//UP
 		OLED_clear_arrow(pointerUP, 5);
 		pointerUP--;
 		if (pointerUP < 1) {pointerUP = menu_length-1;}
 	}
-	else if (ADC_read(JOY_DU) <= 1) {	//DOWN
+	else if (ADC_read(JOY_DU) <= 5) {	//DOWN
 		OLED_clear_arrow(pointerUP, 5);
 		pointerUP++;
 		if (pointerUP > menu_length-1) {pointerUP = 1;}
 	}
-	else if (ADC_read(JOY_LR) >= 255) {	//RIGHT
+	else if (ADC_read(JOY_LR) >= 250) {	//RIGHT
 		if (pointerLR == 0) {
 			OLED_clear_all();
 			pointerLR = pointerUP;
 			pointerUP = 1;
 		}
 	}
-	else if (ADC_read(JOY_LR) <= 1) {	//LEFT
+	else if (ADC_read(JOY_LR) <= 5) {	//LEFT
 		if (pointerLR != 0) {
 			OLED_clear_all();
 			pointerLR = 0;
@@ -105,9 +107,13 @@ void cursor_move() {
 
 /*
 struct  menu {
-	*parent
-	*children
-	int children
+	char name[]
+	int* parent
+	int* children
 	function
 	function2
-};*/
+};
+
+*/
+
+

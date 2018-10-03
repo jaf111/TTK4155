@@ -48,17 +48,19 @@ int main(){
 
 	//OLED init
 	OLED_init();
-	uint8_t i = 0;
+	uint8_t i = 23;
 
 	//Menu init
 	menu_init();
 	
 	while(1){
 
-		print_sub_menu(MENU3);
-		cursor_move();
+		//fprintf(OLED_p, "Hello");
+		fprintf(UART_p, "Hello: %d \r\n");
+		//print_sub_menu(MENU3);
+		//cursor_move();
 		//fprintf(OLED_p, "A");
-		//fprintf(UART_p, "B\n");
+		//fprintf(UART_p, "B\n");''
 		
 		
 		/*OLED_pos(line, ADC_read(SLIDER_L)/2);
@@ -91,62 +93,11 @@ int main(){
 		print_sub_menu(3, 5);
 		_delay_ms(2000);
 		OLED_clear_all();
-		
-		
-		/*OLED_pos(0, i);
-		OLED_print_char('1');
-		_delay_ms(10);
 
-		OLED_pos(1, i);
-		OLED_print_char('2');
-		_delay_ms(10);
-
-		OLED_pos(2, i);
-		OLED_print_char('3');
-		_delay_ms(10);
-
-		OLED_pos(3, i);
-		OLED_print_char('4');
-		_delay_ms(10);
-
-		OLED_pos(4, i);
-		OLED_print_char('5');
-		_delay_ms(10);
-
-		OLED_pos(5, i);
-		OLED_print_char('6');
-		_delay_ms(10);
-
-		OLED_pos(6, i);
-		OLED_print_char('7');
-		_delay_ms(10);
-
-		OLED_pos(7, i);
-		OLED_print_char('8');
-		_delay_ms(10);
-
-
-		if (i < 128){
-			i = i + 7;
-		} else {
-			i = 0;
-			OLED_clear();
-		}*/
-		
 		
 		//font_byte = pgm_read_byte(&(font4[1][1]));	//To take data saved in Flash (PROGMEM)
 		//OLED_pos(line, 2);		//To print font4 (4 columns per character)
 		
-
-		/*_delay_ms(1000);
-		OLED_clear_line(6);
-
-		_delay_ms(1000);
-		OLED_home();
-		write_d(0xFF);
-
-		_delay_ms(1000);
-		OLED_clear_line(0);*/
 
 		
 		/*JoyX = ADC_read(JOY_LR);
@@ -159,16 +110,13 @@ int main(){
 		getJoyDirection(JoyX, JoyY);
 
 		sliders();*/
-		
-		//OLED_pos(0xB0, 0x00);
-		//OLED_write_data(0x8);
 
 		/*SRAM_write(120, 0x1800);
 		_delay_ms(100);
 		SRAM_read(0x1800);
-		_delay_ms(100);*/
+		_delay_ms(100);
 
-		//SRAM_test();
+		SRAM_test();*/
 
 		/*led_turn_on();
 		_delay_ms(100);
