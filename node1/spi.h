@@ -1,9 +1,11 @@
 #ifndef SPI_H
 #define SPI_H
 
-void SPI_Masterinit(void);
+void SPI_init(void);
 
-char SPI_MasterTransmit(char cData);
+void SPI_write(char cData);
+
+char SPI_read(void);
 
 
 #endif // SPI_H

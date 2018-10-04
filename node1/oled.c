@@ -2,7 +2,7 @@
 #include <avr/io.h> 
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
-#include <util/delay.h>
+//#include <util/delay.h>
 
 #include "oled.h"
 #include "fonts.h"
@@ -161,7 +161,7 @@ void OLED_screen_Saver() {
 	for(int p=0; p<8; p++) {
 		OLED_pos(p, 0);
 		for(int c=0; c<128; c++) {
-			write_d(pgm_read_byte(&(screenSaver2[p][c])));
+			write_d(pgm_read_byte(&(screenSaver[p][c])));
 		}
 	}
 }

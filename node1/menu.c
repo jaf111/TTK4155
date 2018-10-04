@@ -48,11 +48,7 @@ menu* init_menu1(menu new_menu){
 	new_menu.select = 0;
 
 	//fprintf(OLED_p, "%d", (new_menu.select));
-
-
 }
-
-
 
 /*struct menu* insert_menu(struct menu* main, char* name, int menu_col, int8_t num_sub){
 	main = malloc(sizeof(main));
@@ -63,7 +59,6 @@ menu* init_menu1(menu new_menu){
 	return main->children;
 	
 }*/
-
 
 char* menu_matrix[5][menu_col_max] = {
 	{"---Main Menu---", "Game", "Scores", "Hacking", "Options", ""},
