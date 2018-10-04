@@ -3,24 +3,24 @@
 
 #define menu_col_max 6
 
-typedef struct menu{
+typedef struct{
 	char* name;
-	struct menu* parent;
-	struct menu* children[4];
-	int8_t select;
-} menu;
+	struct t_menu* parent;
+	struct t_menu* head;
+	struct t_menu* children;
+	//int8_t select;
+} t_menu;
 
 
-//struct menu* create_menu(char name, struct menu* parent, struct menu* child1, struct menu* child2, struct menu* child3, int8_t num_sub);
-//struct menu* insert_menu(struct menu* main, char* name, int menu_col, int8_t num_sub);
-
-menu* init_menu1(menu new_menu);
+t_menu* menu(char* name, t_menu* parent);
+void init_head(t_menu* menu, t_menu* children);
+void set_children(t_menu* menu, t_menu* children);
+t_menu* menu_system(void);
+void print_menu(t_menu* menu);
+void menu_init();
 
 char* menu_matrix[5][menu_col_max];
-
-
 void print_sub_menu(uint8_t menNum);
-void menu_init();
 void cursor_move();
 
 #endif //menu.H

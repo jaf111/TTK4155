@@ -55,12 +55,8 @@ int main(){
 	uint8_t i = 23;
 	
 	//Menu init
-	menu main_menu;
 	menu_init();
-	menu* new_menu = init_menu1(main_menu);
-	//struct menu* menu = create_menu("Main menu", NULL, NULL, NULL, &option, 3);
-
-	OLED_screen_Saver();
+	//OLED_screen_Saver();
 
 	//SPI init
 	SPI_init();
@@ -69,22 +65,18 @@ int main(){
 	CAN_init();
 
 	while(1){
+		//cursor_move();
+
 
 		//SRAM_test();
 		//fprintf(OLED_p, main_menu.name);
-		//_delay_ms(100);
+		_delay_ms(100);
 		//insert_menu(menu, menu_matrix[0][1], 1, 0, NULL); 
 		
-		//SPI_write(0b01110010);
-		//fprintf(UART_p, "Hello\r\n", 0);
-
-		MCP2515_bit_modify(MCP_CANCTRL, 0b11111111, 0b00010100);	// Enable loopback mode
-		_delay_ms(100);
-
-
-		fprintf(UART_p, "READ: %4x \r\n", MCP2515_read(MCP_CANCTRL));
-		//fprintf(UART_p, "Status: %4d \r\n", MCP2515_read(MCP_CANSTAT));
-		_delay_ms(500);
+		
+		//MCP2515_bit_modify(MCP_CANCTRL, 0b11111111, 0b00010100);	// Enable loopback mode
+		//_delay_ms(100);
+		//fprintf(UART_p, "READ: %4x \r\n", MCP2515_read(MCP_CANCTRL));
 		//print_sub_menu(MENU1);
 		//cursor_move();
 		//fprintf(OLED_p, "%d", (main_menu.select));

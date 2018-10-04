@@ -10,58 +10,182 @@
 uint8_t pointerUP = 1;
 uint8_t pointerLR = 0;
 
+volatile t_menu* current_menu; 
 
-menu main_menu, game, scores, hacking, options;
+int displayed_lines = 0;
 
-/*struct menu* create_menu(char name, struct menu* parent, struct menu* child1, struct menu* child2, struct menu* child3, int8_t num_sub){
-	//menu* new_menu = malloc(sizeof(new_menu));
-	new_menu.name = name;
-	new_menu.parent = &parent;
-	new_menu.children[0] = child1;
-	new_menu.children[1] = child2;
-	new_menu.children[2] = child3;
-	new_menu.children[3] = NULL;
-	new_menu.num_sub = num_sub;
-	
+
+t_menu* menu(char* name, t_menu* parent){
+	t_menu* new_menu = malloc(sizeof(new_menu)); 
+	new_menu->name = name;
+	new_menu->parent = parent;
+	new_menu->head = NULL;
+	new_menu->children = NULL;
+
 	return new_menu;
-}*/
-
-/*menu* init_menu1(menu* new_menu){
-	new_menu->name = "Main menu";
-	new_menu->parent = NULL;
-	new_menu->children[0] = &game;
-	new_menu->children[1] = NULL;
-	new_menu->children[2] = NULL;
-	new_menu->num_sub = 0;
-
-	fprintf(OLED_p, "%d\n", (new_menu->num_sub));
-
-}*/
-
-menu* init_menu1(menu new_menu){
-	new_menu.name = "Main menu";
-	new_menu.parent = NULL;
-	new_menu.children[0] = &game;
-	new_menu.children[1] = NULL;
-	new_menu.children[2] = &hacking;
-	new_menu.children[3] = NULL;
-	new_menu.select = 0;
-
-	//fprintf(OLED_p, "%d", (new_menu.select));
 }
 
-/*struct menu* insert_menu(struct menu* main, char* name, int menu_col, int8_t num_sub){
-	main = malloc(sizeof(main));
-	main->num_sub += num_sub;   
-	main->children[menu_col].name = name;
-	main->children[menu_col].parent = main;
+
+void init_head(t_menu* menu, t_menu* children){
+	menu->head = children;
+}
+
+
+void set_children(t_menu* menu, t_menu* children){
+	menu->children = children;
+}
+
+
+t_menu* menu_system(void){
+	//Main menu config
+	t_menu* main_menu = menu("---Main Menu---", NULL);
+	t_menu* game = menu("Game", main_menu);
+	t_menu* highscore = menu("Highscore", main_menu);
+	t_menu* extras = menu("Extras", main_menu);
+	t_menu* options = menu("Options", main_menu);
 	
-	return main->children;
 	
-}*/
+	t_menu* screensaver = menu("Screensaver", extras);
+	t_menu* songs = menu("Songs", extras);
+
+	t_menu* brightness = menu("Brightness", options);
+
+	init_head(main_menu, game);
+	set_children(game, highscore);
+	set_children(highscore, extras);
+	set_children(extras, options);
+
+	//Extras config
+	
+	init_head(extras, screensaver);
+	set_children(screensaver, songs);
+	
+	//Options config
+	
+	init_head(options, brightness);
+
+	current_menu = main_menu;
+	//print_menu(current_menu);
+	
+
+	//ASK STUDASS
+	current_menu = current_menu->head;
+	fprintf(OLED_p, current_menu->name, 0);
+	current_menu = current_menu->children;
+	OLED_home();
+	fprintf(OLED_p, current_menu->name, 0);
+	
+
+	return current_menu;
+}
+
+
+void print_menu(t_menu* menu){
+	OLED_home();
+	displayed_lines = 0;
+
+	fprintf(OLED_p, menu->name, 0);
+	menu = menu->head;
+	
+	int line = 1;
+
+	while(menu->children != NULL && line < 7){
+		displayed_lines++;
+		
+		OLED_pos(line,20);
+		fprintf(OLED_p, menu->name, 0);
+		_delay_ms(100);
+		line++;
+		menu = menu->children;
+	
+	}
+}
+
+
+void menu_init(){
+	OLED_clear_all();
+	menu_system();
+}
+
+
+void cursor_move() {
+	OLED_pos(pointerUP, 5);
+	OLED_print_arrow(pointerUP, 5);
+
+	if (ADC_read(JOY_DU) >= 255) {		//UP
+		OLED_clear_arrow(pointerUP, 5);
+		pointerUP--;
+		if (pointerUP < 1) {
+			pointerUP = displayed_lines;
+		}
+	}
+	else if (ADC_read(JOY_DU) <= 5) {	//DOWN
+		OLED_clear_arrow(pointerUP, 5);
+		pointerUP++;
+		if (pointerUP > displayed_lines) {
+			pointerUP = 1;
+		}
+	}
+	else if (ADC_read(JOY_LR) >= 255) {	//RIGHT
+		if (pointerLR == 0) {
+			OLED_clear_all();
+			pointerLR = pointerUP;
+			pointerUP = 1;
+			///////////////////////
+			///THIS WAS ADDED
+			if (current_menu->head == NULL){
+				print_menu(current_menu);
+			}
+			
+			else{
+
+				current_menu = current_menu->head;
+				
+				for (int i; i < pointerUP; i++) {
+					current_menu = current_menu->children;
+					
+				}
+				print_menu(current_menu);
+			}
+			//////////////////////
+		}
+	}
+	else if (ADC_read(JOY_LR) <= 5) {	//LEFT
+		if (pointerLR != 0) {
+			OLED_clear_all();
+			pointerLR = 0;
+			pointerUP = 1;
+			///////////////////////////
+			if (current_menu->parent == NULL){
+				print_menu(current_menu);
+			}
+			
+			else{
+				current_menu = current_menu->parent;
+				print_menu(current_menu);
+			}
+			//////////////////////
+
+		}
+	}
+
+	_delay_ms(500);
+	
+	fprintf(UART_p, "pointerUP: %4d     ", pointerUP);
+	fprintf(UART_p, "pointerLR: %4d \n\r", pointerLR);
+}
+
+
+
+
+
+
+////////////////////////////////////////////////////////////
+
+
 
 char* menu_matrix[5][menu_col_max] = {
-	{"---Main Menu---", "Game", "Scores", "Hacking", "Options", ""},
+	{"---Main Menu---", "Game", "Scores", "Extras", "Options", ""},
 	{"Game", "a", "b", "c", "", ""},
 	{"Scores", "a", "b", "c", "d", ""},
 	{"Hacking", "Screensaver", "b", "c", "d", "e"},
@@ -69,9 +193,7 @@ char* menu_matrix[5][menu_col_max] = {
 };
 
 
-void menu_init(){
-	OLED_clear_all();
-}
+
 
 
 
@@ -100,39 +222,7 @@ void print_sub_menu(uint8_t menNum) {
 	fprintf(UART_p, "menNum: %4d     ", menNum);
 }
 
-void cursor_move() {
-	OLED_pos(pointerUP, 5);
-	OLED_print_arrow(pointerUP, 5);
 
-	if (ADC_read(JOY_DU) >= 255) {		//UP
-		OLED_clear_arrow(pointerUP, 5);
-		pointerUP--;
-		if (pointerUP < 1) {pointerUP = menu_length-1;}
-	}
-	else if (ADC_read(JOY_DU) <= 5) {	//DOWN
-		OLED_clear_arrow(pointerUP, 5);
-		pointerUP++;
-		if (pointerUP > menu_length-1) {pointerUP = 1;}
-	}
-	else if (ADC_read(JOY_LR) >= 255) {	//RIGHT
-		if (pointerLR == 0) {
-			OLED_clear_all();
-			pointerLR = pointerUP;
-			pointerUP = 1;
-		}
-	}
-	else if (ADC_read(JOY_LR) <= 5) {	//LEFT
-		if (pointerLR != 0) {
-			OLED_clear_all();
-			pointerLR = 0;
-			pointerUP = 1;
-		}
-	}
-	_delay_ms(1000);
-	
-	fprintf(UART_p, "pointerUP: %4d     ", pointerUP);
-	fprintf(UART_p, "pointerLR: %4d \n\r", pointerLR);
-}
 
 
 
