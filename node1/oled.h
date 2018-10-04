@@ -3,6 +3,8 @@
 
 void write_c(uint8_t cmd);
 void write_d(uint8_t cmd);
+void write_s(uint8_t data);
+void OLED_update();
 
 void OLED_init(void);
 

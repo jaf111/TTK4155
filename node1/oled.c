@@ -2,8 +2,11 @@
 #include <avr/io.h> 
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
+#include <util/delay.h>
+
 #include "oled.h"
 #include "fonts.h"
+#include "sram.h"
 
 #define FONTWIDTH 8 //change font
 
@@ -91,7 +94,7 @@ void OLED_goto_line(uint8_t line) {
 	//For page addressing mode
 	//need to check if we are on a valid page
 	//OLED_home();
-
+	gen_page = line;
 	if (line < 8){
 		write_c(0xB0 + line);		//Set page 0-7 (B0h to B7h)
 		write_c(0x00);		//Lower nibble of start column address (00h to 0Fh)	
@@ -100,7 +103,7 @@ void OLED_goto_line(uint8_t line) {
 }
 
 void OLED_goto_column(uint8_t column) {
-	
+	gen_col = column;
 	if (column < 128){
 		uint8_t lower_nibble = (0x0F & column); 
 		uint8_t upper_nibble = (0x10 + (0x0F & (column >> 4)));
@@ -162,3 +165,20 @@ void OLED_screen_Saver() {
 		}
 	}
 }
+
+/*
+void write_s(uint8_t data){
+	uint8_t address_ptr = (sram_init_address + gen_col + (gen_page * 128));
+	SRAM_write(data, address_ptr);
+}
+
+void OLED_update(){
+	//_delay_ms_(1/0.060); // update frequency
+
+	for (int r = 0; r < 8; r++){
+		OLED_pos(r,0);
+		for (int c = 0; c < 128; c++){
+			write_d(SRAM_read(sram_init_address + c + (r * 128)));
+		}
+	}
+}*/

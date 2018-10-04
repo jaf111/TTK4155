@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include <avr/io.h> 
+#include <avr/io.h>
+#include "uart.h"
 
 #define sram_init_address 0x1800
 
@@ -16,7 +17,7 @@ void SRAM_write(unsigned int data, unsigned int address){
 	volatile char *ext_ram = (char *) sram_init_address;
 	ext_ram[address] = data; //- sram_init_address
 
-	printf("SENT data: %04u, address: %04X \n\r", data, address);
+	fprintf(UART_p, "SENT data: %04u, address: %04X \n\r", data, address);
 	//printf("POINTERRR: %04X, %04u \n", ext_ram[address - sram_init_address], ext_ram[address - sram_init_address]);
 }
 
@@ -25,7 +26,7 @@ uint8_t SRAM_read(unsigned int address){
 	volatile char *ext_ram = (char *) sram_init_address;
 	uint8_t data = ext_ram[address]; //- sram_init_address
 
-	printf("RECEIVED data: %04u, address: %04X \n\r", data, address);
+	fprintf(UART_p, "RECEIVED data: %04u, address: %04X \n\r", data, address);
 	
 	return data;
 }
@@ -36,7 +37,7 @@ void SRAM_test(void){
 	uint16_t ext_ram_size = 0x800;
 	uint16_t write_errors = 0;
 	uint16_t retrieval_errors = 0;
-	printf("Starting SRAM test...\n\r");
+	fprintf(UART_p, "Starting SRAM test...%d \n\r");
 
 	// rand() stores some internal state, so calling this function in a loop will
 	// yield different seeds each time (unless srand() is called before this function)
@@ -51,7 +52,7 @@ void SRAM_test(void){
 		uint8_t retreived_value = ext_ram[i];
 		
 		if (retreived_value != some_value) {
-			printf("Write phase error: ext_ram[%d] = %02X (should be %02X)\n\r", i, retreived_value, some_value);
+			fprintf(UART_p, "Write phase error: ext_ram[%d] = %02X (should be %02X)\n\r", i, retreived_value, some_value);
 			write_errors++;
 		}
 	}
@@ -64,11 +65,11 @@ void SRAM_test(void){
 		uint8_t retreived_value = ext_ram[i];
 		
 		if (retreived_value != some_value) {
-			printf("Retrieval phase error: ext_ram[%4d] = %02X (should be %02X)\n\r", i, retreived_value, some_value);
+			fprintf(UART_p, "Retrieval phase error: ext_ram[%4d] = %02X (should be %02X)\n\r", i, retreived_value, some_value);
 			retrieval_errors++;
 		}
 	}
 
-	printf("SRAM test completed with\n\r%4d errors in write phase and\n\r%4d errors in retrieval phase \n \n\r", write_errors, retrieval_errors);
+	fprintf(UART_p, "SRAM test completed with\n\r%4d errors in write phase and\n\r%4d errors in retrieval phase \n \n\r", write_errors, retrieval_errors);
 }
 

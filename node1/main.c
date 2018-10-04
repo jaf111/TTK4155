@@ -59,18 +59,18 @@ int main(){
 	//struct menu* menu = create_menu("Main menu", NULL, NULL, NULL, &option, 3);
 
 	
-	//OLED_screen_Saver();
+	OLED_screen_Saver();
 
 	while(1){
 
-
+		//SRAM_test();
 		//fprintf(OLED_p, main_menu.name);
 		//_delay_ms(100);
 		//insert_menu(menu, menu_matrix[0][1], 1, 0, NULL); 
 		
-		//fprintf(UART_p, "Hello: %d \r\n");
-		print_sub_menu(MENU1);
-		cursor_move();
+		fprintf(UART_p, "Hello\r\n",0);
+		//print_sub_menu(MENU1);
+		//cursor_move();
 		//fprintf(OLED_p, "%d", (main_menu.select));
 		//fprintf(OLED_p, "A");
 		//fprintf(UART_p, "B\n");''
@@ -114,7 +114,6 @@ int main(){
 		SRAM_read(0x1800);
 		_delay_ms(100);
 
-		SRAM_test();*/
 
 		/*led_turn_on();
 		_delay_ms(100);
