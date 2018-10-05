@@ -1,5 +1,9 @@
-#include <util/delay.h>
+
+
+#include <avr/pgmspace.h>
+
 #include <stdio.h>
+#include <stdlib.h>
 #include <avr/io.h>
 #include "menu.h"
 #include "uart.h"
@@ -10,7 +14,8 @@
 uint8_t pointerUP = 1;
 uint8_t pointerLR = 0;
 
-volatile t_menu* current_menu; 
+t_menu* current_menu; 
+
 
 int displayed_lines = 0;
 
@@ -19,62 +24,72 @@ t_menu* menu(char* name, t_menu* parent){
 	t_menu* new_menu = malloc(sizeof(new_menu)); 
 	new_menu->name = name;
 	new_menu->parent = parent;
-	new_menu->head = NULL;
 	new_menu->children = NULL;
+	new_menu->sibling = NULL;
 
 	return new_menu;
 }
 
 
-void init_head(t_menu* menu, t_menu* children){
-	menu->head = children;
+void set_sibling(t_menu* menu, t_menu* new_sibling){
+	menu->sibling = new_sibling;
 }
 
 
-void set_children(t_menu* menu, t_menu* children){
-	menu->children = children;
+void set_children(t_menu* menu, t_menu* new_children){
+	menu->children = new_children;
 }
 
 
 t_menu* menu_system(void){
-	//Main menu config
+	//Main menu page create
 	t_menu* main_menu = menu("---Main Menu---", NULL);
 	t_menu* game = menu("Game", main_menu);
 	t_menu* highscore = menu("Highscore", main_menu);
 	t_menu* extras = menu("Extras", main_menu);
 	t_menu* options = menu("Options", main_menu);
 	
-	
+	//Extras page create
 	t_menu* screensaver = menu("Screensaver", extras);
 	t_menu* songs = menu("Songs", extras);
 
+	//Options page create
 	t_menu* brightness = menu("Brightness", options);
 
-	init_head(main_menu, game);
-	set_children(game, highscore);
-	set_children(highscore, extras);
-	set_children(extras, options);
+
+	//Main menu config
+	set_children(main_menu, game);
+	set_sibling(game, highscore);
+	set_sibling(highscore, extras);
+	set_sibling(extras, options);
 
 	//Extras config
-	
-	init_head(extras, screensaver);
-	set_children(screensaver, songs);
+	set_children(extras, screensaver);
+	set_sibling(screensaver, songs);
 	
 	//Options config
-	
-	init_head(options, brightness);
+	set_children(options, brightness);
 
 	current_menu = main_menu;
-	//print_menu(current_menu);
+	
+	print_menu(current_menu);
 	
 
 	//ASK STUDASS
-	current_menu = current_menu->head;
+	//fprintf(OLED_p, current_menu->name, 0);
+	//OLED_pos(0,20);
+	/*current_menu = current_menu->children;
+	current_menu = current_menu->sibling;
+	current_menu = current_menu->sibling;
+	current_menu = current_menu->sibling;
+	current_menu = current_menu->sibling;
+	
+	//current_menu = current_menu->sibling;
 	fprintf(OLED_p, current_menu->name, 0);
-	current_menu = current_menu->children;
+	/*current_menu = current_menu->children;
 	OLED_home();
 	fprintf(OLED_p, current_menu->name, 0);
-	
+	*/
 
 	return current_menu;
 }
@@ -85,18 +100,15 @@ void print_menu(t_menu* menu){
 	displayed_lines = 0;
 
 	fprintf(OLED_p, menu->name, 0);
-	menu = menu->head;
-	
 	int line = 1;
-
-	while(menu->children != NULL && line < 7){
+	menu = menu->children;
+	
+	while(menu->sibling != NULL && line < 5){
 		displayed_lines++;
-		
 		OLED_pos(line,20);
-		fprintf(OLED_p, menu->name, 0);
-		_delay_ms(100);
+		fprintf(OLED_p, menu->name,0);
 		line++;
-		menu = menu->children;
+		menu = menu->sibling;
 	
 	}
 }
@@ -108,7 +120,7 @@ void menu_init(){
 }
 
 
-void cursor_move() {
+/*void cursor_move() {
 	OLED_pos(pointerUP, 5);
 	OLED_print_arrow(pointerUP, 5);
 
@@ -133,7 +145,7 @@ void cursor_move() {
 			pointerUP = 1;
 			///////////////////////
 			///THIS WAS ADDED
-			if (current_menu->head == NULL){
+			/*if (current_menu->head == NULL){
 				print_menu(current_menu);
 			}
 			
@@ -146,9 +158,9 @@ void cursor_move() {
 					
 				}
 				print_menu(current_menu);
-			}
+			}*/
 			//////////////////////
-		}
+	/*	}
 	}
 	else if (ADC_read(JOY_LR) <= 5) {	//LEFT
 		if (pointerLR != 0) {
@@ -156,24 +168,24 @@ void cursor_move() {
 			pointerLR = 0;
 			pointerUP = 1;
 			///////////////////////////
-			if (current_menu->parent == NULL){
+			/*if (current_menu->parent == NULL){
 				print_menu(current_menu);
 			}
 			
 			else{
 				current_menu = current_menu->parent;
 				print_menu(current_menu);
-			}
+			}*/
 			//////////////////////
 
-		}
+	/*	}
 	}
 
 	_delay_ms(500);
 	
 	fprintf(UART_p, "pointerUP: %4d     ", pointerUP);
 	fprintf(UART_p, "pointerLR: %4d \n\r", pointerLR);
-}
+}*/
 
 
 
@@ -183,7 +195,7 @@ void cursor_move() {
 ////////////////////////////////////////////////////////////
 
 
-
+/*
 char* menu_matrix[5][menu_col_max] = {
 	{"---Main Menu---", "Game", "Scores", "Extras", "Options", ""},
 	{"Game", "a", "b", "c", "", ""},
@@ -226,5 +238,5 @@ void print_sub_menu(uint8_t menNum) {
 
 
 
-
+*/
 

@@ -24,8 +24,8 @@ position getJoyCoord(int16_t X_coord, int16_t Y_coord, int16_t JoyX_init, int16_
 	coord.XX = (X_coord*100/JoyX_init);
 	coord.YY = (Y_coord*100/JoyY_init);
 
-	printf("LEFT/RIGHT SIDE: %4d     ", coord.XX);
-	printf("DOWN/UP SIDE: %4d     \n\r", coord.YY);
+	//printf("LEFT/RIGHT SIDE: %4d     ", coord.XX);
+	//printf("DOWN/UP SIDE: %4d     \n\r", coord.YY);
 
 	return coord;
 }
@@ -60,12 +60,12 @@ void getJoyDirection(int16_t X_coord, int16_t Y_coord) {
 
 	//printf("LEFT/RIGHT SIDE: %4d     ", X_coord);
 	//printf("DOWN/UP SIDE: %4d     ", Y_coord);
-	printf("DIRECTION: %d \n\r", direction);
+	//printf("DIRECTION: %d \n\r", direction);
 }
 
 
 void sliders(/*int16_t SLIDER_R, int16_t SLIDER_L*/){
-	printf("Slider LEFT: %4d  ", ADC_read(SLIDER_L));
-	printf("Slider RIGHT: %4d \n\n\r", ADC_read(SLIDER_R));
+	//printf("Slider LEFT: %4d  ", ADC_read(SLIDER_L));
+	//printf("Slider RIGHT: %4d \n\n\r", ADC_read(SLIDER_R));
 
 }

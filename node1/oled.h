@@ -1,6 +1,8 @@
 #ifndef OLED_H
 #define OLED_H
 
+#include <stdio.h>
+
 void write_c(uint8_t cmd);
 void write_d(uint8_t cmd);
 void write_s(uint8_t data);

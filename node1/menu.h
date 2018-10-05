@@ -6,15 +6,16 @@
 typedef struct{
 	char* name;
 	struct t_menu* parent;
-	struct t_menu* head;
 	struct t_menu* children;
+	struct t_menu* sibling;
+	
 	//int8_t select;
 } t_menu;
 
 
 t_menu* menu(char* name, t_menu* parent);
-void init_head(t_menu* menu, t_menu* children);
-void set_children(t_menu* menu, t_menu* children);
+void set_sibling(t_menu* menu, t_menu* new_sibling);
+void set_children(t_menu* menu, t_menu* new_children);
 t_menu* menu_system(void);
 void print_menu(t_menu* menu);
 void menu_init();
