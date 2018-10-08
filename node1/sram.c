@@ -4,6 +4,8 @@
 
 #define sram_init_address 0x1800
 
+//volatile uint8_t* sram_addr = (uint8_t*)0x1800;
+
 //enables external memory for MCU
 void SRAM_init(void) {
 	//EMCUCR &= ~(1 << SRL2)|( 1<<SRL1 )|(1 << SRL0); //They are initialy 0 so no point setting them
@@ -11,14 +13,13 @@ void SRAM_init(void) {
 	SFIOR |= (1 << XMM2);
 }
 
-void SRAM_write(unsigned int data, unsigned int address){
+void SRAM_write(uint8_t data, unsigned int address){
 	
 	// Start address for the SRAM
 	volatile char *ext_ram = (char *) sram_init_address;
 	ext_ram[address] = data; //- sram_init_address
 
-	fprintf(UART_p, "SENT data: %04u, address: %04X \n\r", data, address);
-	//printf("POINTERRR: %04X, %04u \n", ext_ram[address - sram_init_address], ext_ram[address - sram_init_address]);
+	//fprintf(UART_p, "SENT data: %04u, address: %04X     ", data, address);
 }
 
 uint8_t SRAM_read(unsigned int address){
@@ -26,7 +27,7 @@ uint8_t SRAM_read(unsigned int address){
 	volatile char *ext_ram = (char *) sram_init_address;
 	uint8_t data = ext_ram[address]; //- sram_init_address
 
-	fprintf(UART_p, "RECEIVED data: %04u, address: %04X \n\r", data, address);
+	//fprintf(UART_p, "RECEIVED data: %04u, address: %04X \n\r", data, address);
 	
 	return data;
 }

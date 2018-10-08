@@ -115,7 +115,7 @@ void print_menu(t_menu* menu){
 
 
 void menu_init(){
-	OLED_clear_all();
+	//OLED_clear_all();
 	menu_system();
 }
 

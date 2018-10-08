@@ -15,6 +15,12 @@ volatile uint8_t *oled_data = (uint8_t *) 0x1200; //OLED Data start address
 
 static uint8_t gen_page, gen_col = 0;
 
+volatile uint8_t *frame_addr = (uint8_t*)0x1800;
+
+#define frame ( (uint8_t(*)[128]) (frame_addr) )
+
+
+
 void write_c(uint8_t cmd) {
 	*oled_cmd = cmd;
 }
@@ -24,6 +30,7 @@ void write_d(uint8_t cmd) {
 }
 
 void OLED_init(void) {
+
 	write_c(0xae);	//Display is switch OFF  
 	write_c(0xa1);	//Segment remap (A1=Alligned to the right / A0=Alligned to the left)
 	write_c(0xda);        //common  pads  hardware:  alternative  
@@ -54,13 +61,14 @@ void OLED_init(void) {
 	
 	OLED_clear_all();
 	OLED_home();
+
 } 
 
 void OLED_print_char(char c){
 	for(int i = 0; i < FONTWIDTH; i++){
 		//In ASCII spac or ' ' is 32. So taking the char and subtracting it with ' '
 		//will give us the "correct" symbol from fonts.h 
-		write_d(pgm_read_byte(&(font8[c - ' '][i])));
+		write_s(pgm_read_byte(&(font8[c - ' '][i])));
 	}
 }
 
@@ -73,32 +81,18 @@ void OLED_print(char* word){	//To print a whole word
 }
 
 void OLED_home(void) {
-	//write_c(0x10); //
-	//write_c(0xB0); //to 0 (B0h)
-	
-	/*write_c(0x21);		//Set column address
-	write_c(0x00);		//to 0 (00h)
-	write_c(0x7f);
-	
-	write_c(0x22);		//Set row address
-	write_c(0x00);	
-	write_c(0x7);
-	*/
 	gen_page = 0;
 	gen_col = 0;
-
 	OLED_pos(0, 0);
 }
 
 void OLED_goto_line(uint8_t line) {
-	//For page addressing mode
-	//need to check if we are on a valid page
-	//OLED_home();
 	gen_page = line;
+	gen_col = 0;
 	if (line < 8){
 		write_c(0xB0 + line);		//Set page 0-7 (B0h to B7h)
-		write_c(0x00);		//Lower nibble of start column address (00h to 0Fh)	
-		write_c(0x10);		//Upper nibble of start column address (10h to 1Fh)
+		write_c(0x00);				//Lower nibble of start column address (00h to 0Fh)	
+		write_c(0x10);				//Upper nibble of start column address (10h to 1Fh)
 	}
 }
 
@@ -107,7 +101,7 @@ void OLED_goto_column(uint8_t column) {
 	if (column < 128){
 		uint8_t lower_nibble = (0x0F & column); 
 		uint8_t upper_nibble = (0x10 + (0x0F & (column >> 4)));
-		
+
 		write_c(lower_nibble);		//Set first 4 bits of column address
 		write_c(upper_nibble);		//Set last 4 bits of column address
 	}
@@ -121,9 +115,8 @@ void OLED_pos(uint8_t line, uint8_t column) {
 
 void OLED_clear_line(uint8_t line) {
 	OLED_goto_line(line);
-
 	for (uint8_t i = 0; i < 128; i++){
-		write_d(0x00);	//Set bits to 0
+		write_s(0x00);	//Set bits to 0
 	}
 }
 
@@ -140,20 +133,20 @@ void OLED_set_brightness(uint8_t lvl){
 
 void OLED_print_arrow(uint8_t row, uint8_t col){
 	OLED_pos(row, col);
-	write_d(0b00011000);
-	write_d(0b00011000);
-	write_d(0b01111110);
-	write_d(0b00111100);
-	write_d(0b00011000);
+	write_s(0b00011000);
+	write_s(0b00011000);
+	write_s(0b01111110);
+	write_s(0b00111100);
+	write_s(0b00011000);
 }
 
 void OLED_clear_arrow(uint8_t row, uint8_t col){
 	OLED_pos(row, col);
-	write_d(0b00000000);
-	write_d(0b00000000);
-	write_d(0b00000000);
-	write_d(0b00000000);
-	write_d(0b00000000);
+	write_s(0b00000000);
+	write_s(0b00000000);
+	write_s(0b00000000);
+	write_s(0b00000000);
+	write_s(0b00000000);
 }
 
 void OLED_screen_Saver() {
@@ -161,24 +154,34 @@ void OLED_screen_Saver() {
 	for(int p=0; p<8; p++) {
 		OLED_pos(p, 0);
 		for(int c=0; c<128; c++) {
-			write_d(pgm_read_byte(&(screenSaver[p][c])));
+			write_s(pgm_read_byte(&(screenSaver[p][c])));
 		}
 	}
 }
 
-/*
+
 void write_s(uint8_t data){
-	uint8_t address_ptr = (sram_init_address + gen_col + (gen_page * 128));
-	SRAM_write(data, address_ptr);
+	frame[gen_page][gen_col] = data;
+	gen_col++;
+	if(gen_col >= 128){
+		gen_col = 0;			// Page addressing mode
+	}
 }
 
 void OLED_update(){
-	//_delay_ms_(1/0.060); // update frequency
-
+	//_delay_ms_(1/0.060); 		// update frequency
 	for (int r = 0; r < 8; r++){
 		OLED_pos(r,0);
 		for (int c = 0; c < 128; c++){
-			write_d(SRAM_read(sram_init_address + c + (r * 128)));
+			write_d(frame[r][c]);
 		}
 	}
-}*/
+}
+
+void OLED_frame_fill(){
+	for (uint8_t r = 0; r < 8; r++){
+		for (uint8_t c = 0; c < 128; c++){
+			frame[r][c] = 11;
+		}
+	}
+}
