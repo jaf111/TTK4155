@@ -1,72 +1,72 @@
 #ifndef F_CPU
-#define F_CPU 4915200
+#define F_CPU 4915200	//Clock Speed (Oscillator)
 
-#include <util/delay.h>
-#include <avr/io.h> 
-#include <stdio.h> 
+#include <util/delay.h>	//Functions for busy-wait delay loops
+#include <stdio.h>		//Standard constants and functions for C (printf..., scanf...) 
+#include <avr/io.h> 	//Specific IO for AVR micro (all registers defined inside)
 
-#include "led.h"
-#include "uart.h"
-#include "sram.h"
-#include "adc.h"
-#include "buttons.h"
-#include "oled.h"
-#include "menu.h"
-#include "spi.h"
-#include "can.h"
-#include "MCP2515.h"
+#include "led.h"		//Prototype functions of LED unit
+#include "uart.h"		//Prototype functions of USART unit
+#include "sram.h"		//Prototype functions of SRAM unit
+#include "adc.h"		//Prototype functions of ADC unit
+#include "buttons.h"	//Prototype functions of buttons (USB board) unit
+#include "oled.h"		//Prototype functions of OLED (USB board) unit
+#include "menu.h"		//Prototype functions of the menu
+#include "spi.h"		//Prototype functions of SPI communication
+#include "MCP2515.h"	//Prototype functions of CAN controller unit
+#include "can.h"		//Prototype functions of CAN communication
 
-#define JOY_LR 0x04
-#define JOY_DU 0x05
-#define SLIDER_R 0x06
-#define SLIDER_L 0x07
-#define BUTTON_R PINB & (1<<PB0)
-#define BUTTON_L PINB & (1<<PB1)
+#define JOY_LR 0x04		//ADC channel 1, where Left-Right Joystick is connected to
+#define JOY_DU 0x05		//ADC channel 2, where Down-Up Joystick is connected to
+#define SLIDER_R 0x06	//ADC channel 3, where Right Slider is connected to
+#define SLIDER_L 0x07	//ADC channel 4, where Left Slider is connected to
+#define BUTTON_R PINB & (1<<PB0)	//If button Right is pushed (connected to pin PB0, PORTB)
+#define BUTTON_L PINB & (1<<PB1)	//If button Left is pushed (connected to pin PB0, PORTB)
 
-#define MENU1 0
-#define MENU2 4
-#define MENU3 10
+#define MENU1 0			//Position of parent menu 1
+#define MENU2 4			//Position of parent menu 2
+#define MENU3 10		//Position of parent menu 3
 
-int16_t JoyX = 0;
-int16_t JoyY = 0;
-int16_t JoyX_init = 0;
-int16_t JoyY_init = 0;
+int16_t JoyX = 0;		//X coordinate of Joystick
+int16_t JoyY = 0;		//Y coordinate of Joystick
+int16_t JoyX_init = 0;	//Initial X coordinate of Joystick
+int16_t JoyY_init = 0;	//Initial Y coordinate of Joystick
 
 int main(){
+	//LED initialization
 	//led_init();
 
-	//USART
+	//USART initialization
 	USART_Init(MYUBRR);
-	USART_Transmit(USART_Receive());
+	USART_Transmit(USART_Receive());	//To make printf() working in USART
 	
-	//SRAM
+	//SRAM initialization
 	SRAM_init();
 
-	//ADC
+	//ADC initialization
 	ADC_init();
 
-	//Button init
+	//Buttons initialization
 	button_init();
+	//Stand-by joystick positions read (for the offset)
 	JoyX_init = JoyCoord_init(ADC_read(JOY_LR));
 	JoyY_init = JoyCoord_init(ADC_read(JOY_DU));
 
-	//OLED init
+	//OLED initialization
 	OLED_init();
-	uint8_t i = 23;
-	
-	//Menu init
+
+	//Menu initialization
 	menu_init();
 	//OLED_screen_Saver();
 
-	//SPI init
+	//SPI initialization
 	SPI_init();
 
-	//CAN controller (MCP2515) init
+	//CAN controller (MCP2515) initialization
 	CAN_init();
 
 	while(1){
 		//cursor_move();
-
 
 		//SRAM_test();
 		//fprintf(OLED_p, main_menu.name);
@@ -99,11 +99,9 @@ int main(){
 			write_d(0xFF);
 		}*/
 
-		
 
 		//font_byte = pgm_read_byte(&(font4[1][1]));	//To take data saved in Flash (PROGMEM)
 		//OLED_pos(line, 2);		//To print font4 (4 columns per character)
-		
 
 		
 		/*JoyX = ADC_read(JOY_LR);
@@ -128,7 +126,6 @@ int main(){
 		led_turn_off();
 		_delay_ms(100);*/
 	}
-
 	return 0;
 }
 

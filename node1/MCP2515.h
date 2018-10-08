@@ -1,20 +1,23 @@
 #ifndef __MCP2515_H
 #define __MCP2515_H
 
-/*
-mcp2515.h
+//****************************** HEADER FUNCTIONS **************************************
+uint8_t MCP2515_init();									//CAN-controller initialization
+void MCP2515_reset();									//CAN-controller reset (registers initialization)
+uint8_t MCP2515_read_status();							//Checks CAN-controller status
+uint8_t MCP2515_read(uint8_t address);					//Reads data from CAN-controller
+void MCP2515_write(uint8_t CANdata, uint8_t address);	//Sends data to CAN-controller
+void MCP2515_request_to_send(uint8_t buffer);			//Sends a request to send data
+void MCP2515_bit_modify(uint8_t address, uint8_t mask, uint8_t data);	//Modifies one (or more) bits of a register
+//**************************************************************************************
 
-This file contains constants that are specific to the MCP2515.
 
+/*mcp2515.h - This file contains constants that are specific to the MCP2515
 Version     Date        Description
 ----------------------------------------------------------------------
-v1.00       2003/12/11  Initial release
-
-Copyright 2003 Kimberly Otten Software Consulting
-*/
+v1.00       2003/12/11  Initial release*/
 
 // Define MCP2515 register addresses
-
 #define MCP_RXF0SIDH	0x00
 #define MCP_RXF0SIDL	0x01
 #define MCP_RXF0EID8	0x02
@@ -65,17 +68,16 @@ Copyright 2003 Kimberly Otten Software Consulting
 #define MCP_RXB1CTRL	0x70
 #define MCP_RXB1SIDH	0x71
 
-
-#define MCP_TX_INT		0x1C		// Enable all transmit interrupts
-#define MCP_TX01_INT	0x0C		// Enable TXB0 and TXB1 interrupts
-#define MCP_RX_INT		0x03		// Enable receive interrupts
-#define MCP_NO_INT		0x00		// Disable all interrupts
+#define MCP_TX_INT		0x1C	// Enable all transmit interrupts
+#define MCP_TX01_INT	0x0C	// Enable TXB0 and TXB1 interrupts
+#define MCP_RX_INT		0x03	// Enable receive interrupts
+#define MCP_NO_INT		0x00	// Disable all interrupts
 
 #define MCP_TX01_MASK	0x14
 #define MCP_TX_MASK		0x54
 
-// Define SPI Instruction Set
 
+// Define SPI Instruction Set
 #define MCP_WRITE		0x02
 
 #define MCP_READ		0x03
@@ -102,7 +104,6 @@ Copyright 2003 Kimberly Otten Software Consulting
 
 
 // CANCTRL Register Values
-
 #define MODE_NORMAL     0x00
 #define MODE_SLEEP      0x20
 #define MODE_LOOPBACK   0x40
@@ -121,7 +122,6 @@ Copyright 2003 Kimberly Otten Software Consulting
 
 
 // CNF1 Register Values
-
 #define SJW1            0x00
 #define SJW2            0x40
 #define SJW3            0x80
@@ -129,14 +129,12 @@ Copyright 2003 Kimberly Otten Software Consulting
 
 
 // CNF2 Register Values
-
 #define BTLMODE			0x80
 #define SAMPLE_1X       0x00
 #define SAMPLE_3X       0x40
 
 
 // CNF3 Register Values
-
 #define SOF_ENABLE		0x80
 #define SOF_DISABLE		0x00
 #define WAKFIL_ENABLE	0x40
@@ -144,7 +142,6 @@ Copyright 2003 Kimberly Otten Software Consulting
 
 
 // CANINTF Register Bits
-
 #define MCP_RX0IF		0x01
 #define MCP_RX1IF		0x02
 #define MCP_TX0IF		0x04
@@ -153,26 +150,6 @@ Copyright 2003 Kimberly Otten Software Consulting
 #define MCP_ERRIF		0x20
 #define MCP_WAKIF		0x40
 #define MCP_MERRF		0x80
-
-
-
-//**************************************************************************************
-//Header functions
-
-uint8_t MCP2515_init();
-
-void MCP2515_reset();
-
-uint8_t MCP2515_read_status();
-
-uint8_t MCP2515_read(uint8_t address);
-
-void MCP2515_write(uint8_t CANdata, uint8_t address);
-
-void MCP2515_request_to_send(uint8_t buffer);
-
-void MCP2515_bit_modify(uint8_t address, uint8_t mask, uint8_t data);
-
 
 
 #endif

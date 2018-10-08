@@ -23,10 +23,12 @@ end address_decoder;
 
 architecture behave of address_decoder is
 begin
---implement the functionality here
-
-	oled_cs <= '1' when (a11 = '0' and a10 = '0')
-				else '0';
+-- implement the functionality here
+	
+	-- Partial decoding used. Only MSB of address (a10 & a11) are used
+	-- All Chip Selects (CS) of ICs are logically negated (inverted)
+	oled_cs <= '0' when (a11 = '0' and a10 = '0')
+				else '1';
 			   
 	adc_cs 	<= '0' when (a11 = '0' and a10 = '1')
 				else '1';
