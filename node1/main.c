@@ -65,66 +65,59 @@ int main(){
 	//CAN controller (MCP2515) initialization
 	CAN_init();
 
-	while(1){
-		//cursor_move();
+	packet can_message = {.id = 0x13, .length = 0x08, .data = {0x07,0x02,0x03,0x04,0x05,0x06,0x07, 0x08, 0x09}};
 
+
+	while(1) {
+		//cursor_move();
+		
 		//SRAM_test();
 		//fprintf(OLED_p, main_menu.name);
-		_delay_ms(100);
+		//_delay_ms(100);
 		//insert_menu(menu, menu_matrix[0][1], 1, 0, NULL); 
 		
-		
-		//MCP2515_bit_modify(MCP_CANCTRL, 0b11111111, 0b00010100);	// Enable loopback mode
+		/*MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK);	//Set loopback mode
+		_delay_ms(500);
+		fprintf(UART_p, "CANSTAT: %4x, CANCTRL: %4x: \r\n", MCP2515_read(MCP_CANSTAT), MCP2515_read(MCP_CANCTRL));
+		MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_NORMAL);	//Set normal mode
+		_delay_ms(500);
+		fprintf(UART_p, "CANSTAT: %4x, CANCTRL: %4x: \r\n", MCP2515_read(MCP_CANSTAT), MCP2515_read(MCP_CANCTRL));
+		*/
+
+		/*//Some registers can only be modified in CONFIG MODE (p59 datasheet)
+		MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_CONFIG);
+		MCP2515_bit_modify(MCP_CNF3, 0xFF, 0b10101010);
+		fprintf(UART_p, "CNF30: %4x \r\n", MCP2515_read(MCP_CNF3));
+		_delay_ms(500);
+		MCP2515_bit_modify(MCP_CNF3, 0xFF, 0b00110011);
+		fprintf(UART_p, "CNF31: %4x \r\n", MCP2515_read(MCP_CNF3));
+		_delay_ms(500);*/
+
+		CAN_send(&can_message);
+
+
+		//fprintf(UART_p, "TXREQ %4x \r\n", (MCP_TXB0CTRL & (1<<TXREQ)));
+		//fprintf(UART_p, "Recieve buffer: %4x \r\n", MCP2515_read(MCP_RXB0D0));
+		//CAN_read();
+		_delay_ms(500);
+
 		//_delay_ms(100);
-		//fprintf(UART_p, "READ: %4x \r\n", MCP2515_read(MCP_CANCTRL));
+		//fprintf(UART_p, "CANCTRL: %4d \r\n", MCP2515_read(MCP_CANCTRL));
 		//print_sub_menu(MENU1);
 		//cursor_move();
-		//fprintf(OLED_p, "%d", (main_menu.select));
-		//fprintf(OLED_p, "A");
-		//fprintf(UART_p, "B\n");''
-		//OLED_screen_Saver();
-		
-		/*OLED_pos(line, ADC_read(SLIDER_L)/2);
-		write_d(0xFF);
-		_delay_ms(100);
-		OLED_clear_line(line);
-		if (ADC_read(JOY_DU) > 230) {line++;}
-		if (ADC_read(JOY_DU) < 25) {line--;}
-		if (line > 7) {line = 0;}
-		if (line < 0) {line = 7;}*/
-
-		/*
-		for (int i = 64; i > 0; i--){
-			OLED_pos(4,i);
-			write_d(0xFF);
-		}*/
+	
 
 
-		//font_byte = pgm_read_byte(&(font4[1][1]));	//To take data saved in Flash (PROGMEM)
-		//OLED_pos(line, 2);		//To print font4 (4 columns per character)
 
-		
 		/*JoyX = ADC_read(JOY_LR);
 		JoyY = ADC_read(JOY_DU);
-		
 		if (BUTTON_R) {printf("RIGHT BUTTON \n\r");}
 		if (BUTTON_L) {printf("LEFT BUTTON \n\r");}
-
 		getJoyCoord(JoyX, JoyY, JoyX_init, JoyY_init);
 		getJoyDirection(JoyX, JoyY);
-
 		sliders();*/
 
-		/*SRAM_write(120, 0x1800);
-		_delay_ms(100);
-		SRAM_read(0x1800);
-		_delay_ms(100);
-
-
-		/*led_turn_on();
-		_delay_ms(100);
-		led_turn_off();
-		_delay_ms(100);*/
+		
 	}
 	return 0;
 }

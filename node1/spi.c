@@ -4,7 +4,7 @@
 
 #include "spi.h"		//Prototypes of functions here defined		
 
-void SPI_init(void) {	//SPI initialization
+void SPI_init(void) {	//SPI initialization (as a Master)
 	//Set data directions (1=output, 0=input) - inside DDRB register
 	DDRB = (1<<DDB4)|(1<<DDB5)|(0<<DDB6)|(1<<DDB7);	//DDB4 = SS (out), DDB5 = MISO (out), DDB6 = MOSI (in), DDB7 = SCK (out)
 	//Define SPI comm. SPE (bit 6), MSTR (bit 4), SPR1/SPR0 (bits 1 and 0), inside the register SPCR

@@ -1,7 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
 
-#define menu_MAXlines 6	//Maxim number of lines per menu
+#define menu_col_max 6	//Maxim number of lines per menu
 
 typedef struct{
 	char* name;
