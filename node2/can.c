@@ -1,4 +1,4 @@
-#include <util/delay.h>
+/*#include <util/delay.h>
 #include <avr/io.h> 
 #include <stdio.h> 
 
@@ -56,4 +56,4 @@ packet CAN_read() {
 int CAN_error() {
 	
 	return (MCP2515_read(MCP_TXB0CTRL) & (1 << TXERR) || (MCP2515_read(MCP_TXB0CTRL) & (1 << MLOA)));
-}
+}*/

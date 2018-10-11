@@ -4,7 +4,7 @@
 
 #include "spi.h"		//To communicate through SPI protocol
 #include "uart.h"		//To use the fprintf command through serial comm
-#include "can.h"		//
+/*#include "can.h"		//
 #include "MCP2515.h"	//Prototypes of functions here defined
 
 #define CAN_CS DDB4		//Location of Chip Select (CS) pin of CAN controller (MCP2515)
@@ -72,4 +72,4 @@ void MCP2515_bit_modify(uint8_t address, uint8_t mask, uint8_t data) {	//Modifie
 	SPI_write(mask);			// A mask define which bits are allowed to be modified (1=YES, 0=NO)
 	SPI_write(data);			// The whole data si resent (only bits previously defined will be updated)
 	PORTB |= (1 << CAN_CS); 	//Deselect CAN-controller (~CS=1)
-}
+}*/

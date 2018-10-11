@@ -65,12 +65,12 @@ int main(){
 	//CAN controller (MCP2515) initialization
 	CAN_init();
 
-	packet can_message = {.id = 0x13, .length = 0x08, .data = {0x07,0x02,0x03,0x04,0x05,0x06,0x07, 0x08, 0x09}};
-
+	packet can_message1 = {.id = 0x13, .length = 0x08, .data = {0x07,0x02,0x03,0x04,0x05,0x06,0x07,0x09}};	//Struct initialization
+	packet can_message2 = {.id = 0x14, .length = 0x07, .data = {0x05,0x02,0x03,0x04,0x13,0x06,0x07}};
+	packet can_message3 = {.id = 0x15, .length = 0x07, .data = {0x01,0x02,0x03,0x04,0x13,0x06,0x07}};
 
 	while(1) {
 		//cursor_move();
-		
 		//SRAM_test();
 		//fprintf(OLED_p, main_menu.name);
 		//_delay_ms(100);
@@ -84,29 +84,36 @@ int main(){
 		fprintf(UART_p, "CANSTAT: %4x, CANCTRL: %4x: \r\n", MCP2515_read(MCP_CANSTAT), MCP2515_read(MCP_CANCTRL));
 		*/
 
-		/*//Some registers can only be modified in CONFIG MODE (p59 datasheet)
-		MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_CONFIG);
+		//Some registers can only be modified in CONFIG MODE (p59 datasheet)
+		/*MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_CONFIG);
 		MCP2515_bit_modify(MCP_CNF3, 0xFF, 0b10101010);
 		fprintf(UART_p, "CNF30: %4x \r\n", MCP2515_read(MCP_CNF3));
 		_delay_ms(500);
 		MCP2515_bit_modify(MCP_CNF3, 0xFF, 0b00110011);
 		fprintf(UART_p, "CNF31: %4x \r\n", MCP2515_read(MCP_CNF3));
 		_delay_ms(500);*/
-
-		CAN_send(&can_message);
-
-
-		//fprintf(UART_p, "TXREQ %4x \r\n", (MCP_TXB0CTRL & (1<<TXREQ)));
-		//fprintf(UART_p, "Recieve buffer: %4x \r\n", MCP2515_read(MCP_RXB0D0));
-		//CAN_read();
+		//fprintf(UART_p, "Interrupt: %d \r\n", MCP2515_read(MCP_CANINTF));
+		CAN_send(&can_message1);
 		_delay_ms(500);
+		packet new_message1 = CAN_read();
+		CAN_send(&can_message2);
+		_delay_ms(500);
+		packet new_message2 = CAN_read();
+		CAN_send(&can_message3);
+		_delay_ms(500);
+		packet new_message3 = CAN_read();
+
+		
+		//fprintf(UART_p, "Message data: %4x \r\n", new_message.length);
+		/*for (uint8_t i=0; i < 8; i++) {
+			fprintf(UART_p, "DATA %2x: %4x \r\n", i, new_message2.data[i]);
+		}*/
+		//fprintf(UART_p, "Interrupt: %d \r\n", MCP2515_read(MCP_CANINTF));
 
 		//_delay_ms(100);
 		//fprintf(UART_p, "CANCTRL: %4d \r\n", MCP2515_read(MCP_CANCTRL));
 		//print_sub_menu(MENU1);
 		//cursor_move();
-	
-
 
 
 		/*JoyX = ADC_read(JOY_LR);
@@ -116,10 +123,7 @@ int main(){
 		getJoyCoord(JoyX, JoyY, JoyX_init, JoyY_init);
 		getJoyDirection(JoyX, JoyY);
 		sliders();*/
-
-		
 	}
 	return 0;
 }
-
 #endif
