@@ -13,7 +13,7 @@ void USART_Init(unsigned int ubrr) {	//Atmel 162 has 2 USARTS -> USART 0 & USART
 	//Set frame format (URSEL0 = 1 to configure USART0): 8data bits (UCSZ00 & UCSZ01 = 1), 2stop bit (bit USBS = 1)
 	UCSR0C = (1<<USBS0)|(3<<UCSZ00);	//UCSZ00 is 3 to activate UCZ00 & UCSZ01 at a time
 
-	//fdevopen(USART_Transmit, USART_Receive);		//NOT NECESSARY ANYMORE!! FUNCTION REDEFINED IN OLED!!
+	fdevopen(USART_Transmit, USART_Receive);		//NOT NECESSARY ANYMORE!! FUNCTION REDEFINED IN OLED!!
 }
 
 void USART_Transmit(unsigned char data) {
@@ -31,3 +31,8 @@ unsigned char USART_Receive(void) {
 	/* Get and return received data from buffer*/
 	return UDR0;
 }
+
+/* 	dmesg --follow
+	lsusb
+
+	ACM0 = USB

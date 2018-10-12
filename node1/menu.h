@@ -14,7 +14,7 @@ typedef struct{
 t_menu* menu(char* name, t_menu* parent);
 void set_sibling(t_menu* menu, t_menu* new_sibling);
 void set_children(t_menu* menu, t_menu* new_children);
-t_menu* menu_system(void);
+void menu_system();
 void print_menu(t_menu* menu);
 void menu_init();	//Menu initialization
 

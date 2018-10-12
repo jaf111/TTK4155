@@ -18,7 +18,7 @@ t_menu* current_menu;
 int displayed_lines = 0;
 
 t_menu* menu(char* name, t_menu* parent){
-	t_menu* new_menu = malloc(sizeof(new_menu)); 
+	t_menu* new_menu = malloc(sizeof(t_menu)); 	// PREVIOUSLY: t_menu* new_menu = malloc(sizeof(new_menu)); 
 	new_menu->name = name;
 	new_menu->parent = parent;
 	new_menu->children = NULL;
@@ -32,13 +32,14 @@ void set_sibling(t_menu* menu, t_menu* new_sibling){
 }
 
 void set_children(t_menu* menu, t_menu* new_children){
-	menu->children = new_children;
+	(menu->children) = (new_children);
 }
 
-t_menu* menu_system(void){
+void menu_system(){
 	//Main menu page create
 	t_menu* main_menu = menu("---Main Menu---", NULL);
 	t_menu* game = menu("Game", main_menu);
+	//t_menu* game2 = menu("Game", main_menu);
 	t_menu* highscore = menu("Highscore", main_menu);
 	t_menu* extras = menu("Extras", main_menu);
 	t_menu* options = menu("Options", main_menu);
@@ -50,12 +51,15 @@ t_menu* menu_system(void){
 	//Options page create
 	t_menu* brightness = menu("Brightness", options);
 
+	fprintf(UART_p, game->name,0);
 	//Main menu config
 	set_children(main_menu, game);
+	//fprintf(UART_p, game->name,0);
+	//fprintf(UART_p, game->name,0);
 	set_sibling(game, highscore);
 	set_sibling(highscore, extras);
 	set_sibling(extras, options);
-
+	fprintf(UART_p, " \r\n",0);
 	//Extras config
 	set_children(extras, screensaver);
 	set_sibling(screensaver, songs);
@@ -67,7 +71,6 @@ t_menu* menu_system(void){
 	
 	print_menu(current_menu);
 	
-
 	//ASK STUDASS
 	//fprintf(OLED_p, current_menu->name, 0);
 	//OLED_pos(0,20);
@@ -83,7 +86,7 @@ t_menu* menu_system(void){
 	OLED_home();
 	fprintf(OLED_p, current_menu->name, 0);*/
 
-	return current_menu;
+	//return current_menu;
 }
 
 void print_menu(t_menu* menu){
@@ -94,10 +97,11 @@ void print_menu(t_menu* menu){
 	int line = 1;
 	menu = menu->children;
 	
-	while(menu->sibling != NULL && line < 5){
+	while(menu && line < 5){
 		displayed_lines++;
 		OLED_pos(line,20);
 		fprintf(OLED_p, menu->name,0);
+		fprintf(UART_p, menu->name,0);
 		line++;
 		menu = menu->sibling;
 	}
@@ -214,3 +218,7 @@ void print_sub_menu(uint8_t menNum) {
 
 
 */
+
+
+
+// gdb server (avr)

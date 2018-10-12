@@ -7,6 +7,7 @@ void write_c(uint8_t cmd);		//To write a (configuration) command into the OLED
 void write_d(uint8_t cmd);		//To print data into the OLED
 void write_s(uint8_t data);
 void OLED_update();
+void OLED_frame_fill(uint8_t data);
 
 void OLED_init(void);			//OLED display initialization
 

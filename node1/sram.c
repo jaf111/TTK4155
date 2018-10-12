@@ -10,12 +10,11 @@ void SRAM_init(void) {		//External SRAM memory enabled for AT mega162
 	SFIOR |= (1 << XMM2);	//XMM2: External Memory High Mask [PC7 - PC4] (bit 5 of register SFIOR)
 }
 
-void SRAM_write(unsigned int data, unsigned int address) {	//Address and value to be written in RAM
+void SRAM_write(uint8_t data, unsigned int address) {	//Address and value to be written in RAM
 	volatile char *ext_ram = (char *) sram_init_address;	// Start address for the SRAM
 	ext_ram[address] = data; 	//Value is assigned to the defined address
 
 	fprintf(UART_p, "SENT data: %04u, address: %04X \n\r", data, address);
-	//printf("POINTERRR: %04X, %04u \n", ext_ram[address - sram_init_address], ext_ram[address - sram_init_address]);
 }
 
 uint8_t SRAM_read(unsigned int address) {	//Value read from the requested address
@@ -23,7 +22,6 @@ uint8_t SRAM_read(unsigned int address) {	//Value read from the requested addres
 	uint8_t data = ext_ram[address]; 		//- sram_init_address
 
 	fprintf(UART_p, "RECEIVED data: %04u, address: %04X \n\r", data, address);
-	//printf("RECEIVED data: %04u, address: %04X \n\r", data, address);
 	
 	return data;
 }

@@ -24,24 +24,25 @@ int16_t JoyY = 0;		//Y coordinate of Joystick
 int16_t JoyX_init = 0;	//Initial X coordinate of Joystick
 int16_t JoyY_init = 0;	//Initial Y coordinate of Joystick
 
-/*void led_init() {
-	DDRB |= (1 << DDE0);	//Enable pin 0 (bit DDB0) of Port B (register DDRB)
-	PORTE |= (1 << PE3);	//Set pin 0 (bit PB0) in PORT B (register PORTB) to 1, leave other bits unchanged
-}
-
-void led_turn_on() {
-	PORTE &= ~(1 << PE3);	//Clear pin 0 (bit PB0) in PORT B (register PORTB), leave other bits unchanged
+void led_init() {
+	DDRL |= (1 << DDL0);	//Enable pin 0 (bit DDL0) of Port L (register DDRL)
+	PORTL |= (1 << PL0);	//Set pin 0 (bit PL0) in PORT L (register PORTL) to 1, leave other bits unchanged
 }
 
 void led_turn_off() {
-	PORTE |= (1 << PE3);	//Set pin 0 (bit PB0) in PORT B (register PORTB) to 1, leave other bits unchanged
-}*/
+	PORTL &= ~(1 << PL0);	//Clear pin 0 (bit PB0) in PORT B (register PORTB), leave other bits unchanged
+}
+
+void led_turn_on() {
+	PORTL |= (1 << PL0);	//Set pin 0 (bit PB0) in PORT B (register PORTB) to 1, leave other bits unchanged
+}
+
 int main() {
 	//USART initialization
 	led_init();
 	USART_Init(MYUBRR);
 	USART_Transmit(USART_Receive());	//To make printf() working in USART
-	led_turn_on();
+	//led_turn_on();
 	//ADC initialization
 	//ADC_init();
 
@@ -63,8 +64,13 @@ int main() {
 	*/
 
 	while(1) {		
-		fprintf(UART_p, "NODE 2 TEST \r\n", 0);
+		//fprintf(UART_p, "NODE 2 TEST \r\n", 0);
 		printf("Hello\r\n");
+		USART_Transmit(5);
+		led_turn_on();
+		_delay_ms(500);
+		led_turn_off();
+		_delay_ms(500);
 	}
 	return 0;
 }

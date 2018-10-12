@@ -57,7 +57,7 @@ int main(){
 
 	//Menu initialization
 	menu_init();
-	//OLED_screen_Saver();
+	OLED_screen_Saver();
 
 	//SPI initialization
 	SPI_init();
@@ -70,6 +70,9 @@ int main(){
 	packet can_message3 = {.id = 0x15, .length = 0x07, .data = {0x01,0x02,0x03,0x04,0x13,0x06,0x07}};
 
 	while(1) {
+		_delay_ms(100);
+
+
 		//cursor_move();
 		//SRAM_test();
 		//fprintf(OLED_p, main_menu.name);
@@ -93,6 +96,8 @@ int main(){
 		fprintf(UART_p, "CNF31: %4x \r\n", MCP2515_read(MCP_CNF3));
 		_delay_ms(500);*/
 		//fprintf(UART_p, "Interrupt: %d \r\n", MCP2515_read(MCP_CANINTF));
+
+		/*
 		CAN_send(&can_message1);
 		_delay_ms(500);
 		packet new_message1 = CAN_read();
@@ -102,7 +107,7 @@ int main(){
 		CAN_send(&can_message3);
 		_delay_ms(500);
 		packet new_message3 = CAN_read();
-
+		*/
 		
 		//fprintf(UART_p, "Message data: %4x \r\n", new_message.length);
 		/*for (uint8_t i=0; i < 8; i++) {
