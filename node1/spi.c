@@ -6,7 +6,7 @@
 
 void SPI_init(void) {	//SPI initialization (as a Master)
 	//Set data directions (1=output, 0=input) - inside DDRB register
-	DDRB = (1<<DDB4)|(1<<DDB5)|(0<<DDB6)|(1<<DDB7);	//DDB4 = SS (out), DDB5 = MISO (out), DDB6 = MOSI (in), DDB7 = SCK (out)
+	DDRB = (1<<DDB4)|(1<<DDB5)|(0<<DDB6)|(1<<DDB7);	//DDB4 = SS (out), DDB5 = MOSI (out), DDB6 = MISO (in), DDB7 = SCK (out)
 	//Define SPI comm. SPE (bit 6), MSTR (bit 4), SPR1/SPR0 (bits 1 and 0), inside the register SPCR
 	SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0); //SPE=1 to enable SPI comm, MSTR=1 to be Master (=0 Slave), SPR0/SPR1 to define clock rate (FOSC/16 chosen)
 }

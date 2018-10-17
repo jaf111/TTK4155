@@ -13,8 +13,8 @@ unsigned char USART_Receive(void);			//USART receive of data
 
 //It opens a file to read/write. Necessary to use printf() (and similar functions) with the USART.
 //Otherwise one should write to the USART manually byte-by-byte via the UDRx register
-//static FILE uart_out = FDEV_SETUP_STREAM (USART_Transmit, NULL, _FDEV_SETUP_WRITE);
-//static FILE uart_in = FDEV_SETUP_STREAM (NULL, USART_Receive, _FDEV_SETUP_READ);
+static FILE uart_out = FDEV_SETUP_STREAM (USART_Transmit, NULL, _FDEV_SETUP_WRITE);
+static FILE uart_in = FDEV_SETUP_STREAM (NULL, USART_Receive, _FDEV_SETUP_READ);
 #define UART_p (&uart_out)
 
 #endif // UART_H

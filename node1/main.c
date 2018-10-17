@@ -56,7 +56,7 @@ int main(){
 	OLED_init();
 
 	//Menu initialization
-	menu_init();
+	//menu_init();
 	OLED_screen_Saver();
 
 	//SPI initialization
@@ -65,14 +65,15 @@ int main(){
 	//CAN controller (MCP2515) initialization
 	CAN_init();
 
+	position joy_coord = {0, 0};
+
 	packet can_message1 = {.id = 0x13, .length = 0x08, .data = {0x07,0x02,0x03,0x04,0x05,0x06,0x07,0x09}};	//Struct initialization
 	packet can_message2 = {.id = 0x14, .length = 0x07, .data = {0x05,0x02,0x03,0x04,0x13,0x06,0x07}};
 	packet can_message3 = {.id = 0x15, .length = 0x07, .data = {0x01,0x02,0x03,0x04,0x13,0x06,0x07}};
 
+	packet can_joystick = {.id = 0x16, .length = 0x02, .data = {0x01,0x02}};
+
 	while(1) {
-		_delay_ms(100);
-
-
 		//cursor_move();
 		//SRAM_test();
 		//fprintf(OLED_p, main_menu.name);
@@ -97,8 +98,7 @@ int main(){
 		_delay_ms(500);*/
 		//fprintf(UART_p, "Interrupt: %d \r\n", MCP2515_read(MCP_CANINTF));
 
-		/*
-		CAN_send(&can_message1);
+		/*CAN_send(&can_message1);
 		_delay_ms(500);
 		packet new_message1 = CAN_read();
 		CAN_send(&can_message2);
@@ -106,9 +106,25 @@ int main(){
 		packet new_message2 = CAN_read();
 		CAN_send(&can_message3);
 		_delay_ms(500);
-		packet new_message3 = CAN_read();
-		*/
+		packet new_message3 = CAN_read();*/
+
+		JoyX = ADC_read(JOY_LR);
+		JoyY = ADC_read(JOY_DU);
+		joy_coord = getJoyCoord(JoyX, JoyY, JoyX_init, JoyY_init);
+		//fprintf(UART_p, "JoyX: %4d \r\n", joy_coord.XX);
+		//fprintf(UART_p, "JoyY: %4d \r\n", joy_coord.YY);
+
+		can_joystick.data[0] = JoyX;
+		can_joystick.data[1] = JoyY;
+
+		CAN_send(&can_joystick);
+		//_delay_ms(500);
+		//CAN_read();
+
+		//fprintf(UART_p, "JoyX: %4d \r\n", MCP2515_read(MCP_RXB0D0+0));
+		//fprintf(UART_p, "JoyY: %4d \r\n", MCP2515_read(MCP_RXB0D0+1));
 		
+	
 		//fprintf(UART_p, "Message data: %4x \r\n", new_message.length);
 		/*for (uint8_t i=0; i < 8; i++) {
 			fprintf(UART_p, "DATA %2x: %4x \r\n", i, new_message2.data[i]);

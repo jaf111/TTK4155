@@ -5,6 +5,7 @@
 #include <stdio.h>		//Standard constants and functions for C (printf..., scanf...) 
 #include <avr/io.h> 	//Specific IO for AVR micro (all registers defined inside)
 
+#include "led.h"		//Prototype functions of GPIO
 #include "uart.h"		//Prototype functions of USART unit
 #include "adc.h"		//Prototype functions of ADC unit
 #include "buttons.h"	//Prototype functions of buttons (USB board) unit
@@ -24,25 +25,13 @@ int16_t JoyY = 0;		//Y coordinate of Joystick
 int16_t JoyX_init = 0;	//Initial X coordinate of Joystick
 int16_t JoyY_init = 0;	//Initial Y coordinate of Joystick
 
-void led_init() {
-	DDRL |= (1 << DDL0);	//Enable pin 0 (bit DDL0) of Port L (register DDRL)
-	PORTL |= (1 << PL0);	//Set pin 0 (bit PL0) in PORT L (register PORTL) to 1, leave other bits unchanged
-}
-
-void led_turn_off() {
-	PORTL &= ~(1 << PL0);	//Clear pin 0 (bit PB0) in PORT B (register PORTB), leave other bits unchanged
-}
-
-void led_turn_on() {
-	PORTL |= (1 << PL0);	//Set pin 0 (bit PB0) in PORT B (register PORTB) to 1, leave other bits unchanged
-}
-
 int main() {
-	//USART initialization
+	//GPIO initialization
 	led_init();
+
+	//USART initialization
 	USART_Init(MYUBRR);
-	USART_Transmit(USART_Receive());	//To make printf() working in USART
-	//led_turn_on();
+	//USART_Transmit(USART_Receive());	//To make printf() working in USART if not working check usart_Receive() ->while loop
 	//ADC initialization
 	//ADC_init();
 
@@ -51,26 +40,40 @@ int main() {
 	//Stand-by joystick positions read (for the offset)
 	//JoyX_init = JoyCoord_init(ADC_read(JOY_LR));
 	//JoyY_init = JoyCoord_init(ADC_read(JOY_DU));
-
+	fprintf(UART_p, "Hello\n", 0);
 	//SPI initialization
-	//SPI_init();
+	SPI_init();
 
 	//CAN controller (MCP2515) initialization
-	//CAN_init();
+	CAN_init();
 
-	/*packet can_message1 = {.id=0x13, .length=0x08, .data={0x07,0x02,0x03,0x04,0x05,0x06,0x07,0x09}};	//Struct initialization
+	packet can_message1 = {.id=0x13, .length=0x08, .data={0x07,0x02,0x03,0x04,0x05,0x06,0x07,0x09}};	//Struct initialization
 	packet can_message2 = {.id=0x14, .length=0x07, .data={0x05,0x02,0x03,0x04,0x13,0x06,0x07}};
 	packet can_message3 = {.id=0x15, .length=0x07, .data={0x01,0x02,0x03,0x04,0x13,0x06,0x07}};
-	*/
 
 	while(1) {		
-		//fprintf(UART_p, "NODE 2 TEST \r\n", 0);
-		printf("Hello\r\n");
-		USART_Transmit(5);
-		led_turn_on();
-		_delay_ms(500);
+		//USART_Transmit(5);
+		/*led_turn_on();
+		_delay_ms(1000);
 		led_turn_off();
+		_delay_ms(1000);*/
+		
+		//SPI_write(0b01011100);
+
+
+		/*CAN_send(&can_message1);
 		_delay_ms(500);
+		packet new_message1 = CAN_read();
+		CAN_send(&can_message2);
+		_delay_ms(500);
+		packet new_message2 = CAN_read();
+		CAN_send(&can_message3);
+		_delay_ms(500);
+		packet new_message3 = CAN_read();*/
+		
+		CAN_read();
+		_delay_ms(100);
+
 	}
 	return 0;
 }

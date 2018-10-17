@@ -12,7 +12,8 @@ void CAN_init() {
 	MCP2515_init();
 	
 	//2nd element (mask) defines which numbers are allowed to change
-	MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK);	//Set in loopback mode
+	//MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK);	//Set in loopback mode
+	MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_NORMAL);
 	MCP2515_bit_modify(MCP_CANINTE, 0b00000001, 0xFF);	//Enabling receive buffer interrupt
 	MCP2515_bit_modify(MCP_RXB0CTRL, 0b01100000, 0xFF);	//Disables all filters (security)
 }

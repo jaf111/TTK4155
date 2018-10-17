@@ -1,4 +1,7 @@
 #include <avr/io.h> 	//Specific IO for AVR micro (all registers defined inside)
+#include <stdio.h> 
+
+#include "uart.h"		//Added to use fprintf function
 #include "buttons.h"	//Function prototypes
 
 #define JOY_LR 0x04		//ADC channel 1, where Left-Right Joystick is connected to
@@ -16,26 +19,25 @@ void button_init(void) {	//Using Port B, pin PB0 & PB1 on ATmega162
 
 enum JoyDir{NEUTRAL, RIGHT, UP, LEFT, DOWN} direction;	//Enum with all joystick directions
 
-position coord = {0, 0};		//Initialization of variable of type "position"
-
 int16_t JoyCoord_init(int16_t XY) {		//Get standby joystick position (calibration)
 	return XY;
 }
 
 position getJoyCoord(int16_t X_coord, int16_t Y_coord, int16_t JoyX_init, int16_t JoyY_init) {	
+	position coord = {0, 0};		//Initialization of variable of type "position"
+
 	X_coord -= JoyX_init;	//The current center point (offset) is subtracted for calibration
 	Y_coord -= JoyY_init;
 	coord.XX = (X_coord*100/JoyX_init);		//Coordinates transformed into -100% to 100%
 	coord.YY = (Y_coord*100/JoyY_init);
 
-	printf("LEFT/RIGHT SIDE: %4d     ", coord.XX);
-	printf("DOWN/UP SIDE: %4d     \n\r", coord.YY);
+	//fprintf(UART_p, "LEFT/RIGHT SIDE: %4d     ", coord.XX);
+	//fprintf(UART_p, "DOWN/UP SIDE: %4d     \n\r", coord.YY);
 
 	return coord;
 }
 
 void getJoyDirection(int16_t X_coord, int16_t Y_coord) {	//Current joystick direction
-
 	if (X_coord>Mov23_Pos) {			//More than 2/3 right
 		if (Y_coord>Mov23_Pos) {		//More than 2/3 up
 			if (X_coord>Y_coord) {direction = RIGHT;}	//The biggest number determines final position
@@ -61,10 +63,10 @@ void getJoyDirection(int16_t X_coord, int16_t Y_coord) {	//Current joystick dire
 		}
 	else {direction = NEUTRAL;}		//If nothing is pushed, then neutral position
 
-	printf("DIRECTION: %d \n\r", direction);
+	fprintf(UART_p, "DIRECTION: %d \n\r", direction);
 }
 
 void sliders() {		//Analog lecture of both slider positions
-	printf("Slider LEFT: %4d  ", ADC_read(SLIDER_L));
-	printf("Slider RIGHT: %4d \n\n\r", ADC_read(SLIDER_R));
+	fprintf(UART_p, "Slider LEFT: %4d  ", ADC_read(SLIDER_L));
+	fprintf(UART_p, "Slider RIGHT: %4d \n\n\r", ADC_read(SLIDER_R));
 }

@@ -10,7 +10,7 @@
 #include "buttons.h"	//Prototype functions of buttons (USB board) unit
 #include "adc.h"		//Prototype functions of ADC unit
 
-uint8_t pointerUP = 1;	//Arrow position (starts in 1, after title)
+/*uint8_t pointerUP = 1;	//Arrow position (starts in 1, after title)
 uint8_t pointerLR = 0;	//Menu level (menu or sub-menu)
 
 t_menu* current_menu; 
@@ -74,17 +74,17 @@ void menu_system(){
 	//ASK STUDASS
 	//fprintf(OLED_p, current_menu->name, 0);
 	//OLED_pos(0,20);
-	/*current_menu = current_menu->children;
-	current_menu = current_menu->sibling;
-	current_menu = current_menu->sibling;
-	current_menu = current_menu->sibling;
-	current_menu = current_menu->sibling;
+	//current_menu = current_menu->children;
+	//current_menu = current_menu->sibling;
+	//current_menu = current_menu->sibling;
+	//current_menu = current_menu->sibling;
+	//current_menu = current_menu->sibling;
 	
 	//current_menu = current_menu->sibling;
-	fprintf(OLED_p, current_menu->name, 0);
-	/*current_menu = current_menu->children;
-	OLED_home();
-	fprintf(OLED_p, current_menu->name, 0);*/
+	//fprintf(OLED_p, current_menu->name, 0);
+	//current_menu = current_menu->children;
+	//OLED_home();
+	//fprintf(OLED_p, current_menu->name, 0);
 
 	//return current_menu;
 }
@@ -112,7 +112,7 @@ void menu_init(){
 	menu_system();
 }
 
-/*void cursor_move() {			//To manage the arrow in the current screen
+void cursor_move() {			//To manage the arrow in the current screen
 	OLED_pos(pointerUP, 5);		//Pointer located on left side (column 5) of current option
 	OLED_print_arrow(pointerUP, 5);	//Arrow printed
 
@@ -120,7 +120,7 @@ void menu_init(){
 		OLED_clear_arrow(pointerUP, 5);	//Current arrow removed
 		pointerUP--;					//Pointer updated
 		if (pointerUP < 1) {
-			pointerUP = menu_length-1;	//To ensure a cyclical pointer
+			pointerUP = displayed_lines-1;	//To ensure a cyclical pointer
 		}
 	}
 	else if (ADC_read(JOY_DU) <= 5) {	//If joystick is moved DOWN
@@ -150,7 +150,7 @@ void menu_init(){
 				print_menu(current_menu);
 			}*/
 			//////////////////////
-	/*	}
+		/*}
 	}
 	else if (ADC_read(JOY_LR) <= 5) {	//If joystick is moved LEFT
 		if (pointerLR != 0) {			//Only if I am in a child screen
@@ -175,7 +175,7 @@ void menu_init(){
 	
 	fprintf(UART_p, "pointerUP: %4d     ", pointerUP);
 	fprintf(UART_p, "pointerLR: %4d \n\r", pointerLR);
-}*/
+}
 
 
 ////////////////////////////////////////////////////////////
