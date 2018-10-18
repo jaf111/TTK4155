@@ -32,14 +32,15 @@ int16_t JoyY = 0;		//Y coordinate of Joystick
 int16_t JoyX_init = 0;	//Initial X coordinate of Joystick
 int16_t JoyY_init = 0;	//Initial Y coordinate of Joystick
 
-int main(){
+int main() {
 	//LED initialization
 	//led_init();
 
 	//USART initialization
 	USART_Init(MYUBRR);
 	USART_Transmit(USART_Receive());	//To make printf() working in USART
-	
+	fprintf(UART_p, "TESTTTTTTTTTTTTTTTTT: \r\n", 0);
+
 	//SRAM initialization
 	SRAM_init();
 
@@ -64,6 +65,7 @@ int main(){
 
 	//CAN controller (MCP2515) initialization
 	CAN_init();
+	printf("init done\n\r");
 
 	position joy_coord = {0, 0};
 
@@ -111,20 +113,20 @@ int main(){
 		JoyX = ADC_read(JOY_LR);
 		JoyY = ADC_read(JOY_DU);
 		joy_coord = getJoyCoord(JoyX, JoyY, JoyX_init, JoyY_init);
-		//fprintf(UART_p, "JoyX: %4d \r\n", joy_coord.XX);
-		//fprintf(UART_p, "JoyY: %4d \r\n", joy_coord.YY);
 
 		can_joystick.data[0] = JoyX;
 		can_joystick.data[1] = JoyY;
+		//fprintf(UART_p, "JoyX: %4d \r\n", can_joystick.data[0]);
+		//fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
 
 		CAN_send(&can_joystick);
-		//_delay_ms(500);
-		//CAN_read();
+		_delay_ms(200);
+		CAN_read();
 
-		//fprintf(UART_p, "JoyX: %4d \r\n", MCP2515_read(MCP_RXB0D0+0));
-		//fprintf(UART_p, "JoyY: %4d \r\n", MCP2515_read(MCP_RXB0D0+1));
+		fprintf(UART_p, "JoyX: %4d \r\n", MCP2515_read(MCP_TXB0D0+0));
+		fprintf(UART_p, "JoyY: %4d \r\n", MCP2515_read(MCP_TXB0D0+1));
 		
-	
+
 		//fprintf(UART_p, "Message data: %4x \r\n", new_message.length);
 		/*for (uint8_t i=0; i < 8; i++) {
 			fprintf(UART_p, "DATA %2x: %4x \r\n", i, new_message2.data[i]);

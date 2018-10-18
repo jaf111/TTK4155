@@ -46,7 +46,7 @@ packet CAN_read() {
 	
 	for (uint8_t i=0; i<message.length; i++) {
 		message.data[i]= MCP2515_read(MCP_RXB0D0+i); //Store message data
-		fprintf(UART_p, "MCP_RXB0D %4x: %4x \r\n", i, MCP2515_read(MCP_RXB0D0+i));
+		//fprintf(UART_p, "MCP_RXB0D %4d: %4d \r\n", i, MCP2515_read(MCP_RXB0D0+i));
 	}
 	MCP2515_bit_modify(MCP_CANINTF, MCP_RX0IF, 0x00);
 	fprintf(UART_p, "\r\n \r\n", 0);

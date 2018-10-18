@@ -4,9 +4,11 @@
 
 #include "spi.h"		//Prototypes of functions here defined		
 
+#define CAN_CS DDB4 //Location of Chip Select (CS) pin of CAN controller (MCP2515)
+
 void SPI_init(void) {	//SPI initialization (as a Master)
 	//Set data directions (1=output, 0=input) - inside DDRB register
-	DDRB = (1<<DDB4)|(1<<DDB5)|(0<<DDB6)|(1<<DDB7);	//DDB4 = SS (out), DDB5 = MOSI (out), DDB6 = MISO (in), DDB7 = SCK (out)
+	DDRB = (1<<CAN_CS)|(1<<DDB5)|(0<<DDB6)|(1<<DDB7);	//DDB4 = SS (out), DDB5 = MOSI (out), DDB6 = MISO (in), DDB7 = SCK (out)
 	//Define SPI comm. SPE (bit 6), MSTR (bit 4), SPR1/SPR0 (bits 1 and 0), inside the register SPCR
 	SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0); //SPE=1 to enable SPI comm, MSTR=1 to be Master (=0 Slave), SPR0/SPR1 to define clock rate (FOSC/16 chosen)
 }
@@ -22,4 +24,12 @@ char SPI_read(void) {	//Reads a message from the slave through SPI comm
 	//Wait for transmission complete
 	while(!(SPSR & (1<<SPIF)));	//Waits until the current transmission finishes
 	return SPDR;		//Returns the new value of data registers (SPDR)
+}
+
+void SPI_select(void){
+	PORTB &= ~(1 << CAN_CS);
+}
+
+void SPI_deselect(void){
+	PORTB |= (1 << CAN_CS);
 }

@@ -21,10 +21,24 @@ int16_t JoyCoord_init(int16_t XY) {		//Get standby joystick position (calibratio
 position getJoyCoord(int16_t X_coord, int16_t Y_coord, int16_t JoyX_init, int16_t JoyY_init) {	
 	position coord = {0, 0};		//Initialization of variable of type "position"
 
-	X_coord -= JoyX_init;	//The current center point (offset) is subtracted for calibration
+	/*X_coord -= JoyX_init;	//The current center point (offset) is subtracted for calibration
 	Y_coord -= JoyY_init;
-	coord.XX = (X_coord*100/JoyX_init);		//Coordinates transformed into -100% to 100%
-	coord.YY = (Y_coord*100/JoyY_init);
+	coord.XX = X_coord*100/JoyX_init;		//Coordinates transformed into -100% to 100%
+	coord.YY = Y_coord*100/JoyY_init;*/
+
+	//Joystick is not complete centered in idle position, so not possible to fit -100%, 0%, 100% in just one operation
+	if ((X_coord <= JoyX_init+2) && (X_coord >= JoyX_init-2)) {
+		coord.XX = 0;
+	} else {
+		X_coord -= 127;
+		coord.XX = X_coord*100/127;
+	}
+	if ((Y_coord <= JoyY_init+2) && (Y_coord >= JoyY_init-2)) {
+		coord.YY = 0;
+	} else {
+		Y_coord -= 127;
+		coord.YY = Y_coord*100/127;
+	}
 
 	//fprintf(UART_p, "LEFT/RIGHT SIDE: %4d     ", coord.XX);
 	//fprintf(UART_p, "DOWN/UP SIDE: %4d     \n\r", coord.YY);

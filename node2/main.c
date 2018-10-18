@@ -51,6 +51,8 @@ int main() {
 	packet can_message2 = {.id=0x14, .length=0x07, .data={0x05,0x02,0x03,0x04,0x13,0x06,0x07}};
 	packet can_message3 = {.id=0x15, .length=0x07, .data={0x01,0x02,0x03,0x04,0x13,0x06,0x07}};
 
+	packet can_joystick = {.id=0x16, .length=0x02, .data={0x01,0x02}};
+
 	while(1) {		
 		//USART_Transmit(5);
 		/*led_turn_on();
@@ -59,7 +61,6 @@ int main() {
 		_delay_ms(1000);*/
 		
 		//SPI_write(0b01011100);
-
 
 		/*CAN_send(&can_message1);
 		_delay_ms(500);
@@ -71,8 +72,11 @@ int main() {
 		_delay_ms(500);
 		packet new_message3 = CAN_read();*/
 		
-		CAN_read();
+		packet can_joystick = CAN_read();
 		_delay_ms(100);
+
+		fprintf(UART_p, "JoyX: %4d \r\n", can_joystick.data[0]);
+		fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
 
 	}
 	return 0;
