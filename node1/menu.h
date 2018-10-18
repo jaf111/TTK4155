@@ -17,9 +17,13 @@ void set_children(t_menu* menu, t_menu* new_children);
 void menu_system();
 void print_menu(t_menu* menu);
 void menu_init();	//Menu initialization
+void cursor_move();	//To manage the arrow in the current screen
+void menu_handler(void);
+
+//-----------------------------------------------------------------
 
 char* menu_matrix[5][menu_col_max];
 void print_sub_menu(uint8_t menNum);//Print/refresh the current screen
-void cursor_move();	//To manage the arrow in the current screen
+
 
 #endif //menu.H

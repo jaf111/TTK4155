@@ -4,11 +4,6 @@
 #include "uart.h"		//Added to use fprintf function
 #include "buttons.h"	//Function prototypes
 
-#define JOY_LR 0x04		//ADC channel 1, where Left-Right Joystick is connected to
-#define JOY_DU 0x05		//ADC channel 2, where Down-Up Joystick is connected to
-#define SLIDER_R 0x06	//ADC channel 3, where Right Slider is connected to
-#define SLIDER_L 0x07	//ADC channel 4, where Right Slider is connected to
-
 #define Mov23_Pos 190	//Joystick moved 2/3 in positive direction (up or right)
 #define Mov23_Neg 64	//Joystick moved 2/3 in negative direction (down or left)
 

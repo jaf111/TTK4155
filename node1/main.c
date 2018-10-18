@@ -56,8 +56,8 @@ int main(){
 	OLED_init();
 
 	//Menu initialization
-	//menu_init();
-	OLED_screen_Saver();
+	menu_init();
+	//OLED_screen_Saver();
 
 	//SPI initialization
 	SPI_init();
@@ -74,7 +74,7 @@ int main(){
 	packet can_joystick = {.id = 0x16, .length = 0x02, .data = {0x01,0x02}};
 
 	while(1) {
-		//cursor_move();
+		cursor_move();
 		//SRAM_test();
 		//fprintf(OLED_p, main_menu.name);
 		//_delay_ms(100);

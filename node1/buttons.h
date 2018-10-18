@@ -1,6 +1,12 @@
 #ifndef BUTTONS_H
 #define BUTTONS_H
 
+#define JOY_LR 0x04		//ADC channel 1, where Left-Right Joystick is connected to
+#define JOY_DU 0x05		//ADC channel 2, where Down-Up Joystick is connected to
+#define SLIDER_R 0x06	//ADC channel 3, where Right Slider is connected to
+#define SLIDER_L 0x07	//ADC channel 4, where Right Slider is connected to
+
+
 typedef struct {	//Definition of variable "position", formed by 2 inte16_t
 	int16_t XX;
 	int16_t YY;

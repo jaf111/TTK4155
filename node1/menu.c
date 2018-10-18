@@ -1,3 +1,5 @@
+#define F_CPU 4915200
+
 #include <util/delay.h>	//Functions for busy-wait delay loops
 #include <stdlib.h>		//Functions for dynamic memory management and process control
 #include <stdio.h>		//Standard constants and functions for C (printf..., scanf...)
@@ -10,7 +12,7 @@
 #include "buttons.h"	//Prototype functions of buttons (USB board) unit
 #include "adc.h"		//Prototype functions of ADC unit
 
-/*uint8_t pointerUP = 1;	//Arrow position (starts in 1, after title)
+uint8_t pointerUP = 1;	//Arrow position (starts in 1, after title)
 uint8_t pointerLR = 0;	//Menu level (menu or sub-menu)
 
 t_menu* current_menu; 
@@ -32,14 +34,13 @@ void set_sibling(t_menu* menu, t_menu* new_sibling){
 }
 
 void set_children(t_menu* menu, t_menu* new_children){
-	(menu->children) = (new_children);
+	menu->children = new_children;
 }
 
 void menu_system(){
 	//Main menu page create
 	t_menu* main_menu = menu("---Main Menu---", NULL);
 	t_menu* game = menu("Game", main_menu);
-	//t_menu* game2 = menu("Game", main_menu);
 	t_menu* highscore = menu("Highscore", main_menu);
 	t_menu* extras = menu("Extras", main_menu);
 	t_menu* options = menu("Options", main_menu);
@@ -54,12 +55,11 @@ void menu_system(){
 	fprintf(UART_p, game->name,0);
 	//Main menu config
 	set_children(main_menu, game);
-	//fprintf(UART_p, game->name,0);
-	//fprintf(UART_p, game->name,0);
 	set_sibling(game, highscore);
 	set_sibling(highscore, extras);
 	set_sibling(extras, options);
 	fprintf(UART_p, " \r\n",0);
+	
 	//Extras config
 	set_children(extras, screensaver);
 	set_sibling(screensaver, songs);
@@ -68,34 +68,23 @@ void menu_system(){
 	set_children(options, brightness);
 
 	current_menu = main_menu;
-	
-	print_menu(current_menu);
-	
-	//ASK STUDASS
-	//fprintf(OLED_p, current_menu->name, 0);
-	//OLED_pos(0,20);
-	//current_menu = current_menu->children;
-	//current_menu = current_menu->sibling;
-	//current_menu = current_menu->sibling;
-	//current_menu = current_menu->sibling;
-	//current_menu = current_menu->sibling;
-	
-	//current_menu = current_menu->sibling;
-	//fprintf(OLED_p, current_menu->name, 0);
-	//current_menu = current_menu->children;
-	//OLED_home();
-	//fprintf(OLED_p, current_menu->name, 0);
+	print_menu(current_menu->children);
 
-	//return current_menu;
+	return current_menu;
 }
 
 void print_menu(t_menu* menu){
+	OLED_clear_all();
 	OLED_home();
 	displayed_lines = 0;
 
 	fprintf(OLED_p, menu->name, 0);
 	int line = 1;
-	menu = menu->children;
+
+	//menu = menu->children;
+	for (int i; i < pointerUP; i++) {
+		current_menu = current_menu->sibling;
+	}
 	
 	while(menu && line < 5){
 		displayed_lines++;
@@ -112,6 +101,7 @@ void menu_init(){
 	menu_system();
 }
 
+
 void cursor_move() {			//To manage the arrow in the current screen
 	OLED_pos(pointerUP, 5);		//Pointer located on left side (column 5) of current option
 	OLED_print_arrow(pointerUP, 5);	//Arrow printed
@@ -126,31 +116,40 @@ void cursor_move() {			//To manage the arrow in the current screen
 	else if (ADC_read(JOY_DU) <= 5) {	//If joystick is moved DOWN
 		OLED_clear_arrow(pointerUP, 5);
 		pointerUP++;
-		if (pointerUP > menu_length-1) {
+		if (pointerUP > displayed_lines) {
 			pointerUP = 1;
 		}
 	}
 	else if (ADC_read(JOY_LR) >= 250) {	//If joystick is moved RIGHT
-		if (pointerLR == 0) {			//Only if I am in a parent screen
+		//if (pointerLR == 0) {			//Only if I am in a parent screen
 			OLED_clear_all();			//All screen is cleared
-			pointerLR = pointerUP;		//Arrow position determines sub-menu screen
-			pointerUP = 1;				//Arrow placed in the first line again
+			fprintf(OLED_p, "WORKING ON THIS", 0);
+			//pointerLR = pointerUP;		//Arrow position determines sub-menu screen
+			//pointerUP = 1;				//Arrow placed in the first line again
 			///////////////////////
 			///THIS WAS ADDED
-			/*if (current_menu->head == NULL){
-				print_menu(current_menu);
-			}
-			else{
-				current_menu = current_menu->head;
-				
-				for (int i; i < pointerUP; i++) {
-					current_menu = current_menu->children;
-					
-				}
+			/*if (current_menu->children == NULL){
 				print_menu(current_menu);
 			}*/
+			OLED_home();
+			fprintf(OLED_p, current_menu->name, 0);
+			
+			//current_menu = current_menu->children;
+			//current_menu = current_menu->sibling;
+			//current_menu = current_menu->sibling;
+			//current_menu = current_menu->sibling;
+			//current_menu = current_menu->sibling;
+			
+			//current_menu = current_menu->sibling;
+			//fprintf(OLED_p, current_menu->name, 0);
+			//current_menu = current_menu->children;
+			//OLED_home();
+			//fprintf(OLED_p, current_menu->name, 0);
+			
+			//menu_handler();
+			//print_menu(current_menu->children);
 			//////////////////////
-		/*}
+		
 	}
 	else if (ADC_read(JOY_LR) <= 5) {	//If joystick is moved LEFT
 		if (pointerLR != 0) {			//Only if I am in a child screen
@@ -165,10 +164,10 @@ void cursor_move() {			//To manage the arrow in the current screen
 			else{
 				current_menu = current_menu->parent;
 				print_menu(current_menu);
-			}*/
+			}
 			//////////////////////
 
-	/*	}
+		*/}
 	}
 
 	_delay_ms(500);
@@ -178,7 +177,14 @@ void cursor_move() {			//To manage the arrow in the current screen
 }
 
 
+void menu_handler(void){
+
+}
+
+
+
 ////////////////////////////////////////////////////////////
+
 
 
 /*
