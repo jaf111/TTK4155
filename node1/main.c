@@ -15,6 +15,7 @@
 #include "spi.h"		//Prototype functions of SPI communication
 #include "MCP2515.h"	//Prototype functions of CAN controller unit
 #include "can.h"		//Prototype functions of CAN communication
+//#include "notes_songs.h" //Prototype functions for playing a song
 
 #define JOY_LR 0x04		//ADC channel 1, where Left-Right Joystick is connected to
 #define JOY_DU 0x05		//ADC channel 2, where Down-Up Joystick is connected to
@@ -33,12 +34,13 @@ int16_t JoyX_init = 0;	//Initial X coordinate of Joystick
 int16_t JoyY_init = 0;	//Initial Y coordinate of Joystick
 
 int main() {
-	//LED initialization
-	//led_init();
+	//GPIO initialization
+	//led_init();		//LED initialization
+	//buzzer_init();		//Buzzer initialization
 
 	//USART initialization
 	USART_Init(MYUBRR);
-	USART_Transmit(USART_Receive());	//To make printf() working in USART
+	//USART_Transmit(USART_Receive());	//To make printf() working in USART
 	fprintf(UART_p, "TESTTTTTTTTTTTTTTTTT: \r\n", 0);
 
 	//SRAM initialization
@@ -76,7 +78,10 @@ int main() {
 	packet can_joystick = {.id = 0x16, .length = 0x02, .data = {0x01,0x02}};
 
 	while(1) {
+		fprintf(UART_p, "loop \r\n", 0);
 		cursor_move();
+		fprintf(UART_p, "WHILE LOOP!!!!!!!!!!!!!!!!!!!!!!: \r\n", 0);
+		//write_d(0xFF);
 		//SRAM_test();
 		//fprintf(OLED_p, main_menu.name);
 		//_delay_ms(100);
@@ -110,6 +115,7 @@ int main() {
 		_delay_ms(500);
 		packet new_message3 = CAN_read();*/
 
+		/*
 		JoyX = ADC_read(JOY_LR);
 		JoyY = ADC_read(JOY_DU);
 		joy_coord = getJoyCoord(JoyX, JoyY, JoyX_init, JoyY_init);
@@ -118,14 +124,14 @@ int main() {
 		can_joystick.data[1] = JoyY;
 		//fprintf(UART_p, "JoyX: %4d \r\n", can_joystick.data[0]);
 		//fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
-
 		CAN_send(&can_joystick);
 		_delay_ms(200);
-		CAN_read();
+		//CAN_read();
 
-		fprintf(UART_p, "JoyX: %4d \r\n", MCP2515_read(MCP_TXB0D0+0));
-		fprintf(UART_p, "JoyY: %4d \r\n", MCP2515_read(MCP_TXB0D0+1));
+		fprintf(UART_p, "JoyX CAN: %4d   JOYX; %4d \r\n", MCP2515_read(MCP_TXB0D0+0),JoyX);
+		fprintf(UART_p, "JoyY CAN: %4d   JOYY; %4d \r\n", MCP2515_read(MCP_TXB0D0+1),JoyY);
 		
+		*/
 
 		//fprintf(UART_p, "Message data: %4x \r\n", new_message.length);
 		/*for (uint8_t i=0; i < 8; i++) {

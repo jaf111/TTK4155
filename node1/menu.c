@@ -20,7 +20,7 @@ t_menu* current_menu;
 
 int displayed_lines = 0;
 
-t_menu* menu(char* name, t_menu* parent){
+t_menu* menu(char* name, t_menu* parent) {
 	t_menu* new_menu = malloc(sizeof(t_menu)); 	// 
 	new_menu->name = name;
 	new_menu->parent = parent;
@@ -38,38 +38,54 @@ void set_children(t_menu* menu, t_menu* new_children){
 	menu->children = new_children;
 }
 
-void menu_system(){
+t_menu main_menu;
+t_menu game;
+t_menu highscore;
+t_menu extras;
+t_menu options;
+t_menu screensaver;
+t_menu songs;
+t_menu brightness;
+
+void menu_system() {
+	//fprintf(UART_p, "BEGINNING MENU INIT!!!!!!!!!!!!!!!: \r\n", 0);
 	//Main menu page create
-	t_menu* main_menu = menu("---Main Menu---", NULL); //something is wrong with the print
-	t_menu* game = menu("Game", main_menu);
-	t_menu* highscore = menu("Highscore", main_menu);
-	t_menu* extras = menu("Extras", main_menu);
-	t_menu* options = menu("Options", main_menu);
-	
+	main_menu = (t_menu){"---Main Menu---", NULL, NULL, NULL}; //something is wrong with the print
+	game = (t_menu){"Game", &main_menu, NULL, NULL};
+	highscore = (t_menu){"Highscore", &main_menu, NULL, NULL};
+	extras = (t_menu){"Extras", &main_menu, NULL, NULL};
+	options = (t_menu){"Options", &main_menu, NULL, NULL};
+	//fprintf(UART_p, "MIDDLE MENU INIT!!!!!!!!!!!!!!!22222: \r\n", 0);
 	//Extras page create
-	t_menu* screensaver = menu("Screensaver", extras);
-	t_menu* songs = menu("Songs", extras);
+	screensaver = (t_menu){"Screensaver", &extras, NULL, NULL};
+	songs = (t_menu){"Songs", &extras, NULL, NULL};
 
 	//Options page create
-	t_menu* brightness = menu("Brightness", options);
+	brightness = (t_menu){"Brightness", &options, NULL, NULL};
 
 	//Main menu config
-	set_children(main_menu, game);
-	set_sibling(game, highscore);
-	set_sibling(highscore, extras);
-	set_sibling(extras, options);
-		
+	/*set_children(&main_menu, &game);
+	set_sibling(&game, &highscore);
+	set_sibling(&highscore, &extras);
+	set_sibling(&extras, &options);*/
+	main_menu.children = &game;
+	game.sibling = &highscore;
+	highscore.sibling = &extras;
+	extras.sibling = &options;
+	
 	//Extras config
-	set_children(extras, screensaver);
-	set_sibling(screensaver, songs);
+	/*set_children(&extras, &screensaver);
+	set_sibling(&screensaver, &songs);*/
+	extras.children = &screensaver;
+	screensaver.sibling = &songs;
 	
 	//Options config
-	set_children(options, brightness);
+	//set_children(&options, &brightness);
+	options.children = &brightness;
 
-	current_menu = main_menu;
+	current_menu = &main_menu;
+	fprintf(UART_p, "END MENU INIT!!!: \r\n", 0);
 	print_menu(current_menu);
-
-	return current_menu;
 }
 
 void print_menu(t_menu* menu){
@@ -81,14 +97,13 @@ void print_menu(t_menu* menu){
 	int line = 1;
 
 	menu = menu->children;
-	
-	
-	while(menu && line < 5){
+	while(menu && (line < 5)) {
 		displayed_lines++;
 		OLED_pos(line,20);
 		fprintf(OLED_p, menu->name,0);
 		line++;
 		menu = menu->sibling;
+		fprintf(UART_p, "INSIDE LOOP!!!!!!!!!!!!!!!: \r\n", 0);
 	}
 }
 
@@ -163,11 +178,9 @@ void cursor_move() {			//To manage the arrow in the current screen
 				print_menu(current_menu);
 				//menu_handler();
 			}
-
 		}
 	//}
 	_delay_ms(500);
-	
 }
 
 
@@ -177,13 +190,10 @@ void menu_handler(void){
 		OLED_clear_all();
 		OLED_screen_Saver();
 	}
-
 }
 
 
-
 ////////////////////////////////////////////////////////////
-
 
 
 /*
@@ -220,10 +230,7 @@ void print_sub_menu(uint8_t menNum) {
 
 	fprintf(UART_p, "menNum: %4d     ", menNum);
 }
-
-
 */
-
 
 
 // gdb server (avr)

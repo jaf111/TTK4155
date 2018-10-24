@@ -1,6 +1,9 @@
-#include <stdio.h>			//Standard constants and functions for C (printf..., scanf...)
+/*#include <util/delay.h>	//Functions for busy-wait delay loops
+#include <stdio.h>		//Standard constants and functions for C (printf..., scanf...) 
+#include <avr/io.h> 	//Specific IO for AVR micro (all registers defined inside)
 
-#include "notes_songsn.h"	//Prototype functions
+#include "uart.h"			//Added to use fprintf function
+#include "notes_songs.h"	//Prototype functions
 
 
 void buzzer_init() {		//Buzzer from USB board connected in MISC pin 3
@@ -32,7 +35,7 @@ void buzz(uint16_t frequency, uint16_t length) {
 }
 
 void play_song() {		// iterate over the notes of the melody:
-	fprintf(UART_p, "Mario Theme", 0);
+	/*fprintf(UART_p, "Mario Theme", 0);
 	
 	uint8_t size = sizeof(mario_melody) / sizeof(uint8_t);
 	for (uint8_t thisNote = 0; thisNote<size; thisNote++) {
@@ -49,4 +52,4 @@ void play_song() {		// iterate over the notes of the melody:
 		//stop the tone playing:
 		buzz(0, noteDuration);
 	}
-}
+}*/
