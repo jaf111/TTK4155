@@ -5,26 +5,73 @@
 #include "uart.h"
 #include "PWM.h"
 
-//#define TOP		DDB7
-//#define BOTTOM	0x00
+void PWM_init() {
+	TCCR1A |= (0<<WGM10) | (1<<WGM11);	 //Configure fast PWM (mode 14), with value TOP = ICR1
+	TCCR1B |= (1<<WGM12) | (1<<WGM13);
 
-void PWM_init(void) {
-	TCCR0A |= (1<<WGM00) | (1<<WGM01);	 //Configure fast PWM mode, with value TOP = 0xFF
-	TCCR0B |= (0<<WGM02);
+	TCCR1B |= (0<<CS00) | (0<<CS01) | (1<<CS02);	//PWM's clock activated, with prescaler N=256
 
-	TCCR0B |= (1<<CS00) | (0<<CS01) | (1<<CS02);	//clk I/O /1024 (From prescaler)
+	TCCR1A |= (0<<COM1A0) | (1<<COM1A1);	//PWM output in channel A (called OC1A) enabled. it clears on Compare Match, and sets at BOTTOM (non-inverting mode)
+	DDRB |= (1<<DDB5);		//OC1A is physically connected in Port B, Pin 5 (PB5), so such pin (bit DDB5, register DDRB) is defined as output (1=output, 0=input)
 
-	//OC0A (PWM output) is connected in PB7, and enabled when previous configuration
-	DDRB |= (1<<DDB7);	//Pin 7 (bit DDB7) of PORT B (register DDRB) as a output (1=output, 0=input)
-	DDRG |= (1<<DDG5);
-
-	OCR0A = 0x70;	//Width of the PWM (a random number to test now)
+	TIM16_WriteICR1(0x04E1);		//ICR1 (defined as TOP) must be 0x04E1 to ensure f_out = 50Hz
+	TIM16_WriteOCR1A(0x0000);		//Width of the PWM (0 = NOT WORKING)
 }
 
-void PWM_ON(void) {
-	TCCR0A |= (0<<COM0A0) | (1<<COM0A1);	//PWM output (OC0A) enabled. Clear OC0A on Compare Match, set OC0A at BOTTOM (non-inverting mode)
+void PWM_Left() {
+	TIM16_WriteOCR1A(0x0038);		//0x38 (56d) gives a pulse of 0,9 width
 }
 
-void PWM_OFF(void) {
-	TCCR0A |= (0<<COM0A0) | (0<<COM0A1);	//PWM output (OC0A) disabled.
+void PWM_Center() {
+	TIM16_WriteOCR1A(0x005E);		//0x5E (94d) gives a pulse of 1,5 width
+}
+
+void PWM_Right() {
+	TIM16_WriteOCR1A(0x0083);		//0x83 (131d) gives a pulse of 2,1 width
+}
+
+uint8_t TIM16_ReadTCNT1() {
+	unsigned char sreg;
+	uint8_t i;
+	/* Save global interrupt flag */
+	sreg = SREG;
+	/* Disable interrupts */
+	__disable_interrupt();
+	/* Read TCNT1 into i */
+	i = TCNT1;
+	/* Restore global interrupt flag */
+	SREG = sreg;
+	return i;
+}
+
+void TIM16_WriteICR1(uint16_t i) {
+	unsigned char sreg;
+
+	//Save global interrupt flag
+	sreg = SREG;
+	//Disable interrupts
+	__disable_interrupt();
+	//Set ICR1 to i
+	ICR1H = 0x00FF & (i >> 8);	//Higher part of ICR1
+	ICR1L = 0x00FF & i;			//Lower part of ICR1
+	//ICR1 = i;
+
+	//Restore global interrupt flag
+	SREG = sreg;
+}
+
+void TIM16_WriteOCR1A(uint16_t i) {
+	unsigned char sreg;
+
+	//Save global interrupt flag
+	sreg = SREG;
+	//Disable interrupts
+	__disable_interrupt();
+	//Set OCR1A to i
+	OCR1AH = 0x00FF & (i >> 8);	//Higher part of OCR1A
+	OCR1AL = 0x00FF & i;			//Lower part of OCR1A
+	//OCR1A = i;
+
+	//Restore global interrupt flag
+	SREG = sreg;
 }
