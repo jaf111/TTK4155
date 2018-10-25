@@ -10,7 +10,6 @@
 
 void CAN_init() {
 	MCP2515_init();
-	
 	//2nd element (mask) defines which numbers are allowed to change
 	//MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK);	//Set in loopback mode
 	MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_NORMAL);
@@ -20,7 +19,7 @@ void CAN_init() {
 
 void CAN_send(packet* message) {	//Everything is done only through Buffer 0
 	if (CAN_error()) {	//If there is an error in the transmission
-		//fprintf(UART_p, "ERRORRRRRRRRRR %4x \r\n", MCP2515_read(MCP_TXB0CTRL));
+		//fprintf(UART_p, "ERRORRR %4x \r\n", MCP2515_read(MCP_TXB0CTRL));
 	}
 
 	while (MCP_TXB0CTRL & (1<<TXREQ));	//Waits until last transmission finishes
@@ -55,7 +54,6 @@ packet CAN_read() {
 }
 
 int CAN_error() {
-	
 	return (MCP2515_read(MCP_TXB0CTRL) & (1 << TXERR) || (MCP2515_read(MCP_TXB0CTRL) & (1 << MLOA)));
 }
 

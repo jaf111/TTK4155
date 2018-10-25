@@ -4,6 +4,6 @@
 #include "uart.h"	//USART initialization to do printf
 
 void ADC_init(void);	//ADC initialization
-uint8_t ADC_read(uint8_t channel);	//Reading of ADC channels
+uint16_t ADC_read();	//Reading of ADC
 
 #endif //ADC_H

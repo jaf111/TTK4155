@@ -41,7 +41,7 @@ int main() {
 	//Stand-by joystick positions read (for the offset)
 	//JoyX_init = JoyCoord_init(ADC_read(JOY_LR));
 	//JoyY_init = JoyCoord_init(ADC_read(JOY_DU));
-	fprintf(UART_p, "Hello\n", 0);
+
 	//SPI initialization
 	SPI_init();
 
@@ -49,8 +49,10 @@ int main() {
 	CAN_init();
 
 	//PWM initialization
-	PWM_init();
-	PWM_ON();
+	PWM_init(256, 50);	//Prescaler N=256, and Frequency of 50Hz
+
+	//ADC initialization
+	ADC_init();
 
 	packet can_message1 = {.id=0x13, .length=0x08, .data={0x07,0x02,0x03,0x04,0x05,0x06,0x07,0x09}};	//Struct initialization
 	packet can_message2 = {.id=0x14, .length=0x07, .data={0x05,0x02,0x03,0x04,0x13,0x06,0x07}};
@@ -59,9 +61,12 @@ int main() {
 	packet can_joystick = {.id=0x16, .length=0x02, .data={0x01,0x02}};
 
 	while(1) {
-		fprintf(UART_p, "TCNT0: %4x \r\n", TCNT0);
-		fprintf(UART_p, "TIFR0: %4x \r\n", TIFR0);
-		_delay_ms(50);
+		//fprintf(UART_p, "%d\n\r", ADC_read()); 
+		//_delay_ms(500);
+
+		/*fprintf(UART_p, "TCNT0: %4d ", TCNT0);
+		fprintf(UART_p, "TIFR0: %4d \r\n", TIFR0);
+		_delay_ms(200);*/
 
 		/*PWM_ON();
 		fprintf(UART_p, "ON!!!!!!! \r\n", 0);
@@ -88,12 +93,13 @@ int main() {
 		_delay_ms(500);
 		packet new_message3 = CAN_read();*/
 		
-		/*packet can_joystick = CAN_read();
-		_delay_ms(100);
+		packet can_joystick = CAN_read();
+		_delay_ms(200);
 
 		fprintf(UART_p, "JoyX: %4d \r\n", can_joystick.data[0]);
-		fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);*/
+		fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
 
+		Modify_PWM(can_joystick.data[0]);		
 	}
 	return 0;
 }
