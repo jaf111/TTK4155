@@ -82,9 +82,7 @@ void menu_system() {
 	//Options config
 	//set_children(&options, &brightness);
 	options.children = &brightness;
-
 	current_menu = &main_menu;
-	fprintf(UART_p, "END MENU INIT!!!: \r\n", 0);
 	print_menu(current_menu);
 }
 
@@ -103,7 +101,6 @@ void print_menu(t_menu* menu){
 		fprintf(OLED_p, menu->name,0);
 		line++;
 		menu = menu->sibling;
-		fprintf(UART_p, "INSIDE LOOP!!!!!!!!!!!!!!!: \r\n", 0);
 	}
 }
 

@@ -41,7 +41,6 @@ int main() {
 	//USART initialization
 	USART_Init(MYUBRR);
 	//USART_Transmit(USART_Receive());	//To make printf() working in USART
-	fprintf(UART_p, "TESTTTTTTTTTTTTTTTTT: \r\n", 0);
 
 	//SRAM initialization
 	SRAM_init();
@@ -61,6 +60,8 @@ int main() {
 	//Menu initialization
 	menu_init();
 	//OLED_screen_Saver();
+	//OLED_frame_fill(0x01);
+	//OLED_frame_char_fill('A');
 
 	//SPI initialization
 	SPI_init();
@@ -76,11 +77,13 @@ int main() {
 	packet can_message3 = {.id = 0x15, .length = 0x07, .data = {0x01,0x02,0x03,0x04,0x13,0x06,0x07}};
 
 	packet can_joystick = {.id = 0x16, .length = 0x02, .data = {0x01,0x02}};
-
+	OLED_home();
 	while(1) {
-		fprintf(UART_p, "loop \r\n", 0);
+		//fprintf(UART_p, "loop \r\n", 0);
 		cursor_move();
-		fprintf(UART_p, "WHILE LOOP!!!!!!!!!!!!!!!!!!!!!!: \r\n", 0);
+		//OLED_frame_fill(0xFA);
+		//_delay_ms(20);
+		OLED_update();
 		//write_d(0xFF);
 		//SRAM_test();
 		//fprintf(OLED_p, main_menu.name);
@@ -114,8 +117,7 @@ int main() {
 		CAN_send(&can_message3);
 		_delay_ms(500);
 		packet new_message3 = CAN_read();*/
-
-		/*
+		
 		JoyX = ADC_read(JOY_LR);
 		JoyY = ADC_read(JOY_DU);
 		joy_coord = getJoyCoord(JoyX, JoyY, JoyX_init, JoyY_init);
@@ -125,13 +127,12 @@ int main() {
 		//fprintf(UART_p, "JoyX: %4d \r\n", can_joystick.data[0]);
 		//fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
 		CAN_send(&can_joystick);
-		_delay_ms(200);
+		//_delay_ms(200);
 		//CAN_read();
 
 		fprintf(UART_p, "JoyX CAN: %4d   JOYX; %4d \r\n", MCP2515_read(MCP_TXB0D0+0),JoyX);
 		fprintf(UART_p, "JoyY CAN: %4d   JOYY; %4d \r\n", MCP2515_read(MCP_TXB0D0+1),JoyY);
 		
-		*/
 
 		//fprintf(UART_p, "Message data: %4x \r\n", new_message.length);
 		/*for (uint8_t i=0; i < 8; i++) {

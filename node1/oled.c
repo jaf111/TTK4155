@@ -1,3 +1,4 @@
+/*
 #include <stdio.h>			//Standard constants and functions for C (printf..., scanf...) 
 #include <avr/io.h> 		//Specific IO for AVR micro (all registers defined inside)
 #include <avr/interrupt.h>	//Interruptions for AVR micro
@@ -73,14 +74,6 @@ void OLED_print_all(char* word) {	//To print the whole word/sentence (pointer wh
 }
 
 void OLED_home(void) {	//It goes to position 0,0 in OLED
-	/*write_c(0x21);	//Set column address
-	write_c(0x00);		//to 0 (00h)
-	write_c(0x7f);
-	
-	write_c(0x22);		//Set row address
-	write_c(0x00);	
-	write_c(0x7);*/
-
 	OLED_pos(0, 0);
 }
 
@@ -158,9 +151,9 @@ void OLED_screen_Saver() {	//Prints a complete screen saver
 		}
 	}
 }
+*/
 
 
-/*
 #include <stdio.h>			//Standard constants and functions for C (printf..., scanf...) 
 #include <avr/io.h> 		//Specific IO for AVR micro (all registers defined inside)
 #include <avr/interrupt.h>	//Interruptions for AVR micro
@@ -252,10 +245,11 @@ void OLED_goto_line(uint8_t line) {	//To go to a specific line in OLED
 	//For page addressing mode, it needs to check if we are on a valid page
 	//OLED_home();
 	gen_page = line;
+	gen_col = 0;
 	if (line < MAX_PAGES) {
 		write_c(0xB0 + line);	//Set line/page 0-7 (requested format B0h to B7h)
 		
-		//We also go to the beginning of the column again
+		//We also go to the first column again
 		write_c(0x00);	//Lower nibble of start column address (00h)	
 		write_c(0x10);	//Upper nibble of start column address (10h)
 	}
@@ -316,11 +310,13 @@ void OLED_clear_arrow(uint8_t row, uint8_t col){
 
 void OLED_screen_Saver() {	//Prints a complete screen saver
 	OLED_clear_all();		//All display is cleared first
-	for(int p=0; p<MAX_PAGES; p++) { //Printing from up and down, and left to right
-		OLED_pos(p, 0);
-		for(int c=0; c<MAX_COLUMNS; c++) {
+	for(uint8_t p=0; p<MAX_PAGES; p++) { //Printing from up and down, and left to right
+		//OLED_goto_line(p);
+		gen_page = p;
+		for(uint8_t c=0; c<MAX_COLUMNS; c++) {
 			write_s(pgm_read_byte(&(screenSaver[p][c])));
 		}
+
 	}
 }
 
@@ -334,9 +330,9 @@ void write_s(uint8_t data){
 
 void OLED_update(){
 	//_delay_ms_(1/0.060); 		// update frequency
-	for (int r = 0; r < 8; r++){
+	for (uint8_t r = 0; r < 8; r++){
 		OLED_goto_line(r);
-		for (int c = 0; c < 128; c++){
+		for (uint8_t c = 0; c < 128; c++){
 			write_d(frame[r][c]);
 		}
 	}
@@ -348,4 +344,14 @@ void OLED_frame_fill(uint8_t data){
 			frame[r][c] = data;
 		}
 	}
-}*/
+}
+
+void OLED_frame_char_fill(char c){
+	//OLED_print_all("HELLOHELLOA");
+	for (uint8_t r = 0; r < 8; r++){
+		OLED_goto_line(r);
+		OLED_print_all("HELLOOOOOOOJAJAES");
+	}
+	//OLED_goto_line(3);
+	//fprintf(UART_p,"%d",gen_page);
+}

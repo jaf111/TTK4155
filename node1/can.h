@@ -8,7 +8,7 @@
 typedef struct {
 	uint8_t id;
 	uint8_t length;	
-	uint8_t data[8];
+	int8_t data[8];
 } packet;
 
 void CAN_init();
