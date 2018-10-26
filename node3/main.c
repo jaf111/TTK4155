@@ -3,6 +3,7 @@
 #include <string.h>
 #include "ubit.h"
 
+
 #include "bluetooth.h"
 
 int main(){
@@ -15,3 +16,7 @@ int main(){
 
 	return 0;
 }
+
+//useful webpage
+//https://infocenter.nordicsemi.com/index.jsp?topic=%2Fcom.nordic.infocenter.s130.api.v1.0.0%2Fmodules.html
+
