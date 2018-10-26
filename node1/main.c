@@ -58,11 +58,11 @@ int main() {
 	OLED_init();
 
 	//Menu initialization
-	menu_init();
+	//menu_init();
 	//OLED_screen_Saver();
 	//OLED_frame_fill(0x01);
 	//OLED_frame_char_fill('A');
-
+	//OLED_draw_circle(60,30,30);
 	//SPI initialization
 	SPI_init();
 
@@ -80,10 +80,8 @@ int main() {
 	OLED_home();
 	while(1) {
 		//fprintf(UART_p, "loop \r\n", 0);
-		cursor_move();
+		//cursor_move();
 		//OLED_frame_fill(0xFA);
-		//_delay_ms(20);
-		OLED_update();
 		//write_d(0xFF);
 		//SRAM_test();
 		//fprintf(OLED_p, main_menu.name);
@@ -121,19 +119,26 @@ int main() {
 		JoyX = ADC_read(JOY_LR);
 		JoyY = ADC_read(JOY_DU);
 		joy_coord = getJoyCoord(JoyX, JoyY, JoyX_init, JoyY_init);
-
+		fprintf(UART_p, "SLIDER_L: %d \r\n", joy_coord.slider_l_pos);
 		can_joystick.data[0] = JoyX;
 		can_joystick.data[1] = JoyY;
 		//fprintf(UART_p, "JoyX: %4d \r\n", can_joystick.data[0]);
 		//fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
 		CAN_send(&can_joystick);
-		//_delay_ms(200);
+		//_delay_ms(5);
 		//CAN_read();
 
 		fprintf(UART_p, "JoyX CAN: %4d   JOYX; %4d \r\n", MCP2515_read(MCP_TXB0D0+0),JoyX);
 		fprintf(UART_p, "JoyY CAN: %4d   JOYY; %4d \r\n", MCP2515_read(MCP_TXB0D0+1),JoyY);
 		
-
+		//OLED_draw_circle((JoyX/2), 60 - (JoyY/5), 6 + (joy_coord.slider_l_pos/10));
+		OLED_draw_rectangle((JoyX/2), 60 - (JoyY/5), (joy_coord.slider_l_pos/2), (joy_coord.slider_r_pos/5)); 
+		OLED_draw_rectangle((JoyX/2), 60 - (JoyY/5), (joy_coord.slider_l_pos/3), (joy_coord.slider_r_pos/8));
+		OLED_draw_rectangle((JoyX/2), 60 - (JoyY/5), (joy_coord.slider_l_pos/4), (joy_coord.slider_r_pos/15));
+		//OLED_draw_circle( 40 + (JoyX/5), 50 - (JoyY/8), 6);
+		//OLED_draw_circle( 40 + (JoyX/5), 50 - (JoyY/8), 2);
+		OLED_update();
+		OLED_clear_all();
 		//fprintf(UART_p, "Message data: %4x \r\n", new_message.length);
 		/*for (uint8_t i=0; i < 8; i++) {
 			fprintf(UART_p, "DATA %2x: %4x \r\n", i, new_message2.data[i]);

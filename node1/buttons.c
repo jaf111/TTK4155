@@ -19,7 +19,7 @@ int16_t JoyCoord_init(int16_t XY) {		//Get standby joystick position (calibratio
 }
 
 position getJoyCoord(int16_t X_coord, int16_t Y_coord, int16_t JoyX_init, int16_t JoyY_init) {	
-	position coord = {0, 0};		//Initialization of variable of type "position"
+	position coord = {0, 0, 0, 0}; 	//Initialization of variable of type "position"
 
 	/*X_coord -= JoyX_init;	//The current center point (offset) is subtracted for calibration
 	Y_coord -= JoyY_init;
@@ -39,6 +39,9 @@ position getJoyCoord(int16_t X_coord, int16_t Y_coord, int16_t JoyX_init, int16_
 		Y_coord -= 127;
 		coord.YY = Y_coord*100/127;
 	}
+
+	coord.slider_l_pos = ADC_read(SLIDER_L);
+	coord.slider_r_pos = ADC_read(SLIDER_R);
 
 	//fprintf(UART_p, "LEFT/RIGHT SIDE: %4d     ", coord.XX);
 	//fprintf(UART_p, "DOWN/UP SIDE: %4d     \n\r", coord.YY);

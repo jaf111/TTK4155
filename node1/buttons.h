@@ -10,6 +10,8 @@
 typedef struct {	//Definition of variable "position", formed by 2 inte16_t
 	int16_t XX;
 	int16_t YY;
+	int16_t slider_l_pos;
+	int16_t slider_r_pos;
 } position;
 
 void button_init(void);		//Using Port B, pin PB0 & PB1 on ATmega162

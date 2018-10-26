@@ -177,7 +177,7 @@ void cursor_move() {			//To manage the arrow in the current screen
 			}
 		}
 	//}
-	_delay_ms(500);
+	_delay_ms(100);
 }
 
 
