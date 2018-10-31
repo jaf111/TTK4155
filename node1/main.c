@@ -36,7 +36,7 @@ int16_t JoyY_init = 0;	//Initial Y coordinate of Joystick
 int main() {
 	//GPIO initialization
 	//led_init();		//LED initialization
-	//buzzer_init();		//Buzzer initialization
+	buzzer_init();		//Buzzer initialization
 
 	//USART initialization
 	USART_Init(MYUBRR);
@@ -63,6 +63,7 @@ int main() {
 	//OLED_frame_fill(0x01);
 	//OLED_frame_char_fill('A');
 	//OLED_draw_circle(60,30,30);
+
 	//SPI initialization
 	SPI_init();
 
@@ -78,7 +79,12 @@ int main() {
 
 	packet can_joystick = {.id = 0x16, .length = 0x02, .data = {0x01,0x02}};
 	OLED_home();
+
+
 	while(1) {
+		//buzzer_on();
+		play_song();
+
 		//fprintf(UART_p, "loop \r\n", 0);
 		//cursor_move();
 		//OLED_frame_fill(0xFA);
@@ -119,7 +125,7 @@ int main() {
 		JoyX = ADC_read(JOY_LR);
 		JoyY = ADC_read(JOY_DU);
 		joy_coord = getJoyCoord(JoyX, JoyY, JoyX_init, JoyY_init);
-		fprintf(UART_p, "SLIDER_L: %d \r\n", joy_coord.slider_l_pos);
+		//fprintf(UART_p, "SLIDER_L: %d \r\n", joy_coord.slider_l_pos);
 		can_joystick.data[0] = JoyX;
 		can_joystick.data[1] = JoyY;
 		//fprintf(UART_p, "JoyX: %4d \r\n", can_joystick.data[0]);
@@ -128,8 +134,8 @@ int main() {
 		//_delay_ms(5);
 		//CAN_read();
 
-		fprintf(UART_p, "JoyX CAN: %4d   JOYX; %4d \r\n", MCP2515_read(MCP_TXB0D0+0),JoyX);
-		fprintf(UART_p, "JoyY CAN: %4d   JOYY; %4d \r\n", MCP2515_read(MCP_TXB0D0+1),JoyY);
+		//fprintf(UART_p, "JoyX CAN: %4d   JOYX; %4d \r\n", MCP2515_read(MCP_TXB0D0+0),JoyX);
+		//fprintf(UART_p, "JoyY CAN: %4d   JOYY; %4d \r\n", MCP2515_read(MCP_TXB0D0+1),JoyY);
 		
 		//OLED_draw_circle((JoyX/2), 60 - (JoyY/5), 6 + (joy_coord.slider_l_pos/10));
 		OLED_draw_rectangle((JoyX/2), 60 - (JoyY/5), (joy_coord.slider_l_pos/2), (joy_coord.slider_r_pos/5)); 

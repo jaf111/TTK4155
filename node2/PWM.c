@@ -56,7 +56,7 @@ void PWM_PE3_init(uint16_t prescaler, uint16_t frequency) {		//PWM in timer 3, c
 	OCR3A = 0x0000;		//Width of the PWM (initialized to 0 = NOT WORKING)
 }
 
-void Set_PWMwidth(char ch_PWM, uint8_t PWM_width) {
+void Set_PWMwidth(char* ch_PWM, uint8_t PWM_width) {
 	if (ch_PWM == "PB5") {OCR1A = PWM_width;}
 	else if (ch_PWM == "PE3") {OCR3A = PWM_width;}
 }

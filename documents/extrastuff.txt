@@ -1,6 +1,6 @@
 Optional:
 
-- Menu handler needs to be implemented
+
 - Something weird on the menu print
 - Print from sram not ready
 - The buttons are not optimal

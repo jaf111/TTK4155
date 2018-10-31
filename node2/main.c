@@ -61,6 +61,11 @@ int main() {
 
 	packet can_joystick = {.id=0x16, .length=0x02, .data={0x01,0x02}};
 
+
+	buzzer_init();
+	//buzzer_on();
+	play_song();
+
 	while(1) {
 		//fprintf(UART_p, "%d\n\r", ADC_read()); 
 		//_delay_ms(500);

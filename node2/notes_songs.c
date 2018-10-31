@@ -1,5 +1,5 @@
 #ifndef F_CPU
-#define F_CPU 4915200	//Clock Speed (Oscillator)
+#define F_CPU 16000000	//Clock Speed (Oscillator)
 
 #include <util/delay.h>	//Functions for busy-wait delay loops
 #include <stdio.h>		//Standard constants and functions for C (printf..., scanf...) 
@@ -10,17 +10,17 @@
 #include "notes_songs.h"	//Prototype functions
 
 void buzzer_init() {		//Buzzer from USB board connected in MISC pin 3
-	DDRB |= (1 << DDB3);	//Enable pin 0 (bit DDB0) of Port B (register DDRB)
-	PORTB |= (0 << PB3);	//Set pin 0 (bit PB0) in PORT B (register PORTB) to 1, leave other bits unchanged
+	DDRB |= (1 << DDB4);	//Enable pin 0 (bit DDB0) of Port B (register DDRB)
+	PORTB |= (0 << PB4);	//Set pin 0 (bit PB0) in PORT B (register PORTB) to 1, leave other bits unchanged
 }
 
 void buzzer_on() {
-	PORTB |= (1 << PB3);	//Set pin 0 (bit PB0) in PORT B (register PORTB) to 1, leave other bits unchanged
+	PORTB |= (1 << PB4);	//Set pin 0 (bit PB0) in PORT B (register PORTB) to 1, leave other bits unchanged
 
 }
 
 void buzzer_off() {
-	PORTB &= ~(1 << PB3);	//Clear pin 0 (bit PB0) in PORT B (register PORTB), leave other bits unchanged
+	PORTB &= ~(1 << PB4);	//Clear pin 0 (bit PB0) in PORT B (register PORTB), leave other bits unchanged
 }
 
 void buzz(uint16_t frequency, uint8_t length) {
@@ -41,15 +41,14 @@ void buzz(uint16_t frequency, uint8_t length) {
 void play_song() {		// iterate over the notes of the melody:
 	fprintf(UART_p, "Mario Theme \n\r", 0);
 	
-	uint8_t size = sizeof(mario_melody) / sizeof(uint16_t);
+	uint8_t size = sizeof(underworld_melody) / sizeof(uint16_t);
 	//fprintf(UART_p, "SIZE %4d   \n\r", sizeof(uint8_t));
 	for (uint8_t thisNote = 0; thisNote<size; thisNote++) {
 		//to calculate the note duration, take 1 second divided by the note type
 		//e.g. quarter note = 1000/4, eighth note = 1000/8, etc.
-		uint8_t noteDuration = 1000 / pgm_read_byte(&(mario_tempo[thisNote]));
+		uint8_t noteDuration = 1000 / pgm_read_byte(&(underworld_tempo[thisNote]));
 
-		buzz(pgm_read_word(&(mario_melody[thisNote])), noteDuration);		//Time in ms!!
-		//fprintf(UART_p, "i: %4d, value: %4d: \n\r ", thisNote, pgm_read_word(&(mario_melody[thisNote])));
+		buzz(pgm_read_word(&(underworld_melody[thisNote])), noteDuration);	//Time in ms!!
 
 		//to distinguish the notes, set a minimum time between them.
 		uint8_t pauseBetweenNotes = noteDuration * 1.30;	//the note's duration + 30%
