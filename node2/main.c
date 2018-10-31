@@ -13,6 +13,7 @@
 #include "MCP2515.h"	//Prototype functions of CAN controller unit
 #include "can.h"		//Prototype functions of CAN communication
 #include "PWM.h"		//Prototype functions of PWM output
+#include "servo.h"		//Prototype functions of Servo motor
 
 #define JOY_LR 0x04		//ADC channel 1, where Left-Right Joystick is connected to
 #define JOY_DU 0x05		//ADC channel 2, where Down-Up Joystick is connected to
@@ -48,8 +49,8 @@ int main() {
 	//CAN controller (MCP2515) initialization
 	CAN_init();
 
-	//PWM initialization
-	PWM_init(256, 50);	//Prescaler N=256, and Frequency of 50Hz
+	//Servo initialization
+	Servo_init();	//Servo initialization (connected in PB5)
 
 	//ADC initialization
 	ADC_init();
@@ -99,7 +100,7 @@ int main() {
 		fprintf(UART_p, "JoyX: %4d \r\n", can_joystick.data[0]);
 		fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
 
-		Modify_PWM(can_joystick.data[0]);		
+		Move_Servo(can_joystick.data[0]);	//Change Servo direction
 	}
 	return 0;
 }
