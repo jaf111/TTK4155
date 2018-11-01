@@ -3,9 +3,9 @@
 #include "PWM.h"
 #include "servo.h"
 
-#define MAX_Width 250//131	//2.1ms at 50Hz
-#define IDLE_Width 194	//1.5ms at 50Hz
-#define MIN_Width 100//56	//0.9ms at 50Hz
+#define MAX_Width 131	//2.1ms at 50Hz
+#define IDLE_Width 94	//1.5ms at 50Hz
+#define MIN_Width 56	//0.9ms at 50Hz
 
 void Servo_init() {		//PWM initialization to control the servo
 	PWM_PB5_init(256, 50);	//PWM connected in PB5. Prescaler N=256, and Frequency of 50Hz

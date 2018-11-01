@@ -61,10 +61,9 @@ int main() {
 
 	packet can_joystick = {.id=0x16, .length=0x02, .data={0x01,0x02}};
 
-
-	buzzer_init();
+	//buzzer_init();
 	//buzzer_on();
-	play_song();
+	//play_song();
 
 	while(1) {
 		//fprintf(UART_p, "%d\n\r", ADC_read()); 
@@ -100,11 +99,11 @@ int main() {
 		packet new_message3 = CAN_read();*/
 		
 		packet can_joystick = CAN_read();
-		_delay_ms(200);
+		_delay_ms(50);
 
 		fprintf(UART_p, "JoyX: %4d \r\n", can_joystick.data[0]);
 		fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
-
+		fprintf(UART_p, "IR: %4d \r\n", ADC_read());
 		Move_Servo(can_joystick.data[0]);	//Change Servo direction
 	}
 	return 0;
