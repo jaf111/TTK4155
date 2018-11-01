@@ -22,7 +22,7 @@ int16_t JoyCoord_init(int16_t XY);	//Get standby joystick position (calibration)
 position getJoyCoord(int16_t X_coord, int16_t Y_coord, int16_t JoyX_init, int16_t JoyY_init);
 
 //Get function to take the current joystick direction
-void getJoyDirection(int16_t X_coord, int16_t Y_coord);
+uint8_t getJoyDirection(int16_t X_coord, int16_t Y_coord);
 
 void sliders();		//Status of both sliders analog values
 

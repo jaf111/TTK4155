@@ -49,7 +49,7 @@ position getJoyCoord(int16_t X_coord, int16_t Y_coord, int16_t JoyX_init, int16_
 	return coord;
 }
 
-void getJoyDirection(int16_t X_coord, int16_t Y_coord) {	//Current joystick direction
+uint8_t getJoyDirection(int16_t X_coord, int16_t Y_coord) {	//Current joystick direction
 	if (X_coord>Mov23_Pos) {			//More than 2/3 right
 		if (Y_coord>Mov23_Pos) {		//More than 2/3 up
 			if (X_coord>Y_coord) {direction = RIGHT;}	//The biggest number determines final position
@@ -76,6 +76,7 @@ void getJoyDirection(int16_t X_coord, int16_t Y_coord) {	//Current joystick dire
 	else {direction = NEUTRAL;}		//If nothing is pushed, then neutral position
 
 	fprintf(UART_p, "DIRECTION: %d \n\r", direction);
+	return direction;
 }
 
 void sliders() {		//Analog lecture of both slider positions
