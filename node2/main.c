@@ -14,6 +14,8 @@
 #include "can.h"		//Prototype functions of CAN communication
 #include "PWM.h"		//Prototype functions of PWM output
 #include "servo.h"		//Prototype functions of Servo motor
+#include "TWI_Master.h" //Prototype functions of TWI controller
+#include "motor.h"      //Prototype functions of motor 
 
 #define JOY_LR 0x04		//ADC channel 1, where Left-Right Joystick is connected to
 #define JOY_DU 0x05		//ADC channel 2, where Down-Up Joystick is connected to
@@ -34,9 +36,7 @@ int main() {
 	//USART initialization
 	USART_Init(MYUBRR);
 	//USART_Transmit(USART_Receive());	//To make printf() working in USART if not working check usart_Receive() ->while loop
-	//ADC initialization
-	//ADC_init();
-
+	
 	//Buttons initialization
 	//button_init();
 	//Stand-by joystick positions read (for the offset)
@@ -55,15 +55,24 @@ int main() {
 	//ADC initialization
 	ADC_init();
 
-	packet can_message1 = {.id=0x13, .length=0x08, .data={0x07,0x02,0x03,0x04,0x05,0x06,0x07,0x09}};	//Struct initialization
+	//TWI initialization
+	TWI_Master_Initialise();
+	TWCR |= (1<<TWIE)|(1<<TWINT); // Emable Interupt.
+
+	//Motor initialization
+	motor_init();
+
+	/*packet can_message1 = {.id=0x13, .length=0x08, .data={0x07,0x02,0x03,0x04,0x05,0x06,0x07,0x09}};	//Struct initialization
 	packet can_message2 = {.id=0x14, .length=0x07, .data={0x05,0x02,0x03,0x04,0x13,0x06,0x07}};
 	packet can_message3 = {.id=0x15, .length=0x07, .data={0x01,0x02,0x03,0x04,0x13,0x06,0x07}};
-
+	*/
 	packet can_joystick = {.id=0x16, .length=0x02, .data={0x01,0x02}};
-
+	
 	//buzzer_init();
 	//buzzer_on();
 	//play_song();
+
+
 
 	while(1) {
 		//fprintf(UART_p, "%d\n\r", ADC_read()); 
