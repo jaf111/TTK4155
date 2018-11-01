@@ -29,10 +29,9 @@ void motor_init(){
 	DDRH |= (1 << PH1); 	///Enable DIR pin (direction) 
 
 
-	DDRH |= (1 << PH5); 	//Set !OE low to enable output of encoder
-	DDRH |= (1 << PH3); 	//Set SEL low to get high byte
-	_delay_ms(20) 			//Wait about 20 microseconds
-
+	DDRH |= (1 << PH5); 	//Enable !OE to output of encoder
+	DDRH |= (1 << PH3); 	//Enable SEL to output
+	
 
 }
 
@@ -47,23 +46,21 @@ void reset_encoder(){
 int16_t read_encoder(){
 /*
 Normal procedure of reading the encoder:
-• Set !OE low to enable output of encoder //done in init
-• Set SEL low to get high byte //done in init
-• Wait about 20 microseconds //done in init
-• Read MSB
-• Set SEL high to get low byte
-• Wait about 20 microseconds
-• Read LSB
-• Toggle !RST to reset encoder
-• Set !OE high to disable output of encoder
-• Process received data....
+
+   PORTH &= ~(1 << PH5);		   // Set !OE low to enable output of encoder
+   PORTH &= ~(1 << PH3);		   // Lower SEL to get high byte
+   _delay_ms(20);			   // Wait about 20 microseconds
+   uint8_t MSB = PINK;			   // Read MSB
+   PORTH |= (1 << PH3);			   // Set SEL high to get low byte
+   _delay_ms(20);			   // Wait about 20 microseconds
+   uint8_t LSB = PINK;			   // Read LSB
+   PORTH &= ~(1 << PH4);		   // Toggle !RST to reset encoder
+   PORTH |= (1 << PH5);                    // Set !OE high to disable output of encoder
+   int16_t encoder_pos = (MSB << 8) + LSB; //Process received data.... 
+   return encoder_pos;
 */
-	int16_t encoder_pos = 
-	return encoder_pos;
+
 }
-
-
-
 
 void set_motor_direction(uint8_t dir){
 	switch(dir){				// {NEUTRAL = 0, RIGHT = 1, UP = 2, LEFT = 3, DOWN = 4}
@@ -76,6 +73,7 @@ void set_motor_direction(uint8_t dir){
 			break;
 	}
 }
+
 
 void motor_move(int16_t encoder_pos, int16_t speed){
 	if(encoder_pos > 100){
@@ -91,10 +89,12 @@ void motor_move(int16_t encoder_pos, int16_t speed){
 	//dir = IDLE;
 }
 
+
 void set_motor_speed(int16_t speed){
 	message_buffer[0] = (DAC << TWI_ADR_BITS) | (FALSE << WI_READ_BIT);	// First call consists of TWI slave address
 	message_buffer[1] = TWI_CMD_MASTER_WRITE;		// First byte is write command
 	message_buffer[2] = speed;						// Send desired motor speed to DAC
+	_delay_ms(50);
 	TWI_Start_transceiver_With_Data(message_buffer, 3);	// start transmission
 }
 
