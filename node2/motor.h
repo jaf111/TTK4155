@@ -1,6 +1,6 @@
 #ifndef MOTOR_H
 #define MOTOR_H
-#include "buttons.h"
+#include "buttons.h"	// needs this in order to take in direction from joystick (direction_t)
 
 typedef enum motor_direction { 
 	LEFT,

@@ -14,6 +14,8 @@ typedef struct {	//Definition of variable "position", formed by 2 inte16_t
 	int16_t slider_r_pos;
 } position;
 
+typedef enum JoyDir{JOY_LEFT, JOY_RIGHT, JOY_UP, JOY_DOWN, JOY_NEUTRAL} direction_t;	//Enum with all joystick directions
+
 void button_init(void);		//Using Port B, pin PB0 & PB1 on ATmega162
 
 int16_t JoyCoord_init(int16_t XY);	//Get standby joystick position (calibration)

@@ -41,26 +41,26 @@ void reset_encoder(){
 
 
 int16_t read_encoder(){
-/*
-Normal procedure of reading the encoder:
 
-   PORTH &= ~(1 << PH5);		   // Set !OE low to enable output of encoder
-   PORTH &= ~(1 << PH3);		   // Lower SEL to get high byte
-   _delay_ms(20);			   // Wait about 20 microseconds
-   uint8_t MSB = PINK;			   // Read MSB
-   PORTH |= (1 << PH3);			   // Set SEL high to get low byte
-   _delay_ms(20);			   // Wait about 20 microseconds
-   uint8_t LSB = PINK;			   // Read LSB
-   PORTH &= ~(1 << PH4);		   // Toggle !RST to reset encoder
-   PORTH |= (1 << PH5);                    // Set !OE high to disable output of encoder
+//Normal procedure of reading the encoder:
+
+   PORTH &= ~(1 << PH5);		  	// Set !OE low to enable output of encoder
+   PORTH &= ~(1 << PH3);		   	// Lower SEL to get high byte
+   _delay_ms(20);			  	  	// Wait about 20 microseconds
+   uint8_t MSB = PINK;				// Read MSB
+   PORTH |= (1 << PH3);			  	// Set SEL high to get low byte
+   _delay_ms(20);			   		// Wait about 20 microseconds
+   uint8_t LSB = PINK;			   	// Read LSB
+   PORTH &= ~(1 << PH4);		   	// Toggle !RST to reset encoder
+   PORTH |= (1 << PH5);             // Set !OE high to disable output of encoder
    int16_t encoder_pos = (MSB << 8) + LSB; //Process received data.... 
+
    return encoder_pos;
-*/
 
 }
 
-void set_motor_direction(direction_t direction){
-	switch(direction){				// {NEUTRAL = 0, RIGHT = 1, UP = 2, LEFT = 3, DOWN = 4}
+void set_motor_direction(direction_t direction){	// Take in direction from joystick and set motor direction
+	switch(direction){
 		case LEFT:
 			PORTH &= ~(1 << PH1); //Set direction left  
 			fprintf(UART_p, "LEFT\r\n", 0);
@@ -100,8 +100,4 @@ void set_motor_speed(uint8_t speed){
 	_delay_ms(50);
 	TWI_Start_Transceiver_With_Data(message_buffer, 3);	// start transmission
 }
-
-
-
-
 
