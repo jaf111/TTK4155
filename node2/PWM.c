@@ -56,6 +56,18 @@ void PWM_PE3_init(uint16_t prescaler, uint16_t frequency) {		//PWM in timer 3, c
 	OCR3A = 0x0000;		//Width of the PWM (initialized to 0 = NOT WORKING)
 }
 
+void Timer_PB7_init(uint16_t prescaler, uint16_t frequency) {		//(internal) Timer of 8 bits, in PB7
+	TCCR0A |= (0<<WGM00) | (1<<WGM01);	 //Configure Clear Timer on Compare Match (CTC), mode 2. TOP value is OCR0A
+	TCCR0B |= (0<<WGM02);
+	
+	TCCR0B |= PWM_setPrescaler(prescaler);	//Prescaler is set in the PWM output
+
+	TCCR0A |= (0<<COM0A0) | (1<<COM0A1);	//Clear OC0A on Compare Match
+
+	uint16_t TOP = (F_CPU/(frequency*2*prescaler)) - 1;
+	OCR0A = TOP;		//ICR3 (defined as TOP) is loaded according to the requested frequency
+}
+
 void Set_PWMwidth(char* ch_PWM, uint8_t PWM_width) {
 	if (ch_PWM == "PB5") {OCR1A = PWM_width;}
 	else if (ch_PWM == "PE3") {OCR3A = PWM_width;}
