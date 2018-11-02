@@ -86,7 +86,7 @@ int main() {
 	
 
 	while(1) {
-		play_song();
+		//play_song();
 
 		//fprintf(UART_p, "loop \r\n", 0);
 		//cursor_move();

@@ -1,30 +1,27 @@
 #define F_CPU 16000000	//Clock Speed (Oscillator)
 
 #include <avr/io.h>
-#include <util/delay.h>
+#include <stdio.h>
+#include <util/delay.h>	//Functions for busy-wait delay loops
 
 #include "motor.h"
 #include "TWI_Master.h"
+#include "uart.h"
+#include "buttons.h"
 
 // Digital-analog converter address
 #define DAC 0x28
 
 // Sample TWI transmission commands
-#define TWI_CMD_MASTER_WRITE 0x10
+#define TWI_CMD_MASTER_WRITE 0b0
  
-typedef enum motor_direction { 
-    IDLE = -1,
-    LEFT = 0,    
-    RIGHT = 1
-} motor_dir_t;
-
-motor_dir_t dir = IDLE; 
-uint8_t message_buffer[4];	//
+motor_dir_t dir = RIGHT;
+uint8_t message_buffer[3];	//
 
 
 void motor_init(){
 	DDRH |= (1 << PH4); 	//Enable EN pin
-	PORTH |= (1 << PINH4);	//Set EN pin high to enable motor
+	PORTH |= (1 << PH4);	//Set EN pin high to enable motor
 
 	DDRH |= (1 << PH1); 	///Enable DIR pin (direction) 
 
@@ -38,7 +35,7 @@ void motor_init(){
 
 void reset_encoder(){
 	PORTH &= ~(0 << PINH4);	//Clear RST pin
-	_delay_ms(20) 
+	_delay_ms(20);
 	PORTH |= (1 << PINH4);	//Set RST pin to high
 }
 
@@ -62,40 +59,46 @@ Normal procedure of reading the encoder:
 
 }
 
-void set_motor_direction(uint8_t dir){
-	switch(dir){				// {NEUTRAL = 0, RIGHT = 1, UP = 2, LEFT = 3, DOWN = 4}
+void set_motor_direction(direction_t direction){
+	switch(direction){				// {NEUTRAL = 0, RIGHT = 1, UP = 2, LEFT = 3, DOWN = 4}
 		case LEFT:
-			PORTH |= (0 << PH1); //Set direction left  
+			PORTH &= ~(1 << PH1); //Set direction left  
+			fprintf(UART_p, "LEFT\r\n", 0);
+			dir = LEFT;
 			break;
 		
 		case RIGHT:
-			PORTH |= (1 << PH1); //Set direction right 
+			PORTH |= (1 << PH1); //Set direction right
+			dir = RIGHT;
 			break;
 	}
+	fprintf(UART_p, " motor dir = %d \r \n",dir);
 }
 
 
-void motor_move(int16_t encoder_pos, int16_t speed){
+void motor_move(int16_t encoder_pos, uint8_t speed){
 	if(encoder_pos > 100){
 		dir = LEFT;
-		set_motor_direction();
+		set_motor_direction(dir);
 		set_motor_speed(speed);
 	}
 	else{
 		dir = RIGHT;
-		set_motor_direction();
+		set_motor_direction(dir);
 		set_motor_speed(speed);
 	}
 	//dir = IDLE;
 }
 
 
-void set_motor_speed(int16_t speed){
-	message_buffer[0] = (DAC << TWI_ADR_BITS) | (FALSE << WI_READ_BIT);	// First call consists of TWI slave address
-	message_buffer[1] = TWI_CMD_MASTER_WRITE;		// First byte is write command
+void set_motor_speed(uint8_t speed){
+	uint8_t adr = 0x50;
+	uint8_t cmd = 0x00;
+	message_buffer[0] = adr;	// First call consists of TWI slave address
+	message_buffer[1] = cmd;		// First byte is write command
 	message_buffer[2] = speed;						// Send desired motor speed to DAC
 	_delay_ms(50);
-	TWI_Start_transceiver_With_Data(message_buffer, 3);	// start transmission
+	TWI_Start_Transceiver_With_Data(message_buffer, 3);	// start transmission
 }
 
 

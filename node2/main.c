@@ -4,6 +4,7 @@
 #include <util/delay.h>	//Functions for busy-wait delay loops
 #include <stdio.h>		//Standard constants and functions for C (printf..., scanf...) 
 #include <avr/io.h> 	//Specific IO for AVR micro (all registers defined inside)
+#include <avr/interrupt.h>
 
 #include "led.h"		//Prototype functions of GPIO
 #include "uart.h"		//Prototype functions of USART unit
@@ -56,9 +57,10 @@ int main() {
 	ADC_init();
 
 	//TWI initialization
+	
 	TWI_Master_Initialise();
-	TWCR |= (1<<TWIE)|(1<<TWINT); // Emable Interupt.
-
+	//TWCR |= (1<<TWIE)|(1<<TWINT); // Enable Interupt.
+	sei();							// Enable interrupt
 	//Motor initialization
 	motor_init();
 
@@ -72,7 +74,7 @@ int main() {
 	//buzzer_on();
 	//play_song();
 
-
+	//set_motor_direction(1);
 
 	while(1) {
 		//fprintf(UART_p, "%d\n\r", ADC_read()); 
@@ -110,10 +112,20 @@ int main() {
 		packet can_joystick = CAN_read();
 		_delay_ms(50);
 
-		fprintf(UART_p, "JoyX: %4d \r\n", can_joystick.data[0]);
-		fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
+		fprintf(UART_p, "JoyX: %4d ", can_joystick.data[0]);
+		fprintf(UART_p, "JoyY: %4d ", can_joystick.data[1]);
 		fprintf(UART_p, "IR: %4d \r\n", ADC_read());
 		Move_Servo(can_joystick.data[0]);	//Change Servo direction
+
+		direction_t joy_dir = getJoyDirection(can_joystick.data[0],can_joystick.data[1]);
+		set_motor_direction(joy_dir);
+		
+		fprintf(UART_p, " DIR = %d \r \n",joy_dir);
+		if (joy_dir == JOY_LEFT || joy_dir == JOY_RIGHT){
+			set_motor_speed(0x008F);
+		} else {
+			set_motor_speed(0x0000);
+		}
 	}
 	return 0;
 }

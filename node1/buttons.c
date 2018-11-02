@@ -49,7 +49,7 @@ position getJoyCoord(int16_t X_coord, int16_t Y_coord, int16_t JoyX_init, int16_
 	return coord;
 }
 
-uint8_t getJoyDirection(int16_t X_coord, int16_t Y_coord) {	//Current joystick direction
+direction getJoyDirection(int16_t X_coord, int16_t Y_coord) {	//Current joystick direction
 	if (X_coord>Mov23_Pos) {			//More than 2/3 right
 		if (Y_coord>Mov23_Pos) {		//More than 2/3 up
 			if (X_coord>Y_coord) {direction = RIGHT;}	//The biggest number determines final position
