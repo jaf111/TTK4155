@@ -45,54 +45,48 @@ t_menu extras;
 t_menu options;
 t_menu screensaver;
 t_menu songs;
+t_menu paint;
 t_menu brightness;
 
 void menu_system() {
-	//fprintf(UART_p, "BEGINNING MENU INIT!!!!!!!!!!!!!!!: \r\n", 0);
 	//Main menu page create
-	main_menu = (t_menu){"---Main Menu---", NULL, NULL, NULL}; //something is wrong with the print
+	main_menu = (t_menu){"---Main Menu---", NULL, NULL, NULL}; 
 	game = (t_menu){"Game", &main_menu, NULL, NULL};
 	highscore = (t_menu){"Highscore", &main_menu, NULL, NULL};
 	extras = (t_menu){"Extras", &main_menu, NULL, NULL};
 	options = (t_menu){"Options", &main_menu, NULL, NULL};
-	//fprintf(UART_p, "MIDDLE MENU INIT!!!!!!!!!!!!!!!22222: \r\n", 0);
+
 	//Extras page create
 	screensaver = (t_menu){"Screensaver", &extras, NULL, NULL};
 	songs = (t_menu){"Songs", &extras, NULL, NULL};
+	paint = (t_menu){"Paint", &extras, NULL, NULL};
 
 	//Options page create
 	brightness = (t_menu){"Brightness", &options, NULL, NULL};
 
 	//Main menu config
-	/*set_children(&main_menu, &game);
-	set_sibling(&game, &highscore);
-	set_sibling(&highscore, &extras);
-	set_sibling(&extras, &options);*/
 	main_menu.children = &game;
 	game.sibling = &highscore;
 	highscore.sibling = &extras;
 	extras.sibling = &options;
 	
 	//Extras config
-	/*set_children(&extras, &screensaver);
-	set_sibling(&screensaver, &songs);*/
 	extras.children = &screensaver;
 	screensaver.sibling = &songs;
+	songs.sibling = &paint;
 	
 	//Options config
-	//set_children(&options, &brightness);
 	options.children = &brightness;
 	current_menu = &main_menu;
 	print_menu(current_menu);
 }
 
 void print_menu(t_menu* menu){
-	OLED_clear_all();       //All screen is cleared
-	OLED_home();
+	OLED_clear_all();       		//Entire screen is cleared
 	displayed_lines = 0;
 
 	fprintf(OLED_p, menu->name, 0);
-	int line = 1;
+	uint8_t line = 1;
 
 	menu = menu->children;
 	while(menu && (line < 5)) {
@@ -102,6 +96,7 @@ void print_menu(t_menu* menu){
 		line++;
 		menu = menu->sibling;
 	}
+	OLED_home();
 }
 
 void menu_init(){
@@ -113,6 +108,32 @@ uint8_t JoyDU_last = 0;
 uint8_t JoyDU_now = 0;
 uint8_t JoyLR_last = 0;
 uint8_t JoyLR_now = 0;
+
+/*
+t_menu* menu_cursor = &main_menu.children;
+
+void menu_navigate(joy_direction_t joy_dir){
+	OLED_pos(pointerUP, 5);			//Pointer located on left side (column 5) of current option
+	OLED_print_arrow(pointerUP, 5);	//Arrow printed
+	switch (joy_dir){
+		case JOY_NEUTRAL:
+			break;
+		case JOY_UP:
+			OLED_clear_arrow(pointerUP, 5);	//Current arrow removed
+			pointerUP--;					//Pointer updated
+			if (pointerUP < 1) {
+				pointerUP = displayed_lines-1;	//To ensure a cyclical pointer
+			}
+			break;
+		case JOY_DOWN:
+			OLED_clear_arrow(pointerUP, 5);
+			pointerUP++;
+			if (pointerUP > displayed_lines) {
+				pointerUP = 1;
+			}
+	}
+}
+*/
 
 void cursor_move() {			//To manage the arrow in the current screen
 	OLED_pos(pointerUP, 5);		//Pointer located on left side (column 5) of current option
@@ -148,12 +169,14 @@ void cursor_move() {			//To manage the arrow in the current screen
 			else{
 				OLED_home();
 				current_menu = current_menu->children;
+				print_menu(current_menu);
+				/*
 				fprintf(OLED_p, current_menu->name, 0);
 
 				for (int i = 0; i < pointerUP - 1; i++) {
 					current_menu = current_menu->sibling;
 				}
-				print_menu(current_menu);
+				print_menu(current_menu);*/
 				pointerLR = pointerUP;		//Arrow position determines sub-menu screen
 				pointerUP = 1;				//Arrow placed in the first line again
 				menu_handler();
@@ -183,9 +206,12 @@ void cursor_move() {			//To manage the arrow in the current screen
 
 //something is wrong here
 void menu_handler(void){
-	if(strcmp(current_menu->name, "Screensaver") == 0){
+	if(current_menu = &screensaver){
 		OLED_clear_all();
 		OLED_screen_Saver();
+	}
+	else if (current_menu = &paint){
+		OLED_paint();
 	}
 }
 

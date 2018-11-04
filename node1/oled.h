@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 
+typedef enum tools{CIRCLE, SQUARE, BRUSH} tools_t;	//Types of paint tools
+
 void write_c(uint8_t cmd);		//To write a (configuration) command into the OLED
 void write_d(uint8_t cmd);		//To print data into the OLED
 void write_s(uint8_t data);
@@ -33,6 +35,11 @@ void OLED_screen_Saver();	//Prints a complete screen saver
 void OLED_draw_pixel(uint8_t bit, uint8_t x, uint8_t y);
 void OLED_draw_rectangle(uint8_t x0, uint8_t xe, uint8_t y0, uint8_t ye);
 void OLED_draw_circle(uint8_t x0, uint8_t y0, uint8_t r);
+
+void OLED_paint();
+
+void OLED_cursor();
+
 
 //It opens a file to read/write. Necessary to use printf() (and similar functions) with the OLED.
 //Otherwise one should write manually to OLED

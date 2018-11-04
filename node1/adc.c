@@ -33,14 +33,14 @@ void ADC_init(void){
 
 uint8_t ADC_read(uint8_t channel) {
 	volatile uint8_t *adc = (uint8_t *) adc_init_address;	//A new variable is created, located in the defined position/address 
-	_delay_us(1);		//Courtesy time to ensure ADC does not get stuck
+	_delay_us(1);					//Courtesy time to ensure ADC does not get stuck
 
-	adc[channel] = channel;
+	adc[channel] = channel;			// Choose adc channel
 	
 	//While status of PINE0 (bit 0, managed by PE0) is 0, nothing is done.
-	while (PINE & (1<<PE0));	//We wait until ADC conversion process finishes (supposedly 40us according to datasheet)
+	while (PINE & (1<<PE0));		//Wait until ADC conversion process finishes (supposedly 40us according to datasheet)
 	
-	_delay_us(60);	 //Delay between ADC lectures (at least 600ns according to datasheet)
+	_delay_us(60);					//Delay between ADC lectures (at least 600ns according to datasheet)
 	
 	return *adc;
 }

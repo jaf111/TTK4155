@@ -28,51 +28,41 @@
 #define MENU2 4			//Position of parent menu 2
 #define MENU3 10		//Position of parent menu 3
 
-uint8_t JoyX = 0;		//X coordinate of Joystick
-uint8_t JoyY = 0;		//Y coordinate of Joystick
-uint8_t JoyX_init = 0;	//Initial X coordinate of Joystick
-uint8_t JoyY_init = 0;	//Initial Y coordinate of Joystick
+/*
+typedef struct {
+	uint8_t JoyX = 0;		//X coordinate of Joystick
+	uint8_t JoyY = 0;		//Y coordinate of Joystick
+	uint8_t JoyX_init = 0;	//Initial X coordinate of Joystick
+	uint8_t JoyY_init = 0;	//Initial Y coordinate of Joystick
+} MF_board_input;*/
+
 
 int main() {
 	//GPIO initialization
 	//led_init();		//LED initialization
 	buzzer_init();		//Buzzer initialization
 
-	//USART initialization
 	USART_Init(MYUBRR);
-	//USART_Transmit(USART_Receive());	//To make printf() working in USART
+	//USART_Transmit(USART_Receive());	//To make printf() work in USART
 
-	//SRAM initialization
 	SRAM_init();
 
-	//ADC initialization
 	ADC_init();
 
-	//Buttons initialization
-	button_init();
-	//Stand-by joystick positions read (for the offset)
-	JoyX_init = JoyCoord_init(ADC_read(JOY_LR));
-	JoyY_init = JoyCoord_init(ADC_read(JOY_DU));
+	buttons_init();
 
-	//OLED initialization
 	OLED_init();
 
-	//Menu initialization
 	menu_init();
 	//OLED_screen_Saver();
 	//OLED_frame_fill(0x01);
 	//OLED_frame_char_fill('A');
 	//OLED_draw_circle(60,30,30);
 
-	//SPI initialization
 	SPI_init();
 
-	//CAN controller (MCP2515) initialization
 	CAN_init();
-	printf("init done\n\r");
 	fprintf(UART_p, "init done \n\r", 0);
-
-	position joy_coord = {0, 0, 0, 0};
 
 	/*
 	packet can_message1 = {.id = 0x13, .length = 0x08, .data = {0x07,0x02,0x03,0x04,0x05,0x06,0x07,0x09}};	//Struct initialization
@@ -80,15 +70,16 @@ int main() {
 	packet can_message3 = {.id = 0x15, .length = 0x07, .data = {0x01,0x02,0x03,0x04,0x13,0x06,0x07}};*/
 
 	packet can_joystick = {.id = 0x16, .length = 0x02, .data = {0x01,0x02}};
-	OLED_home();
 
 	//buzzer_on();
 	
 
 	while(1) {
+		joy_position_t joy_coord = buttons_get_joy_coord();	// (use struct from buttons.h to get coordinates (joy_coord.XX etc))
+		slider_position_t slider_pos = buttons_get_slider_positions();
 		//play_song();
 
-		//fprintf(UART_p, "loop \r\n", 0);
+		//fprintf(UART_p, "slider, R = %d   ADC read = %d  \r\n", slider_pos.right, ADC_read(SLIDER_R));
 		//cursor_move();
 		//OLED_frame_fill(0xFA);
 		//write_d(0xFF);
@@ -124,7 +115,7 @@ int main() {
 		CAN_send(&can_message3);
 		_delay_ms(500);
 		packet new_message3 = CAN_read();*/
-		
+		/*
 		JoyX = ADC_read(JOY_LR);
 		JoyY = ADC_read(JOY_DU);
 		//joy_coord = getJoyCoord(JoyX, JoyY, JoyX_init, JoyY_init);
@@ -136,16 +127,17 @@ int main() {
 		CAN_send(&can_joystick);
 		//_delay_ms(5);
 		//CAN_read();
-
+		*/
 		//fprintf(UART_p, "JoyX CAN: %4d   JOYX; %4d \r\n", MCP2515_read(MCP_TXB0D0+0),JoyX);
 		//fprintf(UART_p, "JoyY CAN: %4d   JOYY; %4d \r\n", MCP2515_read(MCP_TXB0D0+1),JoyY);
 		
 		//OLED_draw_circle((JoyX/2), 60 - (JoyY/5), 6 + (joy_coord.slider_l_pos/10));
-		//OLED_draw_rectangle((JoyX/2), 60 - (JoyY/5), (joy_coord.slider_l_pos/2), (joy_coord.slider_r_pos/5)); 
-		//OLED_draw_rectangle((JoyX/2), 60 - (JoyY/5), (joy_coord.slider_l_pos/3), (joy_coord.slider_r_pos/8));
-		//OLED_draw_rectangle((JoyX/2), 60 - (JoyY/5), (joy_coord.slider_l_pos/4), (joy_coord.slider_r_pos/15));
+		//OLED_draw_rectangle((joy_coord.XX/2), 60 - (joy_coord.YY/5), (slider_pos.left/2), (slider_pos.right/5)); 
+		//OLED_draw_rectangle((joy_coord.XX/2), 60 - (joy_coord.YY/5), (slider_pos.left/3), (slider_pos.right/8));
+		//OLED_draw_rectangle((joy_coord.XX/2), 60 - (joy_coord.YY/5), (slider_pos.left/4), (slider_pos.right/15));
 		//OLED_draw_circle( 40 + (JoyX/5), 50 - (JoyY/8), 6);
 		//OLED_draw_circle( 40 + (JoyX/5), 50 - (JoyY/8), 2);
+		OLED_paint();
 		OLED_update();
 		//OLED_clear_all();
 		//fprintf(UART_p, "Message data: %4x \r\n", new_message.length);
