@@ -143,14 +143,14 @@ const uint8_t PROGMEM underworld_tempo[] = {
 	18,18,18,6,6,6,6,6,6,18,18,18,18,18,18,10,
 	10,10,10,10,10,3,3,3
 };
-/*const uint16_t PROGMEM adventure_time_melody = {
-    notes['D5'],notes['G5'],notes['G5'],notes['G5'],notes['G5'],notes['FS5'],
-    notes['FS5'],notes['E5'],notes['D5'],notes['E5'],notes['D5'],notes['D5'],
-    notes['C5'],notes['B5'],notes['A5'],notes['G4'],0,notes['C5'],notes['B5'],
-    notes['A5'],notes['G4'],0,notes['G5'],0,notes['G5'],notes['G5'],0,notes['G5'],
-    notes['FS5'],0,notes['E5'],notes['E5'],notes['D5'],notes['D5'],notes['C5'],
-    notes['C5'],notes['C5'],notes['D5'],notes['D5'],notes['A5'], notes['B5'],
-    notes['A5'],notes['G4'],notes['G5']
+const uint16_t PROGMEM adventure_time_melody = {
+    NOTE_D5,NOTE_G5,NOTE_G5,NOTE_G5,NOTE_G5,NOTE_FS5,
+    NOTE_FS5,NOTE_E5,NOTE_D5,NOTE_E5,NOTE_D5,NOTE_D5,
+    NOTE_C5,NOTE_B5,NOTE_A5,NOTE_G4,0,NOTE_C5,NOTE_B5,
+    NOTE_A5,NOTE_G4,0,NOTE_G5,0,NOTE_G5,NOTE_G5,0,NOTE_G5,
+    NOTE_FS5,0,NOTE_E5,NOTE_E5,NOTE_D5,NOTE_D5,NOTE_C5,
+    NOTE_C5,NOTE_C5,NOTE_D5,NOTE_D5,NOTE_A5, NOTE_B5,
+    NOTE_A5,NOTE_G4,NOTE_G5
 };
 const uint8_t PROGMEM adventure_time_tempo = {
 	24,24,12,12,12,24,12,24,24,24,12,24,12,12,12,
@@ -158,17 +158,17 @@ const uint8_t PROGMEM adventure_time_tempo = {
 	24,12,12,24,8,24,24,8,8,24,12,24,24,12 
 };
 const uint16_t PROGMEM star_wars_melody = {
-	notes['G4'],notes['G4'],notes['G4'],notes['EB4'],0,notes['BB4'],notes['G4'],
-	notes['EB4'],0,notes['BB4'],notes['G4'],0,notes['D4'],notes['D4'],notes['D4'],
-	notes['EB4'],0,notes['BB3'],notes['FS3'],notes['EB3'],0,notes['BB3'],notes['G3'],
-	0,notes['G4'],0,notes['G3'],notes['G3'],0,notes['G4'],0,notes['FS4'],notes['F4'],
-	notes['E4'],notes['EB4'],notes['E4'],0,notes['GS3'],notes['CS3'],0,notes['C3'],
-	notes['B3'],notes['BB3'],notes['A3'],notes['BB3'],0,notes['EB3'],notes['FS3'],
-	notes['EB3'],notes['FS3'],notes['BB3'],0,notes['G3'],notes['BB3'],notes['D4'],
-	0,notes['G4'],0,notes['G3'],notes['G3'],0,notes['G4'],0,notes['FS4'],notes['F4'],
-	notes['E4'],notes['EB4'],notes['E4'],0,notes['GS3'],notes['CS3'],0,notes['C3'],
-	notes['B3'],notes['BB3'],notes['A3'],notes['BB3'],0,notes['EB3'],notes['FS3'],
-	notes['EB3'],notes['BB3'],notes['G3'],notes['EB3'],0,notes['BB3'],notes['G3']
+	NOTE_G4,NOTE_G4,NOTE_G4,NOTE_EB4,0,NOTE_BB4,NOTE_G4,
+	NOTE_EB4,0,NOTE_BB4,NOTE_G4,0,NOTE_D4,NOTE_D4,NOTE_D4,
+	NOTE_EB4,0,NOTE_BB3,NOTE_FS3,NOTE_EB3,0,NOTE_BB3,NOTE_G3,
+	0,NOTE_G4,0,NOTE_G3,NOTE_G3,0,NOTE_G4,0,NOTE_FS4,NOTE_F4,
+	NOTE_E4,NOTE_EB4,NOTE_E4,0,NOTE_GS3,NOTE_CS3,0,NOTE_C3,
+	NOTE_B3,NOTE_BB3,NOTE_A3,NOTE_BB3,0,NOTE_EB3,NOTE_FS3,
+	NOTE_EB3,NOTE_FS3,NOTE_BB3,0,NOTE_G3,NOTE_BB3,NOTE_D4,
+	0,NOTE_G4,0,NOTE_G3,NOTE_G3,0,NOTE_G4,0,NOTE_FS4,NOTE_F4,
+	NOTE_E4,NOTE_EB4,NOTE_E4,0,NOTE_GS3,NOTE_CS3,0,NOTE_C3,
+	NOTE_B3,NOTE_BB3,NOTE_A3,NOTE_BB3,0,NOTE_EB3,NOTE_FS3,
+	NOTE_EB3,NOTE_BB3,NOTE_G3,NOTE_EB3,0,NOTE_BB3,NOTE_G3
 };
 const uint8_t PROGMEM star_wars_tempo = {
 	2,2,2,4,8,6,2,4,8,6,2,8,2,2,2,4,8,6,2,4,8,6,2,8,2,
@@ -177,22 +177,21 @@ const uint8_t PROGMEM star_wars_tempo = {
 	4,2,8,4,2,2,4,2,4,8,4,2
 };
 const uint16_t PROGMEM popcorn_melody = {
-	notes['A4'],notes['G4'],notes['A4'],notes['E4'],notes['C4'],notes['E4'],notes['A3'],notes['A4'],
-	notes['G4'],notes['A4'],notes['E4'],notes['C4'],notes['E4'],notes['A3'],notes['A4'],notes['B4'],
-	notes['C5'],notes['B4'],notes['C5'],notes['A4'],notes['B4'],notes['A4'],notes['B4'],notes['G4'],
-	notes['A4'],notes['G4'],notes['A4'],notes['F4'],notes['A4'],notes['A4'],notes['G4'],notes['A4'],
-	notes['E4'],notes['C4'],notes['E4'],notes['A3'],notes['A4'],notes['G4'],notes['A4'],notes['E4'],
-	notes['C4'],notes['E4'],notes['A3'],notes['A4'],notes['B4'],notes['C5'],notes['B4'],notes['C5'],
-	notes['A4'],notes['B4'],notes['A4'],notes['B4'],notes['G4'],notes['A4'],notes['G4'],notes['A4'],
-	notes['B4'],notes['C5'],notes['E5'],notes['D5'],notes['E5'],notes['C5'],notes['G4'],notes['C5'],
-	notes['E4'],notes['E5'],notes['D5'],notes['E5'],notes['C5'],notes['G4'],notes['C5'],notes['E4'],
-	notes['E5'],notes['FS5'],notes['G5'],notes['FS5'],notes['G5'],notes['E5'],notes['FS5'],notes['E5'],
-	notes['FS5'],notes['D5'],notes['E5'],notes['D5'],notes['E5'],notes['C5'],notes['E5'],	
-	###
-	notes['E5'],notes['D5'],notes['E5'],notes['C5'],notes['G4'],notes['C5'],notes['E4'],notes['E5'],
-	notes['D5'],notes['E5'],notes['C5'],notes['G4'],notes['C5'],notes['E4'],notes['E5'],notes['FS5'],
-	notes['G5'],notes['FS5'],notes['G5'],notes['E5'],notes['FS5'],notes['E5'],notes['FS5'],notes['D5'],
-	notes['E5'],notes['D5'],notes['B4'],notes['D5'],notes['E5']
+	NOTE_A4,NOTE_G4,NOTE_A4,NOTE_E4,NOTE_C4,NOTE_E4,NOTE_A3,NOTE_A4,
+	NOTE_G4,NOTE_A4,NOTE_E4,NOTE_C4,NOTE_E4,NOTE_A3,NOTE_A4,NOTE_B4,
+	NOTE_C5,NOTE_B4,NOTE_C5,NOTE_A4,NOTE_B4,NOTE_A4,NOTE_B4,NOTE_G4,
+	NOTE_A4,NOTE_G4,NOTE_A4,NOTE_F4,NOTE_A4,NOTE_A4,NOTE_G4,NOTE_A4,
+	NOTE_E4,NOTE_C4,NOTE_E4,NOTE_A3,NOTE_A4,NOTE_G4,NOTE_A4,NOTE_E4,
+	NOTE_C4,NOTE_E4,NOTE_A3,NOTE_A4,NOTE_B4,NOTE_C5,NOTE_B4,NOTE_C5,
+	NOTE_A4,NOTE_B4,NOTE_A4,NOTE_B4,NOTE_G4,NOTE_A4,NOTE_G4,NOTE_A4,
+	NOTE_B4,NOTE_C5,NOTE_E5,NOTE_D5,NOTE_E5,NOTE_C5,NOTE_G4,NOTE_C5,
+	NOTE_E4,NOTE_E5,NOTE_D5,NOTE_E5,NOTE_C5,NOTE_G4,NOTE_C5,NOTE_E4,
+	NOTE_E5,NOTE_FS5,NOTE_G5,NOTE_FS5,NOTE_G5,NOTE_E5,NOTE_FS5,NOTE_E5,
+	NOTE_FS5,NOTE_D5,NOTE_E5,NOTE_D5,NOTE_E5,NOTE_C5,NOTE_E5,
+	NOTE_E5,NOTE_D5,NOTE_E5,NOTE_C5,NOTE_G4,NOTE_C5,NOTE_E4,NOTE_E5,
+	NOTE_D5,NOTE_E5,NOTE_C5,NOTE_G4,NOTE_C5,NOTE_E4,NOTE_E5,NOTE_FS5,
+	NOTE_G5,NOTE_FS5,NOTE_G5,NOTE_E5,NOTE_FS5,NOTE_E5,NOTE_FS5,NOTE_D5,
+	NOTE_E5,NOTE_D5,NOTE_B4,NOTE_D5,NOTE_E5
 };
 const uint8_t PROGMEM popcorn_tempo = {
 	8,8,8,8,8,8,4,8,8,8,8,8,8,4,8,8,8,8,8,8,8,8,8,8,8,8,8,8,4,
@@ -201,29 +200,29 @@ const uint8_t PROGMEM popcorn_tempo = {
 	8,8,8,8,8,8,4,8,8,8,8,8,8,4,8,8,8,8,8,8,8,8,8,8,8,8,8,8,4
 };
 const uint16_t PROGMEM twinkle_twinkle_melody = {
-	notes['C4'],notes['C4'],notes['G4'],notes['G4'],notes['A4'],notes['A4'],notes['G4'],
-	notes['F4'],notes['F4'],notes['E4'],notes['E4'],notes['D4'],notes['D4'],notes['C4'],
-	notes['G4'],notes['G4'],notes['F4'],notes['F4'],notes['E4'],notes['E4'],notes['D4'],
-	notes['G4'],notes['G4'],notes['F4'],notes['F4'],notes['E4'],notes['E4'],notes['D4'],
-	notes['C4'],notes['C4'],notes['G4'],notes['G4'],notes['A4'],notes['A4'],notes['G4'],
-	notes['F4'],notes['F4'],notes['E4'],notes['E4'],notes['D4'],notes['D4'],notes['C4']
+	NOTE_C4,NOTE_C4,NOTE_G4,NOTE_G4,NOTE_A4,NOTE_A4,NOTE_G4,
+	NOTE_F4,NOTE_F4,NOTE_E4,NOTE_E4,NOTE_D4,NOTE_D4,NOTE_C4,
+	NOTE_G4,NOTE_G4,NOTE_F4,NOTE_F4,NOTE_E4,NOTE_E4,NOTE_D4,
+	NOTE_G4,NOTE_G4,NOTE_F4,NOTE_F4,NOTE_E4,NOTE_E4,NOTE_D4,
+	NOTE_C4,NOTE_C4,NOTE_G4,NOTE_G4,NOTE_A4,NOTE_A4,NOTE_G4,
+	NOTE_F4,NOTE_F4,NOTE_E4,NOTE_E4,NOTE_D4,NOTE_D4,NOTE_C4
 };
 const uint8_t PROGMEM twinkle_twinkle_tempo = {
 	4,4,4,4,4,4,2,4,4,4,4,4,4,2,4,4,4,4,4,4,2,4,4,
 	4,4,4,4,2,4,4,4,4,4,4,2,4,4,4,4,4,4,2
 };
 const uint16_t PROGMEM crazy_frog_melody = {
-	notes['A4'],notes['C5'],notes['A4'],notes['A4'],notes['D5'],notes['A4'],notes['G4'],
-	notes['A4'],notes['E5'],notes['A4'],notes['A4'],notes['F5'],notes['E5'],notes['C5'],
-	notes['A4'],notes['E5'],notes['A5'],notes['A4'],notes['G4'],notes['G4'],notes['E4'],
-	notes['B4'],notes['A4'],0,notes['A4'],notes['C5'],notes['A4'],notes['A4'],notes['D5'],
-	notes['A4'],notes['G4'], notes['A4'],notes['E5'],notes['A4'],notes['A4'],notes['F5'],
-	notes['E5'],notes['C5'],notes['A4'],notes['E5'],notes['A5'],notes['A4'],notes['G4'],
-	notes['G4'],notes['E4'],notes['B4'],notes['A4'],0,notes['A3'],notes['G3'],notes['E3'],
-	notes['D3'],notes['A4'],notes['C5'],notes['A4'],notes['A4'],notes['D5'],notes['A4'],
-	notes['G4'],notes['A4'],notes['E5'],notes['A4'],notes['A4'],notes['F5'],notes['E5'],
-	notes['C5'],notes['A4'],notes['E5'],notes['A5'],notes['A4'],notes['G4'],notes['G4'],
-	notes['E4'],notes['B4'],notes['A4']
+	NOTE_A4,NOTE_C5,NOTE_A4,NOTE_A4,NOTE_D5,NOTE_A4,NOTE_G4,
+	NOTE_A4,NOTE_E5,NOTE_A4,NOTE_A4,NOTE_F5,NOTE_E5,NOTE_C5,
+	NOTE_A4,NOTE_E5,NOTE_A5,NOTE_A4,NOTE_G4,NOTE_G4,NOTE_E4,
+	NOTE_B4,NOTE_A4,0,NOTE_A4,NOTE_C5,NOTE_A4,NOTE_A4,NOTE_D5,
+	NOTE_A4,NOTE_G4, NOTE_A4,NOTE_E5,NOTE_A4,NOTE_A4,NOTE_F5,
+	NOTE_E5,NOTE_C5,NOTE_A4,NOTE_E5,NOTE_A5,NOTE_A4,NOTE_G4,
+	NOTE_G4,NOTE_E4,NOTE_B4,NOTE_A4,0,NOTE_A3,NOTE_G3,NOTE_E3,
+	NOTE_D3,NOTE_A4,NOTE_C5,NOTE_A4,NOTE_A4,NOTE_D5,NOTE_A4,
+	NOTE_G4,NOTE_A4,NOTE_E5,NOTE_A4,NOTE_A4,NOTE_F5,NOTE_E5,
+	NOTE_C5,NOTE_A4,NOTE_E5,NOTE_A5,NOTE_A4,NOTE_G4,NOTE_G4,
+	NOTE_E4,NOTE_B4,NOTE_A4
 };
 const uint8_t PROGMEM crazy_frog_tempo = {
 	2,4,4,8,4,4,4,2,4,4,8,4,4,4,4,4,4,8,4,8,4,4,1,4,2,
@@ -231,16 +230,16 @@ const uint8_t PROGMEM crazy_frog_tempo = {
 	4,4,2,4,4,8,4,4,4,2,4,4,8,4,4,4,4,4,4,8,4,8,4,4,1
 };
 const uint16_t PROGMEM deck_the_halls_melody = {
-	notes['G5'],notes['F5'],notes['E5'],notes['D5'],notes['C5'],notes['D5'],notes['E5'],
-	notes['C5'],notes['D5'],notes['E5'],notes['F5'],notes['D5'],notes['E5'],notes['D5'],
-	notes['C5'],notes['B4'],notes['C5'],0,notes['G5'],notes['F5'],notes['E5'],notes['D5'],
-	notes['C5'],notes['D5'],notes['E5'],notes['C5'],notes['D5'],notes['E5'],notes['F5'],
-	notes['D5'],notes['E5'],notes['D5'],notes['C5'],notes['B4'],notes['C5'],0,notes['D5'],
-	notes['E5'],notes['F5'],notes['D5'],notes['E5'],notes['F5'],notes['G5'],notes['D5'],
-	notes['E5'],notes['F5'],notes['G5'],notes['A5'],notes['B5'],notes['C6'],notes['B5'],
-	notes['A5'],notes['G5'],0,notes['G5'],notes['F5'],notes['E5'],notes['D5'],notes['C5'],
-	notes['D5'],notes['E5'],notes['C5'],notes['D5'],notes['E5'],notes['F5'],notes['D5'],
-	notes['E5'],notes['D5'],notes['C5'],notes['B4'],notes['C5'],0
+	NOTE_G5,NOTE_F5,NOTE_E5,NOTE_D5,NOTE_C5,NOTE_D5,NOTE_E5,
+	NOTE_C5,NOTE_D5,NOTE_E5,NOTE_F5,NOTE_D5,NOTE_E5,NOTE_D5,
+	NOTE_C5,NOTE_B4,NOTE_C5,0,NOTE_G5,NOTE_F5,NOTE_E5,NOTE_D5,
+	NOTE_C5,NOTE_D5,NOTE_E5,NOTE_C5,NOTE_D5,NOTE_E5,NOTE_F5,
+	NOTE_D5,NOTE_E5,NOTE_D5,NOTE_C5,NOTE_B4,NOTE_C5,0,NOTE_D5,
+	NOTE_E5,NOTE_F5,NOTE_D5,NOTE_E5,NOTE_F5,NOTE_G5,NOTE_D5,
+	NOTE_E5,NOTE_F5,NOTE_G5,NOTE_A5,NOTE_B5,NOTE_C6,NOTE_B5,
+	NOTE_A5,NOTE_G5,0,NOTE_G5,NOTE_F5,NOTE_E5,NOTE_D5,NOTE_C5,
+	NOTE_D5,NOTE_E5,NOTE_C5,NOTE_D5,NOTE_E5,NOTE_F5,NOTE_D5,
+	NOTE_E5,NOTE_D5,NOTE_C5,NOTE_B4,NOTE_C5,0
 };
 const uint8_t PROGMEM deck_the_halls_tempo = {
 	2,4,2,2,2,2,2,2,4,4,4,4,2,4,2,2,2,2,2,4,2,2,2,2,2,
@@ -248,15 +247,15 @@ const uint8_t PROGMEM deck_the_halls_tempo = {
 	2,2,2,2,2,4,2,2,2,2,2,2,4,4,4,4,2,4,2,2,2,2
 };
 const uint16_t PROGMEM manaderna_melody = {
-	notes['E4'],notes['E4'],notes['F4'],notes['G4'],notes['G4'],notes['F4'],notes['E4'],
-	notes['D4'],notes['C4'],notes['C4'],notes['D4'],notes['E4'],notes['E4'],0,notes['D4'],
-	notes['D4'],0,notes['E4'],notes['E4'],notes['F4'],notes['G4'],notes['G4'],notes['F4'],
-	notes['E4'],notes['D4'],notes['C4'],notes['C4'],notes['D4'],notes['E4'],notes['D4'],0,
-	notes['C4'],notes['C4'],0,notes['D4'],notes['D4'],notes['E4'],notes['C4'],notes['D4'],
-	notes['E4'],notes['F4'],notes['E4'],notes['C4'],notes['D4'],notes['E4'],notes['F4'],
-	notes['E4'],notes['D4'],notes['C4'],notes['D4'],notes['G3'],0,notes['E4'],notes['E4'],
-	notes['F4'],notes['G4'],notes['G4'],notes['F4'],notes['E4'],notes['D4'],notes['C4'],
-	notes['C4'],notes['D4'],notes['E4'],notes['D4'],0,notes['C4'],notes['C4']
+	NOTE_E4,NOTE_E4,NOTE_F4,NOTE_G4,NOTE_G4,NOTE_F4,NOTE_E4,
+	NOTE_D4,NOTE_C4,NOTE_C4,NOTE_D4,NOTE_E4,NOTE_E4,0,NOTE_D4,
+	NOTE_D4,0,NOTE_E4,NOTE_E4,NOTE_F4,NOTE_G4,NOTE_G4,NOTE_F4,
+	NOTE_E4,NOTE_D4,NOTE_C4,NOTE_C4,NOTE_D4,NOTE_E4,NOTE_D4,0,
+	NOTE_C4,NOTE_C4,0,NOTE_D4,NOTE_D4,NOTE_E4,NOTE_C4,NOTE_D4,
+	NOTE_E4,NOTE_F4,NOTE_E4,NOTE_C4,NOTE_D4,NOTE_E4,NOTE_F4,
+	NOTE_E4,NOTE_D4,NOTE_C4,NOTE_D4,NOTE_G3,0,NOTE_E4,NOTE_E4,
+	NOTE_F4,NOTE_G4,NOTE_G4,NOTE_F4,NOTE_E4,NOTE_D4,NOTE_C4,
+	NOTE_C4,NOTE_D4,NOTE_E4,NOTE_D4,0,NOTE_C4,NOTE_C4
 };
 const uint8_t PROGMEM manaderna_tempo = {
 	2,2,2,2,2,2,2,2,2,2,2,2,2,4,4,2,4,2,2,2,2,2,2,
@@ -264,37 +263,76 @@ const uint8_t PROGMEM manaderna_tempo = {
 	2,2,2,2,1,4,2,2,2,2,2,2,2,2,2,2,2,2,2,4,4,2
 };
 const uint16_t PROGMEM bonnagard_melody = {
-	notes['C5'],notes['C5'],notes['C5'],notes['G4'],notes['A4'],notes['A4'],notes['G4'],
-	notes['E5'],notes['E5'],notes['D5'],notes['D5'],notes['C5'],0,notes['G4'],notes['C5'],
-	notes['C5'],notes['C5'],notes['G4'],notes['A4'],notes['A4'],notes['G4'],notes['E5'],
-	notes['E5'],notes['D5'],notes['D5'],notes['C5'],0,notes['G4'],notes['G4'],notes['C5'],
-	notes['C5'],notes['C5'],notes['G4'],notes['G4'],notes['C5'],notes['C5'],notes['G4'],
-	notes['C5'],notes['C5'],notes['C5'],notes['C5'],notes['C5'],notes['C5'],notes['C5'],
-	notes['C5'],notes['C5'],notes['C5'],notes['C5'],notes['C5'],0,notes['C5'],notes['C5'],
-	notes['C5'],notes['G4'],notes['A4'],notes['A4'],notes['G4'],notes['E5'],notes['E5'],
-	notes['D5'],notes['D5'],notes['C5'],0
+	NOTE_C5,NOTE_C5,NOTE_C5,NOTE_G4,NOTE_A4,NOTE_A4,NOTE_G4,
+	NOTE_E5,NOTE_E5,NOTE_D5,NOTE_D5,NOTE_C5,0,NOTE_G4,NOTE_C5,
+	NOTE_C5,NOTE_C5,NOTE_G4,NOTE_A4,NOTE_A4,NOTE_G4,NOTE_E5,
+	NOTE_E5,NOTE_D5,NOTE_D5,NOTE_C5,0,NOTE_G4,NOTE_G4,NOTE_C5,
+	NOTE_C5,NOTE_C5,NOTE_G4,NOTE_G4,NOTE_C5,NOTE_C5,NOTE_G4,
+	NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,
+	NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,0,NOTE_C5,NOTE_C5,
+	NOTE_C5,NOTE_G4,NOTE_A4,NOTE_A4,NOTE_G4,NOTE_E5,NOTE_E5,
+	NOTE_D5,NOTE_D5,NOTE_C5,0
 };
 const uint8_t PROGMEM bonnagard_tempo = {
 	2,2,2,2,2,2,1,2,2,2,2,1,2,2,2,2,2,2,2,2,1,2,2,2,
 	2,1,2,4,4,2,2,2,4,4,2,2,1,4,4,2,4,4,2,4,4,4,4,2,
 	2,4,2,2,2,2,2,2,1,2,2,2,2,1,1
 };
-const uint16_t PROGMEM inal_countdown_melody = {
-	notes['A3'],notes['E5'],notes['D5'],notes['E5'],notes['A4'],notes['F3'],notes['F5'],
-	notes['E5'],notes['F5'],notes['E5'],notes['D5'],notes['D3'],notes['F5'],notes['E5'],
-	notes['F5'],notes['A4'],notes['G3'],0,notes['D5'],notes['C5'],notes['D5'],notes['C5'],
-	notes['B4'],notes['D5'],notes['C5'],notes['A3'],notes['E5'],notes['D5'],notes['E5'],
-	notes['A4'],notes['F3'],notes['F5'],notes['E5'],notes['F5'],notes['E5'],notes['D5'],
-	notes['D3'],notes['F5'],notes['E5'],notes['F5'],notes['A4'],notes['G3'],0,notes['D5'],
-	notes['C5'],notes['D5'],notes['C5'],notes['B4'],notes['D5'],notes['C5'],notes['B4'],
-	notes['C5'],notes['D5'],notes['C5'],notes['D5'],notes['E5'],notes['D5'],notes['C5'],
-	notes['B4'],notes['A4'],notes['F5'],notes['E5'],notes['E5'],notes['F5'],notes['E5'],
-	notes['D5'],notes['E5']
+const uint16_t PROGMEM final_countdown_melody = {
+	NOTE_A3,NOTE_E5,NOTE_D5,NOTE_E5,NOTE_A4,NOTE_F3,NOTE_F5,
+	NOTE_E5,NOTE_F5,NOTE_E5,NOTE_D5,NOTE_D3,NOTE_F5,NOTE_E5,
+	NOTE_F5,NOTE_A4,NOTE_G3,0,NOTE_D5,NOTE_C5,NOTE_D5,NOTE_C5,
+	NOTE_B4,NOTE_D5,NOTE_C5,NOTE_A3,NOTE_E5,NOTE_D5,NOTE_E5,
+	NOTE_A4,NOTE_F3,NOTE_F5,NOTE_E5,NOTE_F5,NOTE_E5,NOTE_D5,
+	NOTE_D3,NOTE_F5,NOTE_E5,NOTE_F5,NOTE_A4,NOTE_G3,0,NOTE_D5,
+	NOTE_C5,NOTE_D5,NOTE_C5,NOTE_B4,NOTE_D5,NOTE_C5,NOTE_B4,
+	NOTE_C5,NOTE_D5,NOTE_C5,NOTE_D5,NOTE_E5,NOTE_D5,NOTE_C5,
+	NOTE_B4,NOTE_A4,NOTE_F5,NOTE_E5,NOTE_E5,NOTE_F5,NOTE_E5,
+	NOTE_D5,NOTE_E5
 };
 const uint8_t PROGMEM final_countdown_tempo = {
 	1,16,16,4,4,1,16,16,8,8,4,1,16,16,4,4,2,4,16,16,8,8,8,
 	8,4,4,16,16,4,4,1,16,16,8,8,4,1,16,16,4,4,2,4,16,16,8,
 	8,8,8,4,16,16,4,16,16,8,8,8,8,4,4,2,8,4,16,16,1
+};
+
+/*mario_tempo
+underworld_tempo
+adventure_time_tempo
+star_wars_tempo
+popcorn_tempo
+twinkle_twinkle_tempo
+crazy_frog_tempo
+deck_the_halls_tempo
+manaderna_tempo
+bonnagard_tempo
+final_countdown_tempo*/
+
+/*const uint16_t PROGMEM songs_melody[11][116] = {	//The melody for all songs
+	{NOTE_E7,NOTE_E7,0,NOTE_E7,0,NOTE_C7,NOTE_E7,0,NOTE_G7,0,0,0,NOTE_G6,0,0,0,NOTE_C7,0,0,NOTE_G6,	0,0,NOTE_E6,0,0,NOTE_A6,0,NOTE_B6,0,NOTE_AS6,NOTE_A6,0,NOTE_G6,NOTE_E7,NOTE_G7,NOTE_A7,0,NOTE_F7,NOTE_G7,0,NOTE_E7,0,NOTE_C7,NOTE_D7,NOTE_B6,0,0,NOTE_C7,0,0,NOTE_G6,0,0,NOTE_E6,0,0,NOTE_A6,0,NOTE_B6,0,NOTE_AS6,NOTE_A6,0,NOTE_G6,NOTE_E7,NOTE_G7,NOTE_A7,0,NOTE_F7,NOTE_G7,0,NOTE_E7,0,NOTE_C7,NOTE_D7,NOTE_B6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{NOTE_C4,NOTE_C5,NOTE_A3,NOTE_A4,NOTE_AS3,NOTE_AS4,0,0,NOTE_C4,NOTE_C5,NOTE_A3,NOTE_A4,NOTE_AS3,NOTE_AS4,0,0,NOTE_F3,NOTE_F4,NOTE_D3,NOTE_D4,NOTE_DS3,NOTE_DS4,0,0,NOTE_F3,NOTE_F4,NOTE_D3,NOTE_D4,NOTE_DS3,NOTE_DS4,0,0,NOTE_DS4,NOTE_CS4,NOTE_D4,NOTE_CS4,NOTE_DS4,NOTE_DS4,NOTE_GS3,NOTE_G3,NOTE_CS4,NOTE_C4,NOTE_FS4,NOTE_F4,NOTE_E3,NOTE_AS4,NOTE_A4,NOTE_GS4,NOTE_DS4,NOTE_B3,NOTE_AS3,NOTE_A3,NOTE_GS3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{NOTE_D5,NOTE_G5,NOTE_G5,NOTE_G5,NOTE_G5,NOTE_FS5,NOTE_FS5,NOTE_E5,NOTE_D5,NOTE_E5,NOTE_D5,NOTE_D5,NOTE_C5,NOTE_B5,NOTE_A5,NOTE_G4,0,NOTE_C5,NOTE_B5,NOTE_A5,NOTE_G4,0,NOTE_G5,0,NOTE_G5,NOTE_G5,0,NOTE_G5,NOTE_FS5,0,NOTE_E5,NOTE_E5,NOTE_D5,NOTE_D5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_D5,NOTE_D5,NOTE_A5,NOTE_B5,NOTE_A5,NOTE_G4,NOTE_G5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{NOTE_G4,NOTE_G4,NOTE_G4,NOTE_EB4,0,NOTE_BB4,NOTE_G4,NOTE_EB4,0,NOTE_BB4,NOTE_G4,0,NOTE_D4,NOTE_D4,NOTE_D4,NOTE_EB4,0,NOTE_BB3,NOTE_FS3,NOTE_EB3,0,NOTE_BB3,NOTE_G3,0,NOTE_G4,0,NOTE_G3,NOTE_G3,0,NOTE_G4,0,NOTE_FS4,NOTE_F4,NOTE_E4,NOTE_EB4,NOTE_E4,0,NOTE_GS3,NOTE_CS3,0,NOTE_C3,NOTE_B3,NOTE_BB3,NOTE_A3,NOTE_BB3,0,NOTE_EB3,NOTE_FS3,NOTE_EB3,NOTE_FS3,NOTE_BB3,0,NOTE_G3,NOTE_BB3,NOTE_D4,0,NOTE_G4,0,NOTE_G3,NOTE_G3,0,NOTE_G4,0,NOTE_FS4,NOTE_F4,NOTE_E4,NOTE_EB4,NOTE_E4,0,NOTE_GS3,NOTE_CS3,0,NOTE_C3,NOTE_B3,NOTE_BB3,NOTE_A3,NOTE_BB3,0,NOTE_EB3,NOTE_FS3,NOTE_EB3,NOTE_BB3,NOTE_G3,NOTE_EB3,0,NOTE_BB3,NOTE_G3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{NOTE_A4,NOTE_G4,NOTE_A4,NOTE_E4,NOTE_C4,NOTE_E4,NOTE_A3,NOTE_A4,NOTE_G4,NOTE_A4,NOTE_E4,NOTE_C4,NOTE_E4,NOTE_A3,NOTE_A4,NOTE_B4,NOTE_C5,NOTE_B4,NOTE_C5,NOTE_A4,NOTE_B4,NOTE_A4,NOTE_B4,NOTE_G4,NOTE_A4,NOTE_G4,NOTE_A4,NOTE_F4,NOTE_A4,NOTE_A4,NOTE_G4,NOTE_A4,NOTE_E4,NOTE_C4,NOTE_E4,NOTE_A3,NOTE_A4,NOTE_G4,NOTE_A4,NOTE_E4,NOTE_C4,NOTE_E4,NOTE_A3,NOTE_A4,NOTE_B4,NOTE_C5,NOTE_B4,NOTE_C5,NOTE_A4,NOTE_B4,NOTE_A4,NOTE_B4,NOTE_G4,NOTE_A4,NOTE_G4,NOTE_A4,NOTE_B4,NOTE_C5,NOTE_E5,NOTE_D5,NOTE_E5,NOTE_C5,NOTE_G4,NOTE_C5,NOTE_E4,NOTE_E5,NOTE_D5,NOTE_E5,NOTE_C5,NOTE_G4,NOTE_C5,NOTE_E4,NOTE_E5,NOTE_FS5,NOTE_G5,NOTE_FS5,NOTE_G5,NOTE_E5,NOTE_FS5,NOTE_E5,NOTE_FS5,NOTE_D5,NOTE_E5,NOTE_D5,NOTE_E5,NOTE_C5,NOTE_E5,NOTE_E5,NOTE_D5,NOTE_E5,NOTE_C5,NOTE_G4,NOTE_C5,NOTE_E4,NOTE_E5,NOTE_D5,NOTE_E5,NOTE_C5,NOTE_G4,NOTE_C5,NOTE_E4,NOTE_E5,NOTE_FS5,NOTE_G5,NOTE_FS5,NOTE_G5,NOTE_E5,NOTE_FS5,NOTE_E5,NOTE_FS5,NOTE_D5,NOTE_E5,NOTE_D5,NOTE_B4,NOTE_D5,NOTE_E5},
+	{NOTE_C4,NOTE_C4,NOTE_G4,NOTE_G4,NOTE_A4,NOTE_A4,NOTE_G4,NOTE_F4,NOTE_F4,NOTE_E4,NOTE_E4,NOTE_D4,NOTE_D4,NOTE_C4,NOTE_G4,NOTE_G4,NOTE_F4,NOTE_F4,NOTE_E4,NOTE_E4,NOTE_D4,NOTE_G4,NOTE_G4,NOTE_F4,NOTE_F4,NOTE_E4,NOTE_E4,NOTE_D4,NOTE_C4,NOTE_C4,NOTE_G4,NOTE_G4,NOTE_A4,NOTE_A4,NOTE_G4,NOTE_F4,NOTE_F4,NOTE_E4,NOTE_E4,NOTE_D4,NOTE_D4,NOTE_C4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{NOTE_A4,NOTE_C5,NOTE_A4,NOTE_A4,NOTE_D5,NOTE_A4,NOTE_G4,NOTE_A4,NOTE_E5,NOTE_A4,NOTE_A4,NOTE_F5,NOTE_E5,NOTE_C5,NOTE_A4,NOTE_E5,NOTE_A5,NOTE_A4,NOTE_G4,NOTE_G4,NOTE_E4,NOTE_B4,NOTE_A4,0,NOTE_A4,NOTE_C5,NOTE_A4,NOTE_A4,NOTE_D5,NOTE_A4,NOTE_G4,NOTE_A4,NOTE_E5,NOTE_A4,NOTE_A4,NOTE_F5,NOTE_E5,NOTE_C5,NOTE_A4,NOTE_E5,NOTE_A5,NOTE_A4,NOTE_G4,NOTE_G4,NOTE_E4,NOTE_B4,NOTE_A4,0,NOTE_A3,NOTE_G3,NOTE_E3,NOTE_D3,NOTE_A4,NOTE_C5,NOTE_A4,NOTE_A4,NOTE_D5,NOTE_A4,NOTE_G4,NOTE_A4,NOTE_E5,NOTE_A4,NOTE_A4,NOTE_F5,NOTE_E5,NOTE_C5,NOTE_A4,NOTE_E5,NOTE_A5,NOTE_A4,NOTE_G4,NOTE_G4,NOTE_E4,NOTE_B4,NOTE_A4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{NOTE_G5,NOTE_F5,NOTE_E5,NOTE_D5,NOTE_C5,NOTE_D5,NOTE_E5,NOTE_C5,NOTE_D5,NOTE_E5,NOTE_F5,NOTE_D5,NOTE_E5,NOTE_D5,NOTE_C5,NOTE_B4,NOTE_C5,0,NOTE_G5,NOTE_F5,NOTE_E5,NOTE_D5,NOTE_C5,NOTE_D5,NOTE_E5,NOTE_C5,NOTE_D5,NOTE_E5,NOTE_F5,NOTE_D5,NOTE_E5,NOTE_D5,NOTE_C5,NOTE_B4,NOTE_C5,0,NOTE_D5,NOTE_E5,NOTE_F5,NOTE_D5,NOTE_E5,NOTE_F5,NOTE_G5,NOTE_D5,NOTE_E5,NOTE_F5,NOTE_G5,NOTE_A5,NOTE_B5,NOTE_C6,NOTE_B5,NOTE_A5,NOTE_G5,0,NOTE_G5,NOTE_F5,NOTE_E5,NOTE_D5,NOTE_C5,NOTE_D5,NOTE_E5,NOTE_C5,NOTE_D5,NOTE_E5,NOTE_F5,NOTE_D5,NOTE_E5,NOTE_D5,NOTE_C5,NOTE_B4,NOTE_C5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{NOTE_E4,NOTE_E4,NOTE_F4,NOTE_G4,NOTE_G4,NOTE_F4,NOTE_E4,NOTE_D4,NOTE_C4,NOTE_C4,NOTE_D4,NOTE_E4,NOTE_E4,0,NOTE_D4,NOTE_D4,0,NOTE_E4,NOTE_E4,NOTE_F4,NOTE_G4,NOTE_G4,NOTE_F4,NOTE_E4,NOTE_D4,NOTE_C4,NOTE_C4,NOTE_D4,NOTE_E4,NOTE_D4,0,NOTE_C4,NOTE_C4,0,NOTE_D4,NOTE_D4,NOTE_E4,NOTE_C4,NOTE_D4,NOTE_E4,NOTE_F4,NOTE_E4,NOTE_C4,NOTE_D4,NOTE_E4,NOTE_F4,NOTE_E4,NOTE_D4,NOTE_C4,NOTE_D4,NOTE_G3,0,NOTE_E4,NOTE_E4,NOTE_F4,NOTE_G4,NOTE_G4,NOTE_F4,NOTE_E4,NOTE_D4,NOTE_C4,NOTE_C4,NOTE_D4,NOTE_E4,NOTE_D4,0,NOTE_C4,NOTE_C4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{NOTE_C5,NOTE_C5,NOTE_C5,NOTE_G4,NOTE_A4,NOTE_A4,NOTE_G4,NOTE_E5,NOTE_E5,NOTE_D5,NOTE_D5,NOTE_C5,0,NOTE_G4,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_G4,NOTE_A4,NOTE_A4,NOTE_G4,NOTE_E5,NOTE_E5,NOTE_D5,NOTE_D5,NOTE_C5,0,NOTE_G4,NOTE_G4,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_G4,NOTE_G4,NOTE_C5,NOTE_C5,NOTE_G4,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,0,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_G4,NOTE_A4,NOTE_A4,NOTE_G4,NOTE_E5,NOTE_E5,NOTE_D5,NOTE_D5,NOTE_C5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{NOTE_A3,NOTE_E5,NOTE_D5,NOTE_E5,NOTE_A4,NOTE_F3,NOTE_F5,NOTE_E5,NOTE_F5,NOTE_E5,NOTE_D5,NOTE_D3,NOTE_F5,NOTE_E5,NOTE_F5,NOTE_A4,NOTE_G3,0,NOTE_D5,NOTE_C5,NOTE_D5,NOTE_C5,NOTE_B4,NOTE_D5,NOTE_C5,NOTE_A3,NOTE_E5,NOTE_D5,NOTE_E5,NOTE_A4,NOTE_F3,NOTE_F5,NOTE_E5,NOTE_F5,NOTE_E5,NOTE_D5,NOTE_D3,NOTE_F5,NOTE_E5,NOTE_F5,NOTE_A4,NOTE_G3,0,NOTE_D5,NOTE_C5,NOTE_D5,NOTE_C5,NOTE_B4,NOTE_D5,NOTE_C5,NOTE_B4,NOTE_C5,NOTE_D5,NOTE_C5,NOTE_D5,NOTE_E5,NOTE_D5,NOTE_C5,NOTE_B4,NOTE_A4,NOTE_F5,NOTE_E5,NOTE_E5,NOTE_F5,NOTE_E5,NOTE_D5,NOTE_E5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+};
+const uint8_t PROGMEM songs_tempo[11][116] = {		//The tempo for all songs
+	{12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,9,9,9,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,9,9,9,12,12,12,12,12,12,12,12,12,12,12,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{12,12,12,12,12,12,6,3,12,12,12,12,12,12,6,3,12,12,12,12,12,12,6,3,12,12,12,12,12,12,6,6,18,18,18,6,6,6,6,6,6,18,18,18,18,18,18,10,10,10,10,10,10,3,3,30,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{24,24,12,12,12,24,12,24,24,24,12,24,12,12,12,12,24,12,24,24,12,24,24,24,24,12,24,12,24,24,24,12,12,24,8,24,24,8,8,24,12,24,24,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{2,2,2,4,8,6,2,4,8,6,2,8,2,2,2,4,8,6,2,4,8,6,2,8,2,16,4,4,8,2,8,4,6,6,4,4,8,4,2,8,4,4,6,4,2,8,4,2,4,4,2,8,4,6,2,8,2,16,4,4,8,2,8,4,6,6,4,4,8,4,2,8,4,4,6,4,2,8,4,2,2,4,2,4,8,4,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{8,8,8,8,8,8,4,8,8,8,8,8,8,4,8,8,8,8,8,8,8,8,8,8,8,8,8,8,4,8,8,8,8,8,8,4,8,8,8,8,8,8,4,8,8,8,8,8,8,8,8,8,8,8,8,8,8,4,8,8,8,8,8,8,4,8,8,8,8,8,8,4,8,8,8,8,8,8,8,8,8,8,8,8,8,8,4,8,8,8,8,8,8,4,8,8,8,8,8,8,4,8,8,8,8,8,8,8,8,8,8,8,8,8,8,4},
+	{4,4,4,4,4,4,2,4,4,4,4,4,4,2,4,4,4,4,4,4,2,4,4,4,4,4,4,2,4,4,4,4,4,4,2,4,4,4,4,4,4,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{2,4,4,8,4,4,4,2,4,4,8,4,4,4,4,4,4,8,4,8,4,4,1,4,2,4,4,8,4,4,4,2,4,4,8,4,4,4,4,4,4,8,4,8,4,4,1,4,8,4,4,4,2,4,4,8,4,4,4,2,4,4,8,4,4,4,4,4,4,8,4,8,4,4,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},	
+	{2,4,2,2,2,2,2,2,4,4,4,4,2,4,2,2,2,2,2,4,2,2,2,2,2,2,4,4,4,4,2,4,2,2,2,2,2,4,2,2,2,4,2,2,4,4,2,4,4,2,2,2,2,2,2,4,2,2,2,2,2,2,4,4,4,4,2,4,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{2,2,2,2,2,2,2,2,2,2,2,2,2,4,4,2,4,2,2,2,2,2,2,2,2,2,2,2,2,2,4,4,2,4,2,2,2,2,2,4,4,2,2,2,4,4,2,2,2,2,1,4,2,2,2,2,2,2,2,2,2,2,2,2,2,4,4,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{2,2,2,2,2,2,1,2,2,2,2,1,2,2,2,2,2,2,2,2,1,2,2,2,2,1,2,4,4,2,2,2,4,4,2,2,1,4,4,2,4,4,2,4,4,4,4,2,2,4,2,2,2,2,2,2,1,2,2,2,2,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{1,16,16,4,4,1,16,16,8,8,4,1,16,16,4,4,2,4,16,16,8,8,8,8,4,4,16,16,4,4,1,16,16,8,8,4,1,16,16,4,4,2,4,16,16,8,8,8,8,4,16,16,4,16,16,8,8,8,8,4,4,2,8,4,16,16,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 };*/
 
 #endif 	//NOTES_SONGS_H
