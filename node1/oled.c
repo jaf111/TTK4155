@@ -227,7 +227,7 @@ void OLED_draw_rectangle(uint8_t x0, uint8_t y0, uint8_t width, uint8_t height){
 	}
 }
 
-void OLED_draw_circle(uint8_t x0, uint8_t y0, uint8_t r){	// Draw circle using the midpoint circle algorithm:
+void OLED_draw_circle(uint8_t bit, uint8_t x0, uint8_t y0, uint8_t r){	// Draw circle using the midpoint circle algorithm:
 	int x = r - 1;											// https://en.wikipedia.org/wiki/Midpoint_circle_algorithm
 	int y = 0;												// Have to read more on this, and maybe make it better for small circles
 	int dx = 1;
@@ -235,14 +235,14 @@ void OLED_draw_circle(uint8_t x0, uint8_t y0, uint8_t r){	// Draw circle using t
 	int rad_err = dx - (r << 1);
 
 	while(x >= y){								// Make use of 8-symmetry of circle:
-		OLED_draw_pixel(1, x0 + x, y0 + y);		// Octant 1
-        OLED_draw_pixel(1, x0 + y, y0 + x);		// Octant 2
-        OLED_draw_pixel(1, x0 - y, y0 + x);		// Octant 3
-        OLED_draw_pixel(1, x0 - x, y0 + y);		// And so on...
-        OLED_draw_pixel(1, x0 - x, y0 - y);
-        OLED_draw_pixel(1, x0 - y, y0 - x);
-        OLED_draw_pixel(1, x0 + y, y0 - x);
-        OLED_draw_pixel(1, x0 + x, y0 - y);
+		OLED_draw_pixel(bit, x0 + x, y0 + y);		// Octant 1
+        OLED_draw_pixel(bit, x0 + y, y0 + x);		// Octant 2
+        OLED_draw_pixel(bit, x0 - y, y0 + x);		// Octant 3
+        OLED_draw_pixel(bit, x0 - x, y0 + y);		// And so on...
+        OLED_draw_pixel(bit, x0 - x, y0 - y);
+        OLED_draw_pixel(bit, x0 - y, y0 - x);
+        OLED_draw_pixel(bit, x0 + y, y0 - x);
+        OLED_draw_pixel(bit, x0 + x, y0 - y);
 
          if (rad_err <= 0)
         {
@@ -259,7 +259,7 @@ void OLED_draw_circle(uint8_t x0, uint8_t y0, uint8_t r){	// Draw circle using t
 	}
 }
 
-tools_t paint_tool = BRUSH;	// Initial tool is a brush
+tools_t paint_tool = CIRCLE;	// Initial tool is a brush
 uint8_t cursor_x = 64;
 uint8_t cursor_y = 32;
 
@@ -267,7 +267,7 @@ void OLED_paint(){				// Not done
 	OLED_clear_all();
 	// Draw Circle option
 		OLED_draw_rectangle(1, 1, 20, 20);
-		OLED_draw_circle(11,11,7);
+		OLED_draw_circle(1,11,11,7);
 
 		// Draw Rectangle option
 		OLED_draw_rectangle(1, 21, 20, 20);
@@ -275,21 +275,22 @@ void OLED_paint(){				// Not done
 
 		// Draw brush option
 		OLED_draw_rectangle(1, 41, 20, 20);
-		OLED_draw_circle(11, 51, 2);
-		OLED_draw_circle(11, 51, 1);
+		OLED_draw_circle(1, 11, 51, 2);
+		OLED_draw_circle(1, 11, 51, 1);
 	uint8_t keep_painting = 0x01;
 	while(keep_painting){
-		if (BUTTON_R){			// We should REALLY implement interrupts :)
+		if (BUTTON_L){			// We should REALLY implement interrupts :)
 			keep_painting = 0x00;
 		}
 		OLED_cursor();
-		fprintf(UART_p, "PAINTING! \r\n",0);
+		//fprintf(UART_p, "PAINTING! \r\n",0);
 		OLED_update();
 	}
 }
 
 void OLED_cursor(){
 	joy_position_t joy_pos = buttons_get_joy_coord();	// Maybe move this outside of oled.c and take as argument (if time)
+	slider_position_t sliders = buttons_get_slider_positions();
 
 	if (joy_pos.XX >= (joy_pos.XX_init + 5) && cursor_x <= MAX_COLUMNS-1){	// Joystick moves right
 		cursor_x++;
@@ -303,6 +304,29 @@ void OLED_cursor(){
 	if (joy_pos.YY <= (joy_pos.YY_init -20) && cursor_y <= 63){	// Joystick moves down
 		cursor_y++;
 	}
-	fprintf(UART_p, "x: %d  y: %d \r\n",cursor_x, cursor_y);
-	OLED_draw_circle(cursor_x, cursor_y, 2);
+
+	OLED_draw_circle(0, cursor_x, cursor_y, 2);
+	OLED_draw_circle(1, cursor_x, cursor_y, 2);
+
+	if(BUTTON_R){
+		switch (paint_tool){
+			case BRUSH:
+				OLED_draw_circle(1, cursor_x, cursor_y, 2);
+				break;
+			case CIRCLE:
+				OLED_draw_circle(1, cursor_x, cursor_y, sliders.right/5);
+				break;
+			case RECTANGLE:
+				OLED_draw_rectangle(cursor_x, cursor_y, sliders.right/5, sliders.left/5);
+				break;
+		}
+	}
+}
+
+void OLED_draw_cursor(){
+
+}
+
+ISR(INT2_vect){
+	
 }

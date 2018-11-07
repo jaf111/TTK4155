@@ -77,6 +77,11 @@ int main() {
 	while(1) {
 		joy_position_t joy_coord = buttons_get_joy_coord();	// (use struct from buttons.h to get coordinates (joy_coord.XX etc))
 		slider_position_t slider_pos = buttons_get_slider_positions();
+		can_joystick.data[0] = joy_coord.XX;
+		can_joystick.data[1] = joy_coord.YY;
+		fprintf(UART_p, "JoyX: %4d ", can_joystick.data[0]);
+		fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
+		CAN_send(&can_joystick);
 		//play_song();
 
 		//fprintf(UART_p, "slider, R = %d   ADC read = %d  \r\n", slider_pos.right, ADC_read(SLIDER_R));

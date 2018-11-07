@@ -16,13 +16,17 @@ void SPI_init(void) {	//SPI initialization (as a Master)
 void SPI_write(char cData) {	//Sends a message to the slave through SPI comm
 	SPDR = cData;				//SPDR register (to start transmission) is updated
 	//Wait for transmission complete
+	//cli();
 	while(!(SPSR & (1<<SPIF)));	//Bit SPIF=1 when transmission finishes (inside SPSR register - Status Register)
+	//sei();
 }
 
 char SPI_read(void) {	//Reads a message from the slave through SPI comm
 	SPDR = 0x00;		//Set dummy byte in data register (to clean the buffer, necessary action)
 	//Wait for transmission complete
+	//cli();
 	while(!(SPSR & (1<<SPIF)));	//Waits until the current transmission finishes
+	//sei();
 	return SPDR;		//Returns the new value of data registers (SPDR)
 }
 
