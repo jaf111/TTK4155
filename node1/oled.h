@@ -33,6 +33,8 @@ void OLED_clear_arrow(uint8_t row, uint8_t col); //Clear an arrow in requested p
 void OLED_screen_Saver();	//Prints a complete screen saver
 
 void OLED_draw_pixel(uint8_t bit, uint8_t x, uint8_t y);
+void OLED_draw_cursor(uint8_t x0, uint8_t y0);
+void OLED_clear_cursor(uint8_t x0, uint8_t y0);
 void OLED_draw_rectangle(uint8_t x0, uint8_t xe, uint8_t y0, uint8_t ye);
 void OLED_draw_circle(uint8_t bit, uint8_t x0, uint8_t y0, uint8_t r);
 

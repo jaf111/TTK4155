@@ -17,33 +17,17 @@
 #include "can.h"		//Prototype functions of CAN communication
 //#include "notes_songs.h" //Prototype functions for playing a song
 
-#define JOY_LR 0x04		//ADC channel 1, where Left-Right Joystick is connected to
-#define JOY_DU 0x05		//ADC channel 2, where Down-Up Joystick is connected to
-#define SLIDER_R 0x06	//ADC channel 3, where Right Slider is connected to
-#define SLIDER_L 0x07	//ADC channel 4, where Left Slider is connected to
-#define BUTTON_R PINB & (1<<PB0)	//If button Right is pushed (connected to pin PB0, PORTB)
-#define BUTTON_L PINB & (1<<PB1)	//If button Left is pushed (connected to pin PB0, PORTB)
-
 #define MENU1 0			//Position of parent menu 1
 #define MENU2 4			//Position of parent menu 2
 #define MENU3 10		//Position of parent menu 3
-
-/*
-typedef struct {
-	uint8_t JoyX = 0;		//X coordinate of Joystick
-	uint8_t JoyY = 0;		//Y coordinate of Joystick
-	uint8_t JoyX_init = 0;	//Initial X coordinate of Joystick
-	uint8_t JoyY_init = 0;	//Initial Y coordinate of Joystick
-} MF_board_input;*/
 
 
 int main() {
 	//GPIO initialization
 	//led_init();		//LED initialization
-	buzzer_init();		//Buzzer initialization
+	//buzzer_init();		//Buzzer initialization
 
 	USART_Init(MYUBRR);
-	//USART_Transmit(USART_Receive());	//To make printf() work in USART
 
 	SRAM_init();
 
@@ -54,10 +38,6 @@ int main() {
 	OLED_init();
 
 	menu_init();
-	//OLED_screen_Saver();
-	//OLED_frame_fill(0x01);
-	//OLED_frame_char_fill('A');
-	//OLED_draw_circle(60,30,30);
 
 	SPI_init();
 
@@ -86,12 +66,7 @@ int main() {
 
 		//fprintf(UART_p, "slider, R = %d   ADC read = %d  \r\n", slider_pos.right, ADC_read(SLIDER_R));
 		//cursor_move();
-		//OLED_frame_fill(0xFA);
-		//write_d(0xFF);
-		//SRAM_test();
-		//fprintf(OLED_p, main_menu.name);
-		//_delay_ms(100);
-		//insert_menu(menu, menu_matrix[0][1], 1, 0, NULL); 
+
 		
 		/*MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK);	//Set loopback mode
 		_delay_ms(500);
@@ -120,19 +95,7 @@ int main() {
 		CAN_send(&can_message3);
 		_delay_ms(500);
 		packet new_message3 = CAN_read();*/
-		/*
-		JoyX = ADC_read(JOY_LR);
-		JoyY = ADC_read(JOY_DU);
-		//joy_coord = getJoyCoord(JoyX, JoyY, JoyX_init, JoyY_init);
-		//fprintf(UART_p, "SLIDER_L: %d \r\n", joy_coord.slider_l_pos);
-		can_joystick.data[0] = JoyX;
-		can_joystick.data[1] = JoyY;
-		fprintf(UART_p, "JoyX: %4d ", can_joystick.data[0]);
-		fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
-		CAN_send(&can_joystick);
-		//_delay_ms(5);
-		//CAN_read();
-		*/
+
 		//fprintf(UART_p, "JoyX CAN: %4d   JOYX; %4d \r\n", MCP2515_read(MCP_TXB0D0+0),JoyX);
 		//fprintf(UART_p, "JoyY CAN: %4d   JOYY; %4d \r\n", MCP2515_read(MCP_TXB0D0+1),JoyY);
 		
@@ -153,18 +116,10 @@ int main() {
 
 		//_delay_ms(100);
 		//fprintf(UART_p, "CANCTRL: %4d \r\n", MCP2515_read(MCP_CANCTRL));
-		//print_sub_menu(MENU1);
-		//cursor_move();
-
-
-		/*JoyX = ADC_read(JOY_LR);
-		JoyY = ADC_read(JOY_DU);
-		if (BUTTON_R) {printf("RIGHT BUTTON \n\r");}
-		if (BUTTON_L) {printf("LEFT BUTTON \n\r");}
-		getJoyCoord(JoyX, JoyY, JoyX_init, JoyY_init);
-		getJoyDirection(JoyX, JoyY);
-		sliders();*/
 	}
+
+
+
 	return 0;
 }
 #endif

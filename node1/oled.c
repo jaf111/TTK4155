@@ -25,6 +25,15 @@ volatile uint8_t *frame_addr = (uint8_t*)0x1800;
 
 #define frame ( (uint8_t(*)[128]) (frame_addr) )		// Two dimensional matrix representation of OLED screen in SRAM
 
+// Paint variables
+tools_t paint_tool = BRUSH;			// Initial tool is a brush
+uint8_t cursor_x = 64;				// Centre cursor initially
+uint8_t cursor_y = 32;
+uint8_t cursor_x_prev = 64;			// Variable for storing previous cursor position
+uint8_t cursor_y_prev = 32;
+uint8_t clear_bits_x = 0xFF;		// Make note of which bits should be cleared after the cursor has moved
+uint8_t clear_bits_y = 0xFF;		// Do NOT clear a bit if something was drawn there beforehand (other than cursor)
+
 void write_c(uint8_t cmd) {		//To write a (configuration) command into the OLED
 	*oled_cmd = cmd;
 }
@@ -37,27 +46,26 @@ void OLED_init(void) {	//OLED display initialization
 	write_c(0xae);	//Display is switch OFF
 	write_c(0xa1);	//Segment remap (A1=Aligned to the right / A0=Aligned to the left)
 	write_c(0xda);	//Sets COM signals pin configuration to match OLED panel hardware layout
-	write_c(0x12);		//Value. Alternative
+	write_c(0x12);	//Value. Alternative
 	write_c(0xc8);	//Sets the scan direction of the COM output: COM63~COM0
 	write_c(0xa8);	//Switches the default multiplex mode (63) to any multiplex ratio
-	write_c(0x3f);  	//Value. From 0x10 (16) to 0x3f (63)
+	write_c(0x3f);  //Value. From 0x10 (16) to 0x3f (63)
 	write_c(0xd5);	//Display divide ratio/osc & freq. mode 
-	write_c(0x80);		//Value. [7:4]-> Oscillator freq , [3:0]->Display clock
+	write_c(0x80);	//Value. [7:4]-> Oscillator freq , [3:0]->Display clock
 	write_c(0x81);	//Contrast control
-	write_c(0x50);		//Value. From 00h (0%) to FFh (100%)
+	write_c(0x50);	//Value. From 00h (0%) to FFh (100%)
 	write_c(0xd9);	//Set Pre-charge period
-	write_c(0x21);		//Value. The interval is counted in number of DCLK, where RESET equals 2 DCLKs
+	write_c(0x21);	//Value. The interval is counted in number of DCLK, where RESET equals 2 DCLKs
 	write_c(0x20);	//Set Memory Addressing Mode (AM)
-	write_c(0x02);		//Value. 02h->Page AM, 01h->Vertical AM, 00h->Horizontal AM
+	write_c(0x02);	//Value. 02h->Page AM, 01h->Vertical AM, 00h->Horizontal AM
 	write_c(0xdb);	//COM signal deselected voltage level. Adjusts the VCOMH regulator output.
-	write_c(0x30);		//Value. 00h->~0.65xVcc, 20h->~0.77xVcc(RESET), 30h->~0.83xVcc
+	write_c(0x30);	//Value. 00h->~0.65xVcc, 20h->~0.77xVcc(RESET), 30h->~0.83xVcc
 	write_c(0xad);	//Select internal Iref or external Iref to supply the system
-	write_c(0x00);		//Value. 00h->External Iref, 01h->Internal Iref
+	write_c(0x00);	//Value. 00h->External Iref, 01h->Internal Iref
 	write_c(0xa4);	//Display outputs according to the GDDRAM contents
 	write_c(0xa6);	//A6h->Normal (data 1/0-> pixel ON/OFF), A7h->Inverse (data 1/0-> pixel OFF/ON)
 	write_c(0xaf);	//Display is switch ON
 
-	//kinda explained 9.1.3	
 	write_c(0xB0);		//Set page Start Address for page Addressing Mode
 	write_c(0x00);   	//Set Lower Column Start Address for page Addressing Mode
 	write_c(0x10);		//Set Higher Column Start Address for page Addressing Mode (NEED TO ASK ABOUT THIS)
@@ -89,8 +97,6 @@ void OLED_home(void) {	//Pointer goes to position 0,0 in OLED
 }
 
 void OLED_goto_line(uint8_t line) {	//To go to a specific line in OLED
-	//For page addressing mode, it needs to check if we are on a valid page
-	//OLED_home();
 	gen_page = line;
 	gen_col = 0;
 	if (line < MAX_PAGES) {
@@ -157,9 +163,8 @@ void OLED_clear_arrow(uint8_t row, uint8_t col){
 }
 
 void OLED_screen_Saver() {	//Prints a complete screen saver
-	OLED_clear_all();		//All display is cleared first
+	OLED_clear_all();
 	for(uint8_t p=0; p<MAX_PAGES; p++) { //Printing from up and down, and left to right
-		//OLED_goto_line(p);
 		gen_page = p;
 		for(uint8_t c=0; c<MAX_COLUMNS; c++) {
 			write_s(pgm_read_byte(&(screenSaver[p][c])));
@@ -168,15 +173,15 @@ void OLED_screen_Saver() {	//Prints a complete screen saver
 	}
 }
 
-void write_s(uint8_t data){
+void write_s(uint8_t data){		// Stores data in two-dimensional array that represents OLED sram
 	frame[gen_page][gen_col] = data;
-	gen_col++;
+	gen_col++;					// SRAM pointer behaves like OLED in page mode
 	if(gen_col >= 128){
-		gen_col = 0;			// Page addressing mode
+		gen_col = 0;			
 	}
 }
 
-void OLED_update(){
+void OLED_update(){				// Loads SRAM content to OLED
 	//_delay_ms_(1/0.060); 		// update frequency
 	for (uint8_t r = 0; r < 8; r++){
 		OLED_goto_line(r);
@@ -186,7 +191,7 @@ void OLED_update(){
 	}
 }
 
-void OLED_frame_fill(uint8_t data){
+void OLED_frame_fill(uint8_t data){		// Fills OLED sram data (frame) with byte
 	for (uint8_t r = 0; r < 8; r++){
 		for (uint8_t c = 0; c < 128; c++){
 			frame[r][c] = data;
@@ -194,14 +199,11 @@ void OLED_frame_fill(uint8_t data){
 	}
 }
 
-void OLED_frame_char_fill(char c){
-	//OLED_print_all("HELLOHELLOA");
+void OLED_frame_char_fill(char c){		// Fills frame with words
 	for (uint8_t r = 0; r < 8; r++){
 		OLED_goto_line(r);
-		OLED_print_all("HELLOOOOOOOJAJAES");
+		OLED_print_all("HELL");
 	}
-	//OLED_goto_line(3);
-	//fprintf(UART_p,"%d",gen_page);
 }
 
 void OLED_draw_pixel(uint8_t bit, uint8_t x, uint8_t y){	// x and y are cartesian coordinates, not page and column
@@ -216,12 +218,50 @@ void OLED_draw_pixel(uint8_t bit, uint8_t x, uint8_t y){	// x and y are cartesia
 	}
 }
 
+void OLED_draw_cursor(uint8_t x0, uint8_t y0){	// Draw cross for cursor
+	uint8_t page = y0 / 8;						// Rounds down to find page				
+	uint8_t setbit = y0 % 8;					// Finds which bit in a column it should store clear status for
+
+	for (uint8_t x = x0-3; x <= (x0 + 3); x++){	// Draw horizontal line
+		if (!(frame[page][x] & (1 << setbit))){	// Check if bit is set to 1
+			clear_bits_x |= (1 << (x - x0 + 3));// Bit in this position should be cleared later if nothing was drawn there beforehans (except cursor)
+		} else {
+			clear_bits_x &= ~(1 << (x - x0 + 3));
+		}
+		OLED_draw_pixel(1, x, y0);
+	}
+
+	for (uint8_t y = y0-3; y <= (y0 + 3); y++){	// Draw vertical line
+		page = y / 8;							// Update vertical variables
+		setbit = y % 8;
+		if (!(frame[page][x0] & (1 << setbit))){// Same as above
+			clear_bits_y |= (1 << (y - y0 + 3));
+		} else {
+			clear_bits_y &= ~(1 << (y - y0 + 3));
+		}
+		OLED_draw_pixel(1, x0, y);
+	}
+}
+
+void OLED_clear_cursor(uint8_t x0, uint8_t y0){	// Removes the cursor from its previous position	
+	for (uint8_t x = x0-3; x <= (x0 + 3); x++){	// Uses the clear_bits_xy byte to decide which pixels to set to 0 again
+		if (clear_bits_x & (1<< (x - x0 + 3))){	// Only draws black pixels on bits that were set by cursor, not other functions
+			OLED_draw_pixel(0, x, y0);
+		}
+	}
+	for (uint8_t y = y0-3; y <= (y0 + 3); y++){				
+		if (clear_bits_y & (1 << (y - y0 + 3))){
+			OLED_draw_pixel(0, x0, y);
+		}
+	}
+}
+
 void OLED_draw_rectangle(uint8_t x0, uint8_t y0, uint8_t width, uint8_t height){
-	for (uint8_t x = x0; x <= (x0 +width); x++){
+	for (uint8_t x = x0; x <= (x0 +width); x++){	// Vertical lines
 		OLED_draw_pixel(1, x, y0);
 		OLED_draw_pixel(1, x, (y0 + height));
 	}
-	for (uint8_t y = y0; y <= (y0 +height); y++){
+	for (uint8_t y = y0; y <= (y0 +height); y++){	// Horizontal lines
 		OLED_draw_pixel(1, x0, y);
 		OLED_draw_pixel(1, x0 + width, y);
 	}
@@ -234,7 +274,7 @@ void OLED_draw_circle(uint8_t bit, uint8_t x0, uint8_t y0, uint8_t r){	// Draw c
 	int dy = 1;
 	int rad_err = dx - (r << 1);
 
-	while(x >= y){								// Make use of 8-symmetry of circle:
+	while(x >= y){									// Make use of 8-symmetry of circle:
 		OLED_draw_pixel(bit, x0 + x, y0 + y);		// Octant 1
         OLED_draw_pixel(bit, x0 + y, y0 + x);		// Octant 2
         OLED_draw_pixel(bit, x0 - y, y0 + x);		// Octant 3
@@ -259,74 +299,85 @@ void OLED_draw_circle(uint8_t bit, uint8_t x0, uint8_t y0, uint8_t r){	// Draw c
 	}
 }
 
-tools_t paint_tool = CIRCLE;	// Initial tool is a brush
-uint8_t cursor_x = 64;
-uint8_t cursor_y = 32;
-
-void OLED_paint(){				// Not done
+void OLED_paint(){				// Draw things onto the oled by pressing RIGHT BUTTON
 	OLED_clear_all();
 	// Draw Circle option
-		OLED_draw_rectangle(1, 1, 20, 20);
-		OLED_draw_circle(1,11,11,7);
+	OLED_draw_rectangle(1, 1, 20, 20);
+	OLED_draw_circle(1,11,11,7);
 
-		// Draw Rectangle option
-		OLED_draw_rectangle(1, 21, 20, 20);
-		OLED_draw_rectangle(5,25,12,12);
+	// Draw Rectangle option
+	OLED_draw_rectangle(1, 21, 20, 20);
+	OLED_draw_rectangle(5,25,12,12);
 
-		// Draw brush option
-		OLED_draw_rectangle(1, 41, 20, 20);
-		OLED_draw_circle(1, 11, 51, 2);
-		OLED_draw_circle(1, 11, 51, 1);
+	// Draw brush option
+	OLED_draw_rectangle(1, 41, 20, 20);
+	OLED_draw_circle(1, 11, 51, 2);
+	OLED_draw_circle(1, 11, 51, 1);
+
 	uint8_t keep_painting = 0x01;
+
 	while(keep_painting){
-		if (BUTTON_L){			// We should REALLY implement interrupts :)
+		if (BUTTON_L){				// We should REALLY implement interrupts :)
 			keep_painting = 0x00;
 		}
-		OLED_cursor();
-		//fprintf(UART_p, "PAINTING! \r\n",0);
-		OLED_update();
+		OLED_cursor();				// Handle cursor and its actions
+		OLED_update();				// Refresh screen
 	}
 }
 
 void OLED_cursor(){
+	cursor_x_prev = cursor_x;		// Remember previous position in order to clear cursor
+	cursor_y_prev = cursor_y;		// TODO: decrease cursor sensitivity
+
 	joy_position_t joy_pos = buttons_get_joy_coord();	// Maybe move this outside of oled.c and take as argument (if time)
 	slider_position_t sliders = buttons_get_slider_positions();
 
 	if (joy_pos.XX >= (joy_pos.XX_init + 5) && cursor_x <= MAX_COLUMNS-1){	// Joystick moves right
 		cursor_x++;
 	}
-	if (joy_pos.XX <= (joy_pos.XX_init -20) && cursor_x >= 21){	// Joystick moves left
+	if (joy_pos.XX <= (joy_pos.XX_init -40) && cursor_x >= 3){	// Joystick moves left
 		cursor_x--;
 	}
-	if (joy_pos.YY >= (joy_pos.YY_init + 5) && cursor_y >= 1){	// Joystick moves up
+	if (joy_pos.YY >= (joy_pos.YY_init + 10) && cursor_y >= 1){	// Joystick moves up
 		cursor_y--;
 	}
-	if (joy_pos.YY <= (joy_pos.YY_init -20) && cursor_y <= 63){	// Joystick moves down
+	if (joy_pos.YY <= (joy_pos.YY_init -30) && cursor_y <= 63){	// Joystick moves down
 		cursor_y++;
 	}
 
-	OLED_draw_circle(0, cursor_x, cursor_y, 2);
-	OLED_draw_circle(1, cursor_x, cursor_y, 2);
+	OLED_clear_cursor(cursor_x_prev, cursor_y_prev);
+	OLED_draw_cursor(cursor_x, cursor_y);
 
 	if(BUTTON_R){
-		switch (paint_tool){
-			case BRUSH:
-				OLED_draw_circle(1, cursor_x, cursor_y, 2);
-				break;
-			case CIRCLE:
-				OLED_draw_circle(1, cursor_x, cursor_y, sliders.right/5);
-				break;
-			case RECTANGLE:
-				OLED_draw_rectangle(cursor_x, cursor_y, sliders.right/5, sliders.left/5);
-				break;
+		if(cursor_x < 21){				// Tool selection if cursor is inside the left panel
+			if(cursor_y < 21){
+				paint_tool = CIRCLE;
+			} else if(cursor_y < 41){
+				paint_tool = RECTANGLE;
+			} else if(cursor_y < 61){
+				paint_tool = BRUSH;
+			}
+		}
+		if(cursor_x > 22){				// Draw with tools if the cursor is to the right of the panel
+			switch (paint_tool){
+				case BRUSH:
+					OLED_draw_circle(1, cursor_x, cursor_y, 2);
+					for (uint8_t cx = 2; cx <= 4; cx++){
+						clear_bits_x &= ~(1 << cx);		// Make sure corner of rectangle is not cleared by cursor remove
+						clear_bits_y &= ~(1 << cx);
+					}
+					break;
+				case CIRCLE:
+					OLED_draw_circle(1, cursor_x, cursor_y, sliders.right/5);
+					break;
+				case RECTANGLE:
+					OLED_draw_rectangle(cursor_x, cursor_y, sliders.right/5, sliders.left/5);
+					for (uint8_t cx = 3; cx <= 6; cx++){
+						clear_bits_x &= ~(1 << cx);		// Make sure corner of rectangle is not cleared by cursor remove
+						clear_bits_y &= ~(1 << cx);
+					}
+					break;
+			}
 		}
 	}
-}
-
-void OLED_draw_cursor(){
-
-}
-
-ISR(INT2_vect){
-	
 }
