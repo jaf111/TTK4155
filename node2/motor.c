@@ -25,11 +25,8 @@ void motor_init(){
 
 	DDRH |= (1 << PH1); 	///Enable DIR pin (direction) 
 
-
 	DDRH |= (1 << PH5); 	//Enable !OE to output of encoder
 	DDRH |= (1 << PH3); 	//Enable SEL to output
-	
-
 }
 
 
@@ -40,10 +37,7 @@ void reset_encoder(){
 }
 
 
-int16_t read_encoder(){
-
-//Normal procedure of reading the encoder:
-
+int16_t read_encoder() {			//Normal procedure of reading the encoder:
    PORTH &= ~(1 << PH5);		  	// Set !OE low to enable output of encoder
    PORTH &= ~(1 << PH3);		   	// Lower SEL to get high byte
    _delay_ms(20);			  	  	// Wait about 20 microseconds
@@ -56,7 +50,6 @@ int16_t read_encoder(){
    int16_t encoder_pos = (MSB << 8) + LSB; //Process received data.... 
 
    return encoder_pos;
-
 }
 
 void set_motor_direction(direction_t direction){	// Take in direction from joystick and set motor direction
@@ -75,7 +68,6 @@ void set_motor_direction(direction_t direction){	// Take in direction from joyst
 	fprintf(UART_p, " motor dir = %d \r \n",dir);
 }
 
-
 void motor_move(int16_t encoder_pos, uint8_t speed){
 	if(encoder_pos > 100){
 		dir = LEFT;
@@ -90,7 +82,6 @@ void motor_move(int16_t encoder_pos, uint8_t speed){
 	//dir = IDLE;
 }
 
-
 void set_motor_speed(uint8_t speed){
 	uint8_t adr = 0x50;
 	uint8_t cmd = 0x00;
@@ -100,4 +91,3 @@ void set_motor_speed(uint8_t speed){
 	_delay_ms(50);
 	TWI_Start_Transceiver_With_Data(message_buffer, 3);	// start transmission
 }
-

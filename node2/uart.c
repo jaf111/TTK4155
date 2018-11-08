@@ -1,6 +1,7 @@
 #include <avr/io.h> 	//Specific IO for AVR micro (all registers defined inside)
 #include <stdio.h>		//Standard constants and functions for C (printf..., scanf...) 
 #include <stdint.h>		//Standard Integer Types (uint8_t, int16_t)
+#include <avr/interrupt.h>
 
 #include "uart.h"		//Prototype functions
 
@@ -18,7 +19,9 @@ void USART_Init(unsigned int ubrr) {	//Atmel 162 has 2 USARTS -> USART 0 & USART
 
 void USART_Transmit(unsigned char data) {
 	//Wait for empty transmit buffer in USART0 (bit UDRE0 of register UCSR0A)
+	cli();
 	while (!(UCSR0A & (1<<UDRE0)));	
+	sei();
 	
 	//Put data into buffer, sends the data
 	UDR0 = data;
@@ -32,9 +35,8 @@ unsigned char USART_Receive(void) {
 	return UDR0;
 }
 
-
 /* 	dmesg --follow
 	lsusb
-
+	
 	ttyACM0 = USB
 */

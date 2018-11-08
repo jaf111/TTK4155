@@ -5,6 +5,7 @@
 #include <stdio.h>		//Standard constants and functions for C (printf..., scanf...) 
 #include <avr/io.h> 	//Specific IO for AVR micro (all registers defined inside)
 
+
 #include "led.h"		//Prototype functions of LED unit
 #include "uart.h"		//Prototype functions of USART unit
 #include "sram.h"		//Prototype functions of SRAM unit
@@ -28,17 +29,11 @@ int main() {
 	//buzzer_init();		//Buzzer initialization
 
 	USART_Init(MYUBRR);
-
 	SRAM_init();
-
 	ADC_init();
-
 	buttons_init();
-
 	OLED_init();
-
 	menu_init();
-
 	SPI_init();
 
 	CAN_init();
@@ -48,13 +43,12 @@ int main() {
 	packet can_message1 = {.id = 0x13, .length = 0x08, .data = {0x07,0x02,0x03,0x04,0x05,0x06,0x07,0x09}};	//Struct initialization
 	packet can_message2 = {.id = 0x14, .length = 0x07, .data = {0x05,0x02,0x03,0x04,0x13,0x06,0x07}};
 	packet can_message3 = {.id = 0x15, .length = 0x07, .data = {0x01,0x02,0x03,0x04,0x13,0x06,0x07}};*/
-
 	packet can_joystick = {.id = 0x16, .length = 0x02, .data = {0x01,0x02}};
 
 	//buzzer_on();
-	
 
 	while(1) {
+		
 		joy_position_t joy_coord = buttons_get_joy_coord();	// (use struct from buttons.h to get coordinates (joy_coord.XX etc))
 		slider_position_t slider_pos = buttons_get_slider_positions();
 		can_joystick.data[0] = joy_coord.XX;
@@ -63,9 +57,11 @@ int main() {
 		fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
 		CAN_send(&can_joystick);
 		//play_song();
+		
 
 		//fprintf(UART_p, "slider, R = %d   ADC read = %d  \r\n", slider_pos.right, ADC_read(SLIDER_R));
 		//cursor_move();
+
 
 		
 		/*MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK);	//Set loopback mode
@@ -106,7 +102,7 @@ int main() {
 		//OLED_draw_circle( 40 + (JoyX/5), 50 - (JoyY/8), 6);
 		//OLED_draw_circle( 40 + (JoyX/5), 50 - (JoyY/8), 2);
 		OLED_paint();
-		OLED_update();
+		//OLED_update(); 
 		//OLED_clear_all();
 		//fprintf(UART_p, "Message data: %4x \r\n", new_message.length);
 		/*for (uint8_t i=0; i < 8; i++) {

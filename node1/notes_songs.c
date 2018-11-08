@@ -11,12 +11,11 @@
 
 void buzzer_init() {		//Buzzer from USB board connected in MISC pin 3
 	DDRB |= (1 << DDB3);	//Enable pin 0 (bit DDB0) of Port B (register DDRB)
-	PORTB |= (0 << PB3);	//Set pin 0 (bit PB0) in PORT B (register PORTB) to 1, leave other bits unchanged
+	PORTB &= ~(1 << PB3);	//Set pin 0 (bit PB0) in PORT B (register PORTB) to 1, leave other bits unchanged
 }
 
 void buzzer_on() {
 	PORTB |= (1 << PB3);	//Set pin 0 (bit PB0) in PORT B (register PORTB) to 1, leave other bits unchanged
-
 }
 
 void buzzer_off() {

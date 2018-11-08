@@ -2,7 +2,7 @@
 #include <stdio.h> 
 
 #include "uart.h"		//Added to use fprintf function
-#include "buttons.h"	//Function prototypes
+#include "buttons.h"	//Function prototypes here defined
 
 #define Mov23_Pos 190	//Joystick moved 2/3 in positive direction (up or right)
 #define Mov23_Neg 64	//Joystick moved 2/3 in negative direction (down or left)

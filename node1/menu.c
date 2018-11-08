@@ -19,24 +19,7 @@ uint8_t pointerLR = 0;	//Menu level (menu or sub-menu)
 t_menu* current_menu; 
 
 int displayed_lines = 0;
-
-t_menu* menu(char* name, t_menu* parent) {
-	t_menu* new_menu = malloc(sizeof(t_menu)); 	// 
-	new_menu->name = name;
-	new_menu->parent = parent;
-	new_menu->children = NULL;
-	new_menu->sibling = NULL;
-
-	return new_menu;
-}
-
-void set_sibling(t_menu* menu, t_menu* new_sibling){
-	menu->sibling = new_sibling;
-}
-
-void set_children(t_menu* menu, t_menu* new_children){
-	menu->children = new_children;
-}
+int currsor_io = 0;
 
 t_menu main_menu;
 t_menu game;
@@ -47,6 +30,7 @@ t_menu screensaver;
 t_menu songs;
 t_menu paint;
 t_menu brightness;
+
 
 void menu_system() {
 	//Main menu page create
@@ -137,7 +121,9 @@ void menu_navigate(joy_direction_t joy_dir){
 
 void cursor_move() {			//To manage the arrow in the current screen
 	OLED_pos(pointerUP, 5);		//Pointer located on left side (column 5) of current option
-	OLED_print_arrow(pointerUP, 5);	//Arrow printed
+	if (currsor_io == 0){
+		OLED_print_arrow(pointerUP, 5);	
+	}
 
 	/*JoyDU_now = ADC_read(JOY_DU);
 	JoyLR_now = ADC_read(JOY_LR);
@@ -162,21 +148,20 @@ void cursor_move() {			//To manage the arrow in the current screen
 			}
 		}
 		else if (ADC_read(JOY_LR) >= 220) {	//If joystick is moved RIGHT
-			//if (pointerLR == 0) {			//Only if I am in a parent screen
 			if (current_menu->children == NULL){
 				return;
 			}
 			else{
 				OLED_home();
 				current_menu = current_menu->children;
-				print_menu(current_menu);
-				/*
-				fprintf(OLED_p, current_menu->name, 0);
+				//print_menu(current_menu);
+				
+				//fprintf(OLED_p, current_menu->name, 0);
 
 				for (int i = 0; i < pointerUP - 1; i++) {
 					current_menu = current_menu->sibling;
 				}
-				print_menu(current_menu);*/
+				print_menu(current_menu);
 				pointerLR = pointerUP;		//Arrow position determines sub-menu screen
 				pointerUP = 1;				//Arrow placed in the first line again
 				menu_handler();
@@ -194,6 +179,7 @@ void cursor_move() {			//To manage the arrow in the current screen
 			}
 				
 			else{
+				currsor_io = 0;
 				current_menu = current_menu->parent;
 				print_menu(current_menu);
 				//menu_handler();
@@ -206,11 +192,15 @@ void cursor_move() {			//To manage the arrow in the current screen
 
 //something is wrong here
 void menu_handler(void){
-	if(current_menu = &screensaver){
+	if(current_menu == &screensaver){
 		OLED_clear_all();
+		currsor_io = 1;
 		OLED_screen_Saver();
+
 	}
-	else if (current_menu = &paint){
+	else if (current_menu == &paint){
+		OLED_clear_all();
+		currsor_io = 1;
 		OLED_paint();
 	}
 }
