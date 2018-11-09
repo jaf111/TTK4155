@@ -3,8 +3,8 @@
 #include "PWM.h"
 #include "servo.h"
 
-#define MAX_Width 131	//2.1ms at 50Hz
-#define IDLE_Width 94	//1.5ms at 50Hz
+#define MAX_Width  100 	//131	//2.1ms at 50Hz		// Max value is decreased because of manual calibration 
+#define IDLE_Width 75 	//94	//1.5ms at 50Hz		// Servo is NOT centered at midpoint value for duty cycle. Bad servo?
 #define MIN_Width 56	//0.9ms at 50Hz
 
 void Servo_init() {		//PWM initialization to control the servo
@@ -13,7 +13,7 @@ void Servo_init() {		//PWM initialization to control the servo
 
 void Move_Servo(uint8_t width) {
 	uint8_t Servo_dir = 0;
-	Servo_dir = 0.294*width + MIN_Width;	//Linear relation
+	Servo_dir = 0.175*width + MIN_Width;	//Linear relation
 	//0.294 = (MAX_Width - MIN_Width) * 255
 	
 	if (Servo_dir > MAX_Width) {Servo_dir = MAX_Width;}	//To be sure MAX and MIN

@@ -19,9 +19,9 @@ void USART_Init(unsigned int ubrr) {	//Atmel 162 has 2 USARTS -> USART 0 & USART
 
 void USART_Transmit(unsigned char data) {
 	//Wait for empty transmit buffer in USART0 (bit UDRE0 of register UCSR0A)
-	cli();
+	//cli();
 	while (!(UCSR0A & (1<<UDRE0)));	
-	sei();
+	//sei();
 	
 	//Put data into buffer, sends the data
 	UDR0 = data;

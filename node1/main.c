@@ -101,8 +101,8 @@ int main() {
 		//OLED_draw_rectangle((joy_coord.XX/2), 60 - (joy_coord.YY/5), (slider_pos.left/4), (slider_pos.right/15));
 		//OLED_draw_circle( 40 + (JoyX/5), 50 - (JoyY/8), 6);
 		//OLED_draw_circle( 40 + (JoyX/5), 50 - (JoyY/8), 2);
-		OLED_paint();
-		//OLED_update(); 
+		//OLED_paint();
+		OLED_update(); 
 		//OLED_clear_all();
 		//fprintf(UART_p, "Message data: %4x \r\n", new_message.length);
 		/*for (uint8_t i=0; i < 8; i++) {

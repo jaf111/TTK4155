@@ -53,19 +53,22 @@ void PWM_PE3_init(uint16_t prescaler, uint16_t frequency) {		//PWM in timer 3, c
 	uint16_t TOP = (F_CPU/frequency) / prescaler - 1;
 	ICR3 = TOP;		//ICR3 (defined as TOP) is loaded according to the requested frequency
 	
-	OCR3A = 0x0000;		//Width of the PWM (initialized to 0 = NOT WORKING)
+	OCR3A = 0x0020;		//Width of the PWM (initialized to 0 = NOT WORKING)
+
+	TIMSK3 |= (1<<OCIE3A);
 }
 
 void Timer_PB7_init(uint16_t prescaler, uint16_t frequency) {		//(internal) Timer of 8 bits, in PB7 [D13 in Arduino]
-	TCCR0A |= (0<<WGM00) | (1<<WGM01);	 //Configure Clear Timer on Compare Match (CTC), mode 2. TOP value is OCR0A
-	TCCR0B |= (0<<WGM02);
+	TCCR0A |= (1<<WGM00) | (1<<WGM01);	 //Configure Clear Timer on Compare Match (CTC), mode 2. TOP value is OCR0A
+	TCCR0B |= (1<<WGM02);
 	
 	TCCR0B |= PWM_setPrescaler(prescaler);	//Prescaler is set in the PWM output
 
 	TCCR0A |= (0<<COM0A0) | (1<<COM0A1);	//Clear OC0A on Compare Match
 
-	uint16_t TOP = (F_CPU/(frequency*2*prescaler)) - 1;
-	TOP = 30;
+	//uint8_t TOP = (F_CPU/(frequency*2*prescaler)) - 1;
+	uint16_t TOP = (F_CPU/frequency) / prescaler - 1;
+	TOP = 255;
 	OCR0A = TOP;		//ICR3 (defined as TOP) is loaded according to the requested frequency
 
 	fprintf(UART_p, "TOP: %8d \n\r", TOP);
@@ -81,8 +84,8 @@ void Set_PWMwidth(char* ch_PWM, uint8_t PWM_width) {
 
 //ISR checks the interruptions vector once the previously defined interruption is executed.
 //If a function for it is not defined, the AVR would restart the system automatically
-ISR(TIMER0_COMPA_vect) {	
+/*ISR(TIMER0_COMPA_vect) {	
 	int_tim8 = 1;		//Global variable for internal 8-bits timer interruption
-}
+}*/
 
 #endif
