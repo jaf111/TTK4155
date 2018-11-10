@@ -6,17 +6,18 @@
 #include <avr/io.h> 	//Specific IO for AVR micro (all registers defined inside)
 
 
-#include "led.h"		//Prototype functions of LED unit
-#include "uart.h"		//Prototype functions of USART unit
-#include "sram.h"		//Prototype functions of SRAM unit
-#include "adc.h"		//Prototype functions of ADC unit
-#include "buttons.h"	//Prototype functions of buttons (USB board) unit
-#include "oled.h"		//Prototype functions of OLED (USB board) unit
-#include "menu.h"		//Prototype functions of the menu
-#include "spi.h"		//Prototype functions of SPI communication
-#include "MCP2515.h"	//Prototype functions of CAN controller unit
-#include "can.h"		//Prototype functions of CAN communication
-//#include "notes_songs.h" //Prototype functions for playing a song
+#include "led.h"		
+#include "uart.h"		
+#include "sram.h"		
+#include "adc.h"		
+#include "buttons.h"	
+#include "oled.h"		
+#include "menu.h"		
+#include "spi.h"		
+#include "MCP2515.h"	
+#include "can.h"		
+#include "highscore.h"
+//#include "notes_songs.h" 
 
 #define MENU1 0			//Position of parent menu 1
 #define MENU2 4			//Position of parent menu 2
@@ -48,8 +49,8 @@ int main() {
 	//buzzer_on();
 
 	while(1) {
-		
-		joy_position_t joy_coord = buttons_get_joy_coord();	// (use struct from buttons.h to get coordinates (joy_coord.XX etc))
+		create_name();
+		/*joy_position_t joy_coord = buttons_get_joy_coord();	// (use struct from buttons.h to get coordinates (joy_coord.XX etc))
 		slider_position_t slider_pos = buttons_get_slider_positions();
 		can_joystick.data[0] = joy_coord.XX;
 		can_joystick.data[1] = joy_coord.YY;

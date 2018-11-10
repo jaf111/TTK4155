@@ -75,7 +75,7 @@ int main() {
 	solenoid_init();
 
 	//PID initialization
-	pid_init(2, 50);	//Type 2 (PI) and frequency of 1000Hz
+	pid_init(2, 10);	//Type 2 (PI) and frequency of 1000Hz
 
 	/*packet can_message1 = {.id=0x13, .length=0x08, .data={0x07,0x02,0x03,0x04,0x05,0x06,0x07,0x09}};	//Struct initialization
 	packet can_message2 = {.id=0x14, .length=0x07, .data={0x05,0x02,0x03,0x04,0x13,0x06,0x07}};
@@ -138,29 +138,15 @@ int main() {
 		//fprintf(UART_p, "IR: %4d \r\n", ADC_read());
 		Move_Servo(can_joystick.data[0]);	//Change Servo direction
 		int16_t motor_pos = motor_read_encoder();
-		//motor_reset_encoder();
-		//fprintf(UART_p, "Motor position: %d \r\n", motor_pos);
-		
-		direction_t joy_dir = getJoyDirection(can_joystick.data[0], can_joystick.data[1]);
 		
 		uint8_t setpoint = can_joystick.data[0];
-		//fprintf(UART_p, "setpoint: %d \r\n", setpoint);
 		
-		motor_move(pid_controller(setpoint));
+		//motor_move(pid_controller(setpoint, 300));
 
-
-
-		//motor_set_direction(joy_dir);
-		
-
-
-		//fprintf(UART_p, " DIR = %d \r \n",joy_dir);
-		/*if (joy_dir == JOY_LEFT || joy_dir == JOY_RIGHT){
-			motor_set_speed(0x008F);
-		} else {
-			motor_set_speed(0x0000);
-		}*/
 	}
+
+		//direction_t joy_dir = getJoyDirection(can_joystick.data[0], can_joystick.data[1]);
+		//fprintf(UART_p, " DIR = %d \r \n",joy_dir);
 	return 0;
 }
 #endif

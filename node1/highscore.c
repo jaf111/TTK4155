@@ -42,5 +42,6 @@ char display_letter(char_selector){
 		}
 		return('A' + char_selector)
 	}
+	return ('A' + char_selector);
 }
 

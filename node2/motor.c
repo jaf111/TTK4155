@@ -17,9 +17,10 @@
  
 motor_dir_t dir = IDLE;
 uint8_t message_buffer[3];	//
+uint16_t motor_encoder_max = 0;
 
 
-void motor_init(){
+void motor_init() {
 	DDRH |= (1 << PH4); 	//Enable EN pin
 	PORTH |= (1 << PH4);	//Set EN pin high to enable motor
 
@@ -30,7 +31,17 @@ void motor_init(){
 	DDRH |= (1 << PH6);		//Enable encoder !RTS pin
 
 	motor_set_speed(0);
+	motor_set_direction(LEFT);
+	motor_set_speed(150);
+	_delay_ms(1000);
+	//motor_set_direction(IDLE);
 	motor_reset_encoder();
+	motor_set_speed(0);
+	_delay_ms(10);
+	motor_set_direction(RIGHT);
+	motor_set_speed(150);
+	_delay_ms(1000);
+	motor_encoder_max = motor_read_encoder();
 }
 
 
