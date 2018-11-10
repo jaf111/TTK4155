@@ -7,8 +7,8 @@ typedef struct {
 } highscore;
 
 void print_highscore(void);
-void create_name();
-char display_letter(char_selector);
+void create_name(void);
+char letter_select(void);
 
 
 #endif //HIGHSCORE_H
