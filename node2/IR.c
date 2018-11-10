@@ -23,10 +23,10 @@ void IR_init(){
 uint8_t IR_triggered(){
 	IR_val = IR_read_filtered();
 	if (IR_val < (IR_init-50)){				// Cutoff for deciding if player missed the ball
-		return 0x01;						// return 1 => Player missed the ball
-	} else{
-		return 0x00;						// Return 0 => No ball registered in IR line
+		return 0x01;						
 	}
+	
+	return 0x00;						
 }
 
 uint8_t IR_read_filtered(){
