@@ -55,13 +55,12 @@ int16_t pid_controller(int16_t setpoint) {	//Calculate the corrected output. Thi
 		int_tim8 = 0;
 
 		setpoint = setpoint - 128;
-		if (setpoint == 0) {
+		/*if (setpoint == 0) {
 			setpoint = measured_value;
-		}
+		}*/
 		
 		error = setpoint - measured_value;
 		
-
 		if ((error > 7) || (error < -7)) {		//If the error is too big, integral (accumulation) value must be restarted
 			integral = 0;
 		}
@@ -74,19 +73,24 @@ int16_t pid_controller(int16_t setpoint) {	//Calculate the corrected output. Thi
 		fprintf(UART_p, "PID_output %4d \r\n", PID_output);
 
 		previous_error = error;
-		fprintf(UART_p, "error %4d, setpoint %4d, measured_value %4d \r\n", error, setpoint, measured_value);
+		//fprintf(UART_p, "error %4d, setpoint %4d, measured_value %4d \r\n", error, setpoint, measured_value);
 		//fprintf(UART_p, "P %4d \r\n", Kp);
 		//fprintf(UART_p, "PID output: %4d\n", PID_output);
 		
 		if(PID_output >= 255) {
 			PID_output = 255; 
 		}
-
-		if(PID_output <= -255) {
-			PID_output = -255; 
+		else if((PID_output < 50) && (PID_output > 20)) {
+			PID_output = 50;
+		}
+		else if(PID_output <= -255) {
+			PID_output = -255;
+		}
+		else if((PID_output > -50) && (PID_output < -20)) {
+			PID_output = -50;
 		}
 		
-		fprintf(UART_p, "REAL PID_output %4d \r\n", PID_output);
+		//fprintf(UART_p, "REAL PID_output %4d \r\n", PID_output);
 	}
 
 	return PID_output;

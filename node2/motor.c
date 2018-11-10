@@ -87,7 +87,7 @@ void motor_move(int16_t speed) {
 	motor_set_speed(speed);
 	motor_set_direction(dir);
 
-	fprintf(UART_p, "DIRECTION %4d \r\n", dir);
+	//fprintf(UART_p, "DIRECTION %4d \r\n", dir);
 }
 
 void motor_set_speed(uint8_t speed){
@@ -95,7 +95,7 @@ void motor_set_speed(uint8_t speed){
 	uint8_t cmd = 0x00;
 	message_buffer[0] = adr;		// First call consists of TWI slave address
 	message_buffer[1] = cmd;		// First byte is write command
-	message_buffer[2] = speed;						// Send desired motor speed to DAC
-	_delay_ms(50);
+	message_buffer[2] = speed;		// Send desired motor speed to DAC
+	//_delay_ms(50);
 	TWI_Start_Transceiver_With_Data(message_buffer, 3);	// start transmission
 }
