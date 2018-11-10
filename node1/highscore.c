@@ -14,9 +14,44 @@
 int char_selector;
 int array_pos = 0;
 
-void print_highscore(){
+
+highscore_t nr1;
+highscore_t nr2;
+highscore_t nr3;
+highscore_t nr4;
+highscore_t nr5;
+highscore_t nr6;
+highscore_t nr7;
+highscore_t new_score;
+
+
+void highscore_init(){
+	nr1 = (highscore_t){NULL, NULL, &nr2}; 
+	nr2 = (highscore_t){NULL, NULL, &nr3};
+	nr3 = (highscore_t){NULL, NULL, &nr4};
+	nr4 = (highscore_t){NULL, NULL, &nr5};
+	nr5 = (highscore_t){NULL, NULL, &nr6};
+	nr6 = (highscore_t){NULL, NULL, &nr7};
+	nr7 = (highscore_t){NULL, NULL, NULL};
 
 }
+
+
+void print_highscore(){
+	OLED_clear_all();
+	uint8_t line = 1;
+	highscore_t* highscore;
+	highscore = nr1;
+
+	while(highscore && (line < 7)) {
+		OLED_pos(line,20);
+		fprintf(OLED_p, menu->name,0);
+		line++;
+		highscore = highscore->next;
+	}
+	OLED_home();
+}
+
 
 void create_name(){
 	OLED_update(); 
@@ -44,10 +79,10 @@ void create_name(){
 			if (array_pos <= 0){
 				array_pos = 0;
 			}
-		}
-		fprintf(UART_p, "array_pos: %d\r\n", array_pos); 
+		} 
 
 	}
+	new_score = (highscore_t){new_name, NULL};
 }
 
 
@@ -73,6 +108,51 @@ char letter_select(){
 	}
 	return(letter + char_selector);
 }
+
+
+void insert_score(char* name, uint8_t score){
+	highscore_t* highscore;
+	highscore = nr1;
+	int place = check_score(score);
+	
+	if (place == 0){
+		return;
+	}
+	highscore_copy(place);
+
+	for (int i = 1; i < place; i++){
+	 	highscore = highscore->next;
+	}
+	highscore.name = &name;
+	highscore.score = score;
+}
+
+void highscore_copy(int place){
+	//make sure the highscore does not owerwrite itself
+	highscore_t* highscore;
+	highscore = nr1;
+	for (int i = place; i > 0; i--){
+		highscore.name = highscore.next;
+		highscore.score = score;
+	}
+}
+
+void check_score(uint8_t score){
+	highscore_t* highscore;
+	highscore = nr1;
+	int place = 1;
+	
+	while(highscore && (line < 7)){
+		if (score > highscore->score){
+			return place;
+		}
+		highscore = highscore->next;
+		place += 1;
+	}
+	return 0;
+}
+
+
 
 #endif //F_CPU
 

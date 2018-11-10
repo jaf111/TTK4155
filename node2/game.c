@@ -65,6 +65,7 @@ void game_play(){
 			solenoid_push();
 		}
 	}
-
+	packet send_score = {.id = 0x15, .length = 0x01, .data = {score}};
+	CAN_send(score);
 
 }
