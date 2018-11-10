@@ -5,8 +5,8 @@
 #define JOY_DU 0x05		//ADC channel 2, where Down-Up Joystick is connected to
 #define SLIDER_R 0x06	//ADC channel 3, where Right Slider is connected to
 #define SLIDER_L 0x07	//ADC channel 4, where Right Slider is connected to
-#define BUTTON_R PINB & (1<<PB0)	//If button Right is pushed (connected to pin PB0, PORTB)
-#define BUTTON_L PINB & (1<<PB1)	//If button Left is pushed (connected to pin PB0, PORTB)
+//#define BUTTON_R PINB & (1<<PB0)	//If button Right is pushed (connected to pin PB0, PORTB)
+//#define BUTTON_L PINB & (1<<PB1)	//If button Left is pushed (connected to pin PB0, PORTB)
 
 
 typedef struct {	//Definition of variable "position_t"

@@ -88,7 +88,7 @@ void Timer_PB7_init(uint16_t prescaler, uint16_t frequency) {		//(internal) Time
 	TOP = 255;
 	OCR0A = TOP;		//ICR3 (defined as TOP) is loaded according to the requested frequency
 
-	fprintf(UART_p, "TOP: %8d \n\r", TOP);
+	//fprintf(UART_p, "TOP: %8d \n\r", TOP);
 			
 	TIMSK0 |= (1<<OCIE0A);	//Timer/Counter0 Output Compare Match A Interrupt enabled
 

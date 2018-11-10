@@ -28,11 +28,11 @@ void CAN_send(packet* message) {	//Everything is done only through Buffer 0
 	MCP2515_bit_modify(MCP_TXB0SIDH, 0xFF, message->id>>3);	//-> to access one particular element of the struct
 	MCP2515_bit_modify(MCP_TXB0SIDL, 0xE0, message->id<<5);	//Only bits defined in 2nd parameter can be changed
 	MCP2515_bit_modify(MCP_TXB0DLC, 0x0F, message->length);
-	fprintf(UART_p, "\nSENDER ID: %4x \r\n", message->id);
+	
 	
 	for (uint8_t i=0; i<message->length; i++) {
 		MCP2515_bit_modify(MCP_TXB0D0 + i, 0xFF, message->data[i]);
-		fprintf(UART_p, "MCP_TXB0D %4x: %4x \r\n", i, MCP2515_read(MCP_TXB0D0+i));
+		
 	}
 	MCP2515_request_to_send(MCP_RTS_TX0);
 }
@@ -41,14 +41,13 @@ packet CAN_read() {
 	packet message;
 	message.id = ((MCP2515_read(MCP_RXB0SIDH)<<3) + (MCP2515_read(MCP_RXB0SIDL)>>5)); // Store message id
 	message.length = 0x0F & (MCP2515_read(MCP_RXB0DLC)); // Length of the last received message is checked
-	//fprintf(UART_p, "RECEIVE ID: %4x \r\n", message.id);
+	
 	
 	for (uint8_t i=0; i<message.length; i++) {
 		message.data[i]= MCP2515_read(MCP_RXB0D0+i); //Store message data
-		//fprintf(UART_p, "MCP_RXB0D %4d: %4d \r\n", i, MCP2515_read(MCP_RXB0D0+i));
+		
 	}
 	MCP2515_bit_modify(MCP_CANINTF, MCP_RX0IF, 0x00);
-	fprintf(UART_p, "\r\n \r\n", 0);
 	
 	return message;
 }
@@ -58,8 +57,3 @@ int CAN_error() {
 }
 
 
-/* 	dmesg --follow
-	lsusb
-
-	ttyACM0 = USB
-*/

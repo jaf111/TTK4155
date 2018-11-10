@@ -17,7 +17,7 @@
  
 motor_dir_t dir = IDLE;
 uint8_t message_buffer[3];	//
-uint16_t motor_encoder_max = 0;
+//uint16_t motor_encoder_max = 0;
 
 
 void motor_init() {
@@ -32,18 +32,6 @@ void motor_init() {
 
 	motor_set_speed(0);
 	motor_reset_encoder();
-	/*
-	motor_set_direction(LEFT);
-	motor_set_speed(150);
-	_delay_ms(1000);
-	//motor_set_direction(IDLE);
-	motor_reset_encoder();
-	motor_set_speed(0);
-	_delay_ms(10);
-	motor_set_direction(RIGHT);
-	motor_set_speed(150);
-	_delay_ms(1000);
-	motor_encoder_max = motor_read_encoder();*/
 }
 
 
@@ -61,18 +49,18 @@ int16_t motor_read_encoder() {		//Normal procedure of reading the encoder:
    PORTH |= (1 << PH3);				// Set SEL high to get low byte
    _delay_ms(20);			   		// Wait about 20 microseconds
    uint8_t LSB = PINK;			   	// Read LSB
-   motor_reset_encoder();		   	// Toggle !RST to reset encoder
+   //motor_reset_encoder();		   	// Toggle !RST to reset encoder
    PORTH |= (1 << PH5);           	// Set !OE high to disable output of encoder
    int16_t encoder_pos = (MSB << 8) + LSB; //Process received data.... 
 
    return encoder_pos;
 }
 
-uint16_t motor_get_encoder_max() {
+/*uint16_t motor_get_encoder_max() {
 	return motor_encoder_max;
-}
+}*/
 
-void motor_set_direction(direction_t direction) {	// Take in direction from joystick and set motor direction
+void motor_set_direction(joy_direction_t direction) {	// Take in direction from joystick and set motor direction
 	switch(direction) {
 		case LEFT:
 			PORTH &= ~(1 << PH1); //Set direction left  
@@ -110,6 +98,6 @@ void motor_set_speed(uint8_t speed){
 	message_buffer[0] = adr;		// First call consists of TWI slave address
 	message_buffer[1] = cmd;		// First byte is write command
 	message_buffer[2] = speed;		// Send desired motor speed to DAC
-	//_delay_ms(50);
+	_delay_ms(50);
 	TWI_Start_Transceiver_With_Data(message_buffer, 3);	// start transmission
 }

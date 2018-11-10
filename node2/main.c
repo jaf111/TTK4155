@@ -20,33 +20,21 @@
 #include "pid_contr.h"	//Prototype functions of PID control
 #include "solenoid.h"	//Prototype functions of solenoid
 
-#define JOY_LR 0x04		//ADC channel 1, where Left-Right Joystick is connected to
-#define JOY_DU 0x05		//ADC channel 2, where Down-Up Joystick is connected to
-#define SLIDER_R 0x06	//ADC channel 3, where Right Slider is connected to
-#define SLIDER_L 0x07	//ADC channel 4, where Left Slider is connected to
-//#define BUTTON_R PINB & (1<<PB0)	//If button Right is pushed (connected to pin PB0, PORTB)
-//#define BUTTON_L PINB & (1<<PB1)	//If button Left is pushed (connected to pin PB0, PORTB)
-
-int16_t JoyX = 0;		//X coordinate of Joystick
-int16_t JoyY = 0;		//Y coordinate of Joystick
-int16_t JoyX_init = 0;	//Initial X coordinate of Joystick
-int16_t JoyY_init = 0;	//Initial Y coordinate of Joystick
-
-//int8_t int_tim8 = 0;		//Global variable for internal 8-bits timer interruption
 
 int main() {
 	cli();
-	fprintf(UART_p, "INIT \n\r", 0);
 
-	//GPIO initialization
-	//led_init();
-	
 	//USART initialization
 	USART_Init(MYUBRR);
 	//USART_Transmit(USART_Receive());	//To make printf() working in USART if not working check usart_Receive() ->while loop
 	
+	fprintf(UART_p, "INIT \n\r", 0);
+
+	//GPIO initialization
+	//led_init();
+
 	//Buttons initialization
-	button_init();
+	//buttons_init();
 
 	//Stand-by joystick positions read (for the offset)
 	//JoyX_init = JoyCoord_init(ADC_read(JOY_LR));
@@ -58,14 +46,13 @@ int main() {
 	//CAN controller (MCP2515) initialization
 	CAN_init();
 
+	TWI_Master_Initialise();
 	//Servo initialization
 	Servo_init();	//Servo initialization (connected in PB5)
 
 	//ADC initialization
 	ADC_init();
 
-	//TWI initialization
-	TWI_Master_Initialise();
 	//TWCR |= (1<<TWIE)|(1<<TWINT); // Enable specific interupt
 	
 	//Motor initialization
@@ -75,7 +62,7 @@ int main() {
 	solenoid_init();
 
 	//PID initialization
-	pid_init(2, 10);	//Type 2 (PI) and frequency of 1000Hz
+	pid_init(2, 50);	//Type 2 (PI) and frequency of 1000Hz
 
 	/*packet can_message1 = {.id=0x13, .length=0x08, .data={0x07,0x02,0x03,0x04,0x05,0x06,0x07,0x09}};	//Struct initialization
 	packet can_message2 = {.id=0x14, .length=0x07, .data={0x05,0x02,0x03,0x04,0x13,0x06,0x07}};
@@ -86,18 +73,31 @@ int main() {
 	//buzzer_on();
 	//play_song(2);
 
-	//set_motor_direction(1);
-
 	sei();							// Enable all interrupts
 
+	motor_set_direction(LEFT);
+	motor_set_speed(100);
+	
+	_delay_ms(1000);
+	motor_reset_encoder();
+	motor_set_speed(0);
+
+	_delay_ms(10);
+	motor_set_direction(RIGHT);
+	motor_set_speed(100);
+	_delay_ms(1000);
+	int16_t motor_encoder_max = -motor_read_encoder();
+	
 	while(1) {
+		
+
 		//solenoid_push();
 		
-		//fprintf(UART_p, "%d\n\r", ADC_read()); 
+		//fprintf(UART_p, "%d\n\r", motor_encoder_max); 
 		//_delay_ms(500);
 
-		/*
-		fprintf(UART_p, "TCNT0: %4d ", TCNT0);
+		
+		/*fprintf(UART_p, "TCNT0: %4d ", TCNT0);
 		if (int_tim8 == 1) {
 			int_tim8 = 0;
 			fprintf(UART_p, "TIMER!!!!!!!! \r\n", 0);
@@ -132,21 +132,20 @@ int main() {
 		packet can_joystick = CAN_read();
 
 		//_delay_ms(50);
-
 		//fprintf(UART_p, "JoyX: %4d ", can_joystick.data[0]);
 		//fprintf(UART_p, "JoyY: %4d ", can_joystick.data[1]);
 		//fprintf(UART_p, "IR: %4d \r\n", ADC_read());
 		Move_Servo(can_joystick.data[0]);	//Change Servo direction
 		int16_t motor_pos = motor_read_encoder();
-		
 		uint8_t setpoint = can_joystick.data[0];
-		
-		//motor_move(pid_controller(setpoint, 300));
-
+		motor_move(pid_controller(setpoint, motor_encoder_max)); //pid_controller(setpoint, 300)
 	}
-
-		//direction_t joy_dir = getJoyDirection(can_joystick.data[0], can_joystick.data[1]);
-		//fprintf(UART_p, " DIR = %d \r \n",joy_dir);
 	return 0;
 }
 #endif
+
+/* 	dmesg --follow
+	lsusb
+
+	ttyACM0 = USB
+*/

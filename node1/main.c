@@ -49,10 +49,10 @@ int main() {
 	//buzzer_on();
 
 	while(1) {
-		create_name();
+		//create_name();
 
 		
-		/*joy_position_t joy_coord = buttons_get_joy_coord();	// (use struct from buttons.h to get coordinates (joy_coord.XX etc))
+		joy_position_t joy_coord = buttons_get_joy_coord();	// (use struct from buttons.h to get coordinates (joy_coord.XX etc))
 		slider_position_t slider_pos = buttons_get_slider_positions();
 		can_joystick.data[0] = joy_coord.XX;
 		can_joystick.data[1] = joy_coord.YY;
