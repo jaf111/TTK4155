@@ -205,6 +205,21 @@ void menu_handler(void){
 	}
 }
 
+void Ext_INT0_ON(void) {
+	DDRD &= ~(1 << PD2); 	//PD2 set as input (1=output, 0=input). Leave others unchanged
+
+	MCUCR |= (1<<ISC01) | (1<<ISC00);	//Rising edge activation for INT0
+	GICR |= (1<<INT0);					//External interrupt 0 enabled (pin PD2)
+}
+
+void Ext_INT0_OFF(void) {
+	DDRD &= ~(1 << PD2); 	//disable pin PD2
+	GICR &= ~(1<<INT0);		//External interrupt 0 disabled
+}
+
+ISR(EXT_INT0_vect) {	
+	;
+}
 
 ////////////////////////////////////////////////////////////
 
