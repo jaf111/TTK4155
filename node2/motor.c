@@ -31,6 +31,8 @@ void motor_init() {
 	DDRH |= (1 << PH6);		//Enable encoder !RTS pin
 
 	motor_set_speed(0);
+	motor_reset_encoder();
+	/*
 	motor_set_direction(LEFT);
 	motor_set_speed(150);
 	_delay_ms(1000);
@@ -41,7 +43,7 @@ void motor_init() {
 	motor_set_direction(RIGHT);
 	motor_set_speed(150);
 	_delay_ms(1000);
-	motor_encoder_max = motor_read_encoder();
+	motor_encoder_max = motor_read_encoder();*/
 }
 
 
@@ -50,7 +52,6 @@ void motor_reset_encoder(){	//Toggles RST pin on MJ1
 	_delay_ms(20);
 	PORTH |= (1 << PH6);	//Set RST pin to high
 }
-
 
 int16_t motor_read_encoder() {		//Normal procedure of reading the encoder:
    PORTH &= ~(1 << PH5);		  	// Set !OE low to enable output of encoder
@@ -65,6 +66,10 @@ int16_t motor_read_encoder() {		//Normal procedure of reading the encoder:
    int16_t encoder_pos = (MSB << 8) + LSB; //Process received data.... 
 
    return encoder_pos;
+}
+
+uint16_t motor_get_encoder_max() {
+	return motor_encoder_max;
 }
 
 void motor_set_direction(direction_t direction) {	// Take in direction from joystick and set motor direction
@@ -97,8 +102,6 @@ void motor_move(int16_t speed) {
 	speed = (uint8_t)speed; 
 	motor_set_speed(speed);
 	motor_set_direction(dir);
-
-	//fprintf(UART_p, "DIRECTION %4d \r\n", dir);
 }
 
 void motor_set_speed(uint8_t speed){

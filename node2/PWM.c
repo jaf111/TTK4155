@@ -58,6 +58,23 @@ void PWM_PE3_init(uint16_t prescaler, uint16_t frequency) {		//PWM in timer 3, c
 	TIMSK3 |= (1<<OCIE3A);
 }
 
+void PWM_PL3_init(uint16_t prescaler, uint16_t frequency) {		//PWM in timer 5, channel A (PL3)
+	TCCR5A |= (0<<WGM50) | (1<<WGM51);	 //Configure fast PWM (mode 14), with value TOP in ICR5
+	TCCR5B |= (1<<WGM52) | (1<<WGM53);
+	
+	TCCR5B |= PWM_setPrescaler(prescaler);	//Prescaler is set in the PWM output
+
+	TCCR5A |= (0<<COM5A0) | (1<<COM5A1);	//PWM output in channel A (called OC5A) enabled. it clears on Compare Match, and sets at BOTTOM (non-inverting mode)
+	DDRL |= (1<<DDL3);	//OC3A is physically connected in Port L, Pin 3 (PL3), so such pin (bit DDL3, register DDRL) is defined as output (1=output, 0=input)
+
+	uint16_t TOP = (F_CPU/frequency) / prescaler - 1;
+	ICR5 = TOP;		//ICR3 (defined as TOP) is loaded according to the requested frequency
+	
+	OCR5A = 0x0020;		//Width of the PWM (initialized to 0 = NOT WORKING)
+
+	TIMSK5 |= (1<<OCIE5A);
+}
+
 void Timer_PB7_init(uint16_t prescaler, uint16_t frequency) {		//(internal) Timer of 8 bits, in PB7 [D13 in Arduino]
 	TCCR0A |= (1<<WGM00) | (1<<WGM01);	 //Configure Clear Timer on Compare Match (CTC), mode 2. TOP value is OCR0A
 	TCCR0B |= (1<<WGM02);

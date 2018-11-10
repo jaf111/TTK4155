@@ -52,7 +52,7 @@ int16_t pid_controller(int16_t setpoint, uint16_t motor_encoder_max) {	//Calcula
 	if(int_tim8 == 1) {
 		int_tim8 = 0;
 
-		int16_t measured_value = (255/motor_encoder_max)*motor_read_encoder();
+		int16_t measured_value = (255/motor_encoder_max)*motor_read_encoder();	//Encoder_min (max left) is assumed to be 0
 
 		//setpoint = setpoint - 127;
 		error = setpoint - measured_value;
