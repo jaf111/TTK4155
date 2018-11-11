@@ -6,12 +6,14 @@
 #include <avr/io.h>		//Specific IO for AVR micro (all registers defined inside)
 #include <avr/pgmspace.h>	//Interfaces to access data stored in program space (flash memory) of AVR
 #include <string.h>
+#include <avr/interrupt.h>
 
 #include "menu.h"		//Prototype of functions here implemented
 #include "uart.h"		//Prototype functions of USART unit
 #include "oled.h"		//Prototype functions of OLED (USB board) unit
 #include "buttons.h"	//Prototype functions of buttons (USB board) unit
 #include "adc.h"		//Prototype functions of ADC unit
+#include "can.h"		//Prototype functions of CAN unit
 
 uint8_t pointerUP = 1;	//Arrow position (starts in 1, after title)
 uint8_t pointerLR = 0;	//Menu level (menu or sub-menu)
@@ -154,7 +156,6 @@ void cursor_move() {			//To manage the arrow in the current screen
 			else{
 				OLED_home();
 				current_menu = current_menu->children;
-				//print_menu(current_menu);
 				
 				//fprintf(OLED_p, current_menu->name, 0);
 
@@ -190,21 +191,26 @@ void cursor_move() {			//To manage the arrow in the current screen
 }
 
 
-//something is wrong here
-void menu_handler(void){
+void menu_handler(void){				// Executes menu options
 	if(current_menu == &screensaver){
 		OLED_clear_all();
 		currsor_io = 1;
 		OLED_screen_Saver();
 
-	}
-	else if (current_menu == &paint){
+	} else if (current_menu == &paint){
 		OLED_clear_all();
 		currsor_io = 1;
 		OLED_paint();
+
+	} else if (current_menu == &game){
+		uint8_t score = game_node1_play();
+		//current_menu = &main_menu;
 	}
 }
 
+
+
+/*
 void ext_INT0_ON(void) {
 	DDRD &= ~(1 << PD2); 	//PD2 set as input (1=output, 0=input). Leave others unchanged
 
@@ -220,6 +226,10 @@ void ext_INT0_OFF(void) {
 ISR(EXT_INT0_vect) {	
 	;
 }
+
+*/
+
+
 
 ////////////////////////////////////////////////////////////
 

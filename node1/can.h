@@ -15,5 +15,6 @@ void CAN_init();
 void CAN_send(packet* message);
 packet CAN_read();
 int CAN_error();
+uint8_t CAN_message_recieved();
 
 #endif // CAN_H

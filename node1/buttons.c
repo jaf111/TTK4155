@@ -4,13 +4,18 @@
 #include "uart.h"		//Added to use fprintf function
 #include "buttons.h"	//Function prototypes
 #include "adc.h"
+#include "can.h"
 
 #define Mov23_Pos 190	//Joystick moved 2/3 in positive direction (up or right)
 #define Mov23_Neg 64	//Joystick moved 2/3 in negative direction (down or left)
 
+//Variables for storing input data
 joy_direction_t direction = JOY_NEUTRAL;		//Initialization of joystick direciton	
 slider_position_t slider_pos = {0, 0};			//Initialization of slider positions
 joy_position_t joy_coord;
+
+//Packet for sending input data over CAN communication
+packet can_joystick = {.id = 0x16, .length = 0x02, .data = {0x01,0x02}};
 
 //Variables used for digital average filtering:
 uint8_t index = 0;
@@ -32,8 +37,8 @@ void buttons_init(void) {
 		joyY_sum += joyY_readings[i];
 	}
 
-	joy_coord.XX_init = joyX_readings[0];		//Update initial joystick positions
-	joy_coord.YY_init = joyY_readings[0];
+	joy_coord.XX_init = joyX_readings[3];		//Update initial joystick positions
+	joy_coord.YY_init = joyY_readings[3];
 }
 
 
@@ -141,4 +146,14 @@ joy_direction_t buttons_get_joy_direction(int16_t X_coord, int16_t Y_coord) {	//
 	else {direction = JOY_NEUTRAL;}		//If nothing is pushed, then neutral position
 
 	return direction;
+}
+
+void buttons_send_CAN_message(){
+	buttons_update_joy_coord();
+	buttons_update_slider_positions();
+
+	can_joystick.data[0] = joy_coord.XX;
+	can_joystick.data[1] = joy_coord.YY;
+
+	CAN_send(&can_joystick);
 }

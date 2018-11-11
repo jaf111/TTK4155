@@ -129,6 +129,8 @@ v1.00       2003/12/11  Initial release*/
 #define MCP_TX01_MASK	0x14
 #define MCP_TX_MASK		0x54
 
+#define MCP_BFPCTRL		0x0C
+
 
 // Define SPI Instruction Set
 #define MCP_WRITE		0x02

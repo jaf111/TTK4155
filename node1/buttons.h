@@ -37,4 +37,6 @@ void buttons_update_slider_positions();
 
 slider_position_t buttons_get_slider_positions();
 
+void buttons_send_CAN_message();
+
 #endif // BUTTON_H

@@ -59,13 +59,13 @@ void game_play(){
 
 		Move_Servo(joy_coords.XX);	
 
-		motor_move(pid_controller(joy_coords.XX), motor_get_encoder_max());
+		motor_move(pid_controller(joy_coords.XX, motor_get_encoder_max()));
 
 		if(BUTTON_R){
 			solenoid_push();
 		}
 	}
-	packet send_score = {.id = 0x15, .length = 0x01, .data = {score}};
+	packet send_score = {.id = 0x15, .length = 0x01, .data = {0x09}};			// .data = {time_score}
 	CAN_send(score);
 
 }

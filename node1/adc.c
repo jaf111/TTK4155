@@ -11,7 +11,7 @@ void ADC_init(void){
 	//Happens in sram init too
 	MCUCR |= (1 << SRE);	//SRE: External SRAM/XMEM Enable (bit 7 of register MCUCR). Rest unchanged
 	SFIOR |= (1 << XMM2);	//XMM2: External Memory High Mask [PC7 - PC4] (bit 5 of register SFIOR)
-	
+	/*
 	// Button input
 	DDRE &= ~(1<<PE0);		//Enabled pin 0 (PE0) of port E (register DDRE)
 
@@ -23,7 +23,7 @@ void ADC_init(void){
 
 	// Enable interrupt on PE0
 	GICR |= (1<<INT2);		//INT2: External Interrupt Request 2 (bit 5 of GICR).
-
+	*/
 	// Enable global interrupts
 	//sei();
 
