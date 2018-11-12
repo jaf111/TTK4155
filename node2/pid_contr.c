@@ -86,7 +86,6 @@ int16_t pid_controller(int16_t setpoint, int16_t motor_encoder_max) {	//Calculat
 			PID_output = -150;
 		}
 
-
 		/*if(PID_output >= 255) {
 			PID_output = 160; 
 		}

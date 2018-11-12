@@ -1,3 +1,6 @@
+#ifndef F_CPU
+#define F_CPU 4915200	//Clock Speed (Oscillator)
+
 #include <util/delay.h>	//Functions for busy-wait delay loops
 #include <avr/io.h>		//Specific IO for AVR micro (all registers defined inside)
 #include <stdio.h>		//Standard constants and functions for C (printf..., scanf...) 
@@ -74,3 +77,5 @@ void MCP2515_bit_modify(uint8_t address, uint8_t mask, uint8_t data) {	//Modifie
 	SPI_write(data);			// The whole data si resent (only bits previously defined will be updated)
 	SPI_deselect(); 	//Deselect CAN-controller (~CS=1)
 }
+
+#endif

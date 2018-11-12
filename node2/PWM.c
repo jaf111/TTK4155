@@ -76,7 +76,7 @@ void PWM_PL3_init(uint16_t prescaler, uint16_t frequency) {		//PWM in timer 5, c
 }
 
 void Timer_PB7_init(uint16_t prescaler, uint16_t frequency) {		//(internal) Timer of 8 bits, in PB7 [D13 in Arduino]
-	TCCR0A |= (1<<WGM00) | (1<<WGM01);	 //Configure Clear Timer on Compare Match (CTC), mode 2. TOP value is OCR0A
+	/*TCCR0A |= (1<<WGM00) | (1<<WGM01);	 //Configure Clear Timer on Compare Match (CTC), mode 2. TOP value is OCR0A
 	TCCR0B |= (1<<WGM02);
 	
 	TCCR0B |= PWM_setPrescaler(prescaler);	//Prescaler is set in the PWM output
@@ -91,7 +91,7 @@ void Timer_PB7_init(uint16_t prescaler, uint16_t frequency) {		//(internal) Time
 	//fprintf(UART_p, "TOP: %8d \n\r", TOP);
 			
 	TIMSK0 |= (1<<OCIE0A);	//Timer/Counter0 Output Compare Match A Interrupt enabled
-
+*/
 }
 
 void Set_PWMwidth(char* ch_PWM, uint8_t PWM_width) {

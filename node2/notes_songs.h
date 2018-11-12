@@ -4,18 +4,6 @@
 #include <avr/pgmspace.h>
 
 /**************************************************
-*************** Prototype functions ***************
-**************************************************/
-void buzzer_init();		//Buzzer initialization
-void buzzer_on();		//Buzzer activation
-void buzzer_off();		//Buzzer deactivation
-void play_song(uint8_t song_num);	//Reproduces a song
-void buzz(uint16_t frequency, uint8_t length);	//Reproduces a note
-void my_delay_ms(uint8_t n);	//Delay of ms with variable
-void my_delay_us(uint16_t n);	//Delay of us with variable
-
-
-/**************************************************
 **************** All musical notes ****************
 **************************************************/
 #define NOTE_B0	 31
@@ -172,7 +160,7 @@ const uint8_t PROGMEM underworld_tempo[] = {
 	18,18,18,6,6,6,6,6,6,18,18,18,18,18,18,10,
 	10,10,10,10,10,3,3,3
 };
-const uint16_t PROGMEM adventure_time_melody = {
+const uint16_t PROGMEM adventure_time_melody[] = {
     NOTE_D5,NOTE_G5,NOTE_G5,NOTE_G5,NOTE_G5,NOTE_FS5,
     NOTE_FS5,NOTE_E5,NOTE_D5,NOTE_E5,NOTE_D5,NOTE_D5,
     NOTE_C5,NOTE_B5,NOTE_A5,NOTE_G4,0,NOTE_C5,NOTE_B5,
@@ -181,12 +169,12 @@ const uint16_t PROGMEM adventure_time_melody = {
     NOTE_C5,NOTE_C5,NOTE_D5,NOTE_D5,NOTE_A5, NOTE_B5,
     NOTE_A5,NOTE_G4,NOTE_G5
 };
-const uint8_t PROGMEM adventure_time_tempo = {
+const uint8_t PROGMEM adventure_time_tempo[] = {
 	24,24,12,12,12,24,12,24,24,24,12,24,12,12,12,
 	12,24,12,24,24,12,24,24,24,24,12,24,12,24,24,
 	24,12,12,24,8,24,24,8,8,24,12,24,24,12 
 };
-const uint16_t PROGMEM star_wars_melody = {
+const uint16_t PROGMEM star_wars_melody[] = {
 	NOTE_G4,NOTE_G4,NOTE_G4,NOTE_DS4,0,NOTE_AS4,NOTE_G4,
 	NOTE_DS4,0,NOTE_AS4,NOTE_G4,0,NOTE_D4,NOTE_D4,NOTE_D4,
 	NOTE_DS4,0,NOTE_AS3,NOTE_FS3,NOTE_DS3,0,NOTE_AS3,NOTE_G3,
@@ -199,13 +187,13 @@ const uint16_t PROGMEM star_wars_melody = {
 	NOTE_B3,NOTE_AS3,NOTE_A3,NOTE_AS3,0,NOTE_DS3,NOTE_FS3,
 	NOTE_DS3,NOTE_AS3,NOTE_G3,NOTE_DS3,0,NOTE_AS3,NOTE_G3
 };
-const uint8_t PROGMEM star_wars_tempo = {
+const uint8_t PROGMEM star_wars_tempo[] = {
 	2,2,2,4,8,6,2,4,8,6,2,8,2,2,2,4,8,6,2,4,8,6,2,8,2,
 	16,4,4,8,2,8,4,6,6,4,4,8,4,2,8,4,4,6,4,2,8,4,2,4,4,
 	2,8,4,6,2,8,2,16,4,4,8,2,8,4,6,6,4,4,8,4,2,8,4,4,6,
 	4,2,8,4,2,2,4,2,4,8,4,2
 };
-const uint16_t PROGMEM popcorn_melody = {
+const uint16_t PROGMEM popcorn_melody[] = {
 	NOTE_A4,NOTE_G4,NOTE_A4,NOTE_E4,NOTE_C4,NOTE_E4,NOTE_A3,NOTE_A4,
 	NOTE_G4,NOTE_A4,NOTE_E4,NOTE_C4,NOTE_E4,NOTE_A3,NOTE_A4,NOTE_B4,
 	NOTE_C5,NOTE_B4,NOTE_C5,NOTE_A4,NOTE_B4,NOTE_A4,NOTE_B4,NOTE_G4,
@@ -222,13 +210,13 @@ const uint16_t PROGMEM popcorn_melody = {
 	NOTE_G5,NOTE_FS5,NOTE_G5,NOTE_E5,NOTE_FS5,NOTE_E5,NOTE_FS5,NOTE_D5,
 	NOTE_E5,NOTE_D5,NOTE_B4,NOTE_D5,NOTE_E5
 };
-const uint8_t PROGMEM popcorn_tempo = {
+const uint8_t PROGMEM popcorn_tempo[] = {
 	8,8,8,8,8,8,4,8,8,8,8,8,8,4,8,8,8,8,8,8,8,8,8,8,8,8,8,8,4,
 	8,8,8,8,8,8,4,8,8,8,8,8,8,4,8,8,8,8,8,8,8,8,8,8,8,8,8,8,4,
 	8,8,8,8,8,8,4,8,8,8,8,8,8,4,8,8,8,8,8,8,8,8,8,8,8,8,8,8,4,
 	8,8,8,8,8,8,4,8,8,8,8,8,8,4,8,8,8,8,8,8,8,8,8,8,8,8,8,8,4
 };
-const uint16_t PROGMEM twinkle_twinkle_melody = {
+const uint16_t PROGMEM twinkle_twinkle_melody[] = {
 	NOTE_C4,NOTE_C4,NOTE_G4,NOTE_G4,NOTE_A4,NOTE_A4,NOTE_G4,
 	NOTE_F4,NOTE_F4,NOTE_E4,NOTE_E4,NOTE_D4,NOTE_D4,NOTE_C4,
 	NOTE_G4,NOTE_G4,NOTE_F4,NOTE_F4,NOTE_E4,NOTE_E4,NOTE_D4,
@@ -236,11 +224,11 @@ const uint16_t PROGMEM twinkle_twinkle_melody = {
 	NOTE_C4,NOTE_C4,NOTE_G4,NOTE_G4,NOTE_A4,NOTE_A4,NOTE_G4,
 	NOTE_F4,NOTE_F4,NOTE_E4,NOTE_E4,NOTE_D4,NOTE_D4,NOTE_C4
 };
-const uint8_t PROGMEM twinkle_twinkle_tempo = {
+const uint8_t PROGMEM twinkle_twinkle_tempo[] = {
 	4,4,4,4,4,4,2,4,4,4,4,4,4,2,4,4,4,4,4,4,2,4,4,
 	4,4,4,4,2,4,4,4,4,4,4,2,4,4,4,4,4,4,2
 };
-const uint16_t PROGMEM crazy_frog_melody = {
+const uint16_t PROGMEM crazy_frog_melody[] = {
 	NOTE_A4,NOTE_C5,NOTE_A4,NOTE_A4,NOTE_D5,NOTE_A4,NOTE_G4,
 	NOTE_A4,NOTE_E5,NOTE_A4,NOTE_A4,NOTE_F5,NOTE_E5,NOTE_C5,
 	NOTE_A4,NOTE_E5,NOTE_A5,NOTE_A4,NOTE_G4,NOTE_G4,NOTE_E4,
@@ -253,12 +241,12 @@ const uint16_t PROGMEM crazy_frog_melody = {
 	NOTE_C5,NOTE_A4,NOTE_E5,NOTE_A5,NOTE_A4,NOTE_G4,NOTE_G4,
 	NOTE_E4,NOTE_B4,NOTE_A4
 };
-const uint8_t PROGMEM crazy_frog_tempo = {
+const uint8_t PROGMEM crazy_frog_tempo[] = {
 	2,4,4,8,4,4,4,2,4,4,8,4,4,4,4,4,4,8,4,8,4,4,1,4,2,
 	4,4,8,4,4,4,2,4,4,8,4,4,4,4,4,4,8,4,8,4,4,1,4,8,4,
 	4,4,2,4,4,8,4,4,4,2,4,4,8,4,4,4,4,4,4,8,4,8,4,4,1
 };
-const uint16_t PROGMEM deck_the_halls_melody = {
+const uint16_t PROGMEM deck_the_halls_melody[] = {
 	NOTE_G5,NOTE_F5,NOTE_E5,NOTE_D5,NOTE_C5,NOTE_D5,NOTE_E5,
 	NOTE_C5,NOTE_D5,NOTE_E5,NOTE_F5,NOTE_D5,NOTE_E5,NOTE_D5,
 	NOTE_C5,NOTE_B4,NOTE_C5,0,NOTE_G5,NOTE_F5,NOTE_E5,NOTE_D5,
@@ -270,12 +258,12 @@ const uint16_t PROGMEM deck_the_halls_melody = {
 	NOTE_D5,NOTE_E5,NOTE_C5,NOTE_D5,NOTE_E5,NOTE_F5,NOTE_D5,
 	NOTE_E5,NOTE_D5,NOTE_C5,NOTE_B4,NOTE_C5,0
 };
-const uint8_t PROGMEM deck_the_halls_tempo = {
+const uint8_t PROGMEM deck_the_halls_tempo[] = {
 	2,4,2,2,2,2,2,2,4,4,4,4,2,4,2,2,2,2,2,4,2,2,2,2,2,
 	2,4,4,4,4,2,4,2,2,2,2,2,4,2,2,2,4,2,2,4,4,2,4,4,2,
 	2,2,2,2,2,4,2,2,2,2,2,2,4,4,4,4,2,4,2,2,2,2
 };
-const uint16_t PROGMEM manaderna_melody = {
+const uint16_t PROGMEM manaderna_melody[] = {
 	NOTE_E4,NOTE_E4,NOTE_F4,NOTE_G4,NOTE_G4,NOTE_F4,NOTE_E4,
 	NOTE_D4,NOTE_C4,NOTE_C4,NOTE_D4,NOTE_E4,NOTE_E4,0,NOTE_D4,
 	NOTE_D4,0,NOTE_E4,NOTE_E4,NOTE_F4,NOTE_G4,NOTE_G4,NOTE_F4,
@@ -286,12 +274,12 @@ const uint16_t PROGMEM manaderna_melody = {
 	NOTE_F4,NOTE_G4,NOTE_G4,NOTE_F4,NOTE_E4,NOTE_D4,NOTE_C4,
 	NOTE_C4,NOTE_D4,NOTE_E4,NOTE_D4,0,NOTE_C4,NOTE_C4
 };
-const uint8_t PROGMEM manaderna_tempo = {
+const uint8_t PROGMEM manaderna_tempo[] = {
 	2,2,2,2,2,2,2,2,2,2,2,2,2,4,4,2,4,2,2,2,2,2,2,
 	2,2,2,2,2,2,2,4,4,2,4,2,2,2,2,2,4,4,2,2,2,4,4,
 	2,2,2,2,1,4,2,2,2,2,2,2,2,2,2,2,2,2,2,4,4,2
 };
-const uint16_t PROGMEM bonnagard_melody = {
+const uint16_t PROGMEM bonnagard_melody[] = {
 	NOTE_C5,NOTE_C5,NOTE_C5,NOTE_G4,NOTE_A4,NOTE_A4,NOTE_G4,
 	NOTE_E5,NOTE_E5,NOTE_D5,NOTE_D5,NOTE_C5,0,NOTE_G4,NOTE_C5,
 	NOTE_C5,NOTE_C5,NOTE_G4,NOTE_A4,NOTE_A4,NOTE_G4,NOTE_E5,
@@ -302,12 +290,12 @@ const uint16_t PROGMEM bonnagard_melody = {
 	NOTE_C5,NOTE_G4,NOTE_A4,NOTE_A4,NOTE_G4,NOTE_E5,NOTE_E5,
 	NOTE_D5,NOTE_D5,NOTE_C5,0
 };
-const uint8_t PROGMEM bonnagard_tempo = {
+const uint8_t PROGMEM bonnagard_tempo[] = {
 	2,2,2,2,2,2,1,2,2,2,2,1,2,2,2,2,2,2,2,2,1,2,2,2,
 	2,1,2,4,4,2,2,2,4,4,2,2,1,4,4,2,4,4,2,4,4,4,4,2,
 	2,4,2,2,2,2,2,2,1,2,2,2,2,1,1
 };
-const uint16_t PROGMEM final_countdown_melody = {
+const uint16_t PROGMEM final_countdown_melody[] = {
 	NOTE_A3,NOTE_E5,NOTE_D5,NOTE_E5,NOTE_A4,NOTE_F3,NOTE_F5,
 	NOTE_E5,NOTE_F5,NOTE_E5,NOTE_D5,NOTE_D3,NOTE_F5,NOTE_E5,
 	NOTE_F5,NOTE_A4,NOTE_G3,0,NOTE_D5,NOTE_C5,NOTE_D5,NOTE_C5,
@@ -319,7 +307,7 @@ const uint16_t PROGMEM final_countdown_melody = {
 	NOTE_B4,NOTE_A4,NOTE_F5,NOTE_E5,NOTE_E5,NOTE_F5,NOTE_E5,
 	NOTE_D5,NOTE_E5
 };
-const uint8_t PROGMEM final_countdown_tempo = {
+const uint8_t PROGMEM final_countdown_tempo[] = {
 	1,16,16,4,4,1,16,16,8,8,4,1,16,16,4,4,2,4,16,16,8,8,8,
 	8,4,4,16,16,4,4,1,16,16,8,8,4,1,16,16,4,4,2,4,16,16,8,
 	8,8,8,4,16,16,4,16,16,8,8,8,8,4,4,2,8,4,16,16,1

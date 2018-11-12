@@ -6,29 +6,27 @@
 #include <avr/io.h> 	//Specific IO for AVR micro (all registers defined inside)
 #include <avr/interrupt.h>
 
-
 #include "led.h"		
 #include "uart.h"		
 #include "sram.h"		
 #include "adc.h"		
 #include "buttons.h"	
 #include "oled.h"		
-#include "menu.h"		
+#include "menu.h"
+#include "play_song.h"
 #include "spi.h"		
 #include "MCP2515.h"	
 #include "can.h"		
 #include "highscore.h"
-//#include "notes_songs.h" 
 
 #define MENU1 0			//Position of parent menu 1
 #define MENU2 4			//Position of parent menu 2
 #define MENU3 10		//Position of parent menu 3
 
-
 int main() {
 	//GPIO initialization
 	//led_init();		//LED initialization
-	//buzzer_init();		//Buzzer initialization
+	buzzer_init();		//Buzzer initialization
 
 	cli();
 
@@ -36,8 +34,8 @@ int main() {
 	SRAM_init();
 	ADC_init();
 	buttons_init();
-	OLED_init();
-	menu_init();
+	//OLED_init();
+	//menu_init();
 	SPI_init();
 
 	CAN_init();
@@ -49,14 +47,13 @@ int main() {
 	packet can_message3 = {.id = 0x15, .length = 0x07, .data = {0x01,0x02,0x03,0x04,0x13,0x06,0x07}};*/
 	packet can_joystick = {.id = 0x06, .length = 0x02, .data = {0x01,0x02}};
 	packet score2 = {.id=0x17, .length=0x02, .data={0x02,0x03}};
-	//buzzer_on();s
+
+	play_countdown();	//DO NOT FORGET THAT DELAYS MUST BE REMOVED TO PLAY THE SONG PROPERLY!
+
 	sei();
 
 	while(1) {
 		//create_name();
-
-		
-
 		
 		joy_position_t joy_coord = buttons_get_joy_coord();	// (use struct from buttons.h to get coordinates (joy_coord.XX etc))
 		slider_position_t slider_pos = buttons_get_slider_positions();
@@ -72,7 +69,7 @@ int main() {
 		
 		//play_song();
 		
-		cursor_move();
+		//cursor_move();
 
 		/*MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK);	//Set loopback mode
 		_delay_ms(500);

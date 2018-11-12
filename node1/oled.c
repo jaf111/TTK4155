@@ -1,3 +1,6 @@
+#ifndef F_CPU
+#define F_CPU 4915200	//Clock Speed (Oscillator)
+
 #include <stdio.h>			//Standard constants and functions for C (printf..., scanf...) 
 #include <avr/io.h> 		//Specific IO for AVR micro (all registers defined inside)
 #include <avr/interrupt.h>	//Interruptions for AVR micro
@@ -381,3 +384,5 @@ void OLED_cursor(){
 		}
 	}
 }
+
+#endif

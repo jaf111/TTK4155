@@ -15,6 +15,7 @@
 #include "can.h"		//Prototype functions of CAN communication
 #include "PWM.h"		//Prototype functions of PWM output
 #include "servo.h"		//Prototype functions of Servo motor
+#include "play_song.h"	//Prototype functions of play songs
 #include "TWI_Master.h" //Prototype functions of TWI controller
 #include "motor.h"      //Prototype functions of motor
 #include "pid_contr.h"	//Prototype functions of PID control
@@ -33,6 +34,7 @@ int main() {
 
 	//GPIO initialization
 	//led_init();
+	buzzer_init();
 
 	//Buttons initialization
 	//buttons_init();
@@ -47,14 +49,15 @@ int main() {
 	//CAN controller (MCP2515) initialization
 	CAN_init();
 
+	//TWI comm. initialization
+	//TWCR |= (1<<TWIE)|(1<<TWINT); // Enable specific interupt
 	TWI_Master_Initialise();
+
 	//Servo initialization
 	Servo_init();	//Servo initialization (connected in PB5)
 
 	//ADC initialization
 	ADC_init();
-
-	//TWCR |= (1<<TWIE)|(1<<TWINT); // Enable specific interupt
 	
 	//Motor initialization
 	motor_init();
@@ -71,15 +74,8 @@ int main() {
 	packet can_message2 = {.id=0x14, .length=0x07, .data={0x05,0x02,0x03,0x04,0x13,0x06,0x07}};
 	packet can_message3 = {.id=0x15, .length=0x07, .data={0x01,0x02,0x03,0x04,0x13,0x06,0x07}};*/
 	packet can_joystick = {.id=0x12, .length=0x02, .data={0x01,0x02}};
-	
-	//buzzer_init();
-	//buzzer_on();
-	//play_song(2);
 
-	sei();							// Enable all interrupts
-
-	/*
-	motor_set_direction(LEFT);
+	/*motor_set_direction(LEFT);
 	motor_set_speed(100);
 	
 	_delay_ms(1000);
@@ -92,14 +88,18 @@ int main() {
 	_delay_ms(1000);
 	int16_t motor_encoder_max = -motor_read_encoder();
 	*/
-	
+
+	//buzzer_on();
+
+	sei();			// Enable all interrupts
+
 	while(1) {
+		
 
 		//solenoid_push();
 		
 		//fprintf(UART_p, "%d\n\r", motor_encoder_max); 
 		//_delay_ms(500);
-
 		
 		/*fprintf(UART_p, "TCNT0: %4d ", TCNT0);
 		if (int_tim8 == 1) {
@@ -118,17 +118,15 @@ int main() {
 		_delay_ms(500);
 		packet new_message3 = CAN_read();*/
 
-		
 		packet can_joystick = CAN_read();
 
-		_delay_ms(50);
-		fprintf(UART_p, "JoyX: %4d ", can_joystick.data[0]);
-		fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
+		//_delay_ms(250);
+		//fprintf(UART_p, "JoyX: %4d ", can_joystick.data[0]);
+		//fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
 
 		//fprintf(UART_p, "IR: %4d \r\n", ADC_read());
 
-		/*
-		Move_Servo(can_joystick.data[0]);	//Change Servo direction
+		/*Move_Servo(can_joystick.data[0]);	//Change Servo direction
 		int16_t motor_pos = motor_read_encoder();
 		uint8_t setpoint = can_joystick.data[0];
 		motor_move(pid_controller(setpoint, motor_encoder_max)); //pid_controller(setpoint, 300)
@@ -136,10 +134,9 @@ int main() {
 
 		packet score_send = {.id=0x17, .length=0x02, .data={0x05,0x03}};
 		if (IR_triggered()){
-			fprintf(UART_p,"Sent %d \r\n",score_send.data[0]);
+			//fprintf(UART_p,"Sent %d \r\n",score_send.data[0]);
 			CAN_send(&score_send);
 		}
-		
 	}
 	return 0;
 }

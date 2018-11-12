@@ -1,4 +1,3 @@
-#include <util/delay.h>
 #include <avr/io.h> 
 #include <stdio.h> 
 #include <avr/interrupt.h>
@@ -20,7 +19,6 @@ void CAN_init() {
 	MCP2515_bit_modify(MCP_BFPCTRL, 0b0000101, 0xFF);
 	MCP2515_bit_modify(MCP_RXB0CTRL, 0b01100000, 0xFF);				//Disables all filters (security)
 
-	
 	DDRD &= ~(1 << PD3);
 	MCUCR |= (1<<ISC11);				//Falling edge activation for INT0
 	MCUCR &= ~(1 << ISC10);		
