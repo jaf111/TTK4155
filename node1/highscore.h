@@ -38,23 +38,21 @@ char letter_select(void);
 /**
   * @desc inserts score from game into struct highscore in correct position  
   * in highscore table.   
-  * @param string $msg - the message to be displayed
-  * @return bool - success or failure
+  * @param char and uint - variabels will be inserted into highscore struct
 */
 void insert_score(char* name, uint8_t* score);
 
 
 /**
-  * @desc Initializing structs in the highscore driver 
-  * @param string $msg - the message to be displayed
-  * @return bool - success or failure
+  * @desc Moves highscores down on the highscoretable so you can insert a new highscore arbitrary
+  * @param highscore structs - he message to be displayed
 */
 void highscore_copy(highscore_t* highscore_current, highscore_t* highscorre_next);
 
 
 /**
   * @desc Checks if score to new player can be placed in highscoretable 
-  * @param uint score - score from game
+  * @param uint - score from game
   * @return bool - can be placed in highscoretable or not
 */
 int check_score(uint8_t* score);
