@@ -26,7 +26,7 @@
 int main() {
 	//GPIO initialization
 	//led_init();		//LED initialization
-	buzzer_init();		//Buzzer initialization
+	//buzzer_init();		//Buzzer initialization
 
 	cli();
 
@@ -34,10 +34,10 @@ int main() {
 	SRAM_init();
 	ADC_init();
 	buttons_init();
-	//OLED_init();
+	OLED_init();
 	//menu_init();
 	SPI_init();
-
+	highscore_init();
 	CAN_init();
 	fprintf(UART_p, "init done \n\r", 0);
 
@@ -48,20 +48,28 @@ int main() {
 	packet can_joystick = {.id = 0x06, .length = 0x02, .data = {0x01,0x02}};
 	packet score2 = {.id=0x17, .length=0x02, .data={0x02,0x03}};
 
-	play_countdown();	//DO NOT FORGET THAT DELAYS MUST BE REMOVED TO PLAY THE SONG PROPERLY!
+	//play_countdown();	//DO NOT FORGET THAT DELAYS MUST BE REMOVED TO PLAY THE SONG PROPERLY!
 
 	sei();
-
+	;
 	while(1) {
-		//create_name();
 		
+		//all code to make highscore work (some problems with memory and buttons?)
+		/*highscore_t highscore;
+		highscore = create_name();
+		fprintf(UART_p, highscore.name, 0);
+		insert_score(highscore.name, 10); // random number 10
+		print_highscore();
+		fprintf(UART_p, "%s\r\n", "hello");*/
+		
+
 		joy_position_t joy_coord = buttons_get_joy_coord();	// (use struct from buttons.h to get coordinates (joy_coord.XX etc))
 		slider_position_t slider_pos = buttons_get_slider_positions();
 		can_joystick.data[0] = joy_coord.XX;
 		can_joystick.data[1] = joy_coord.YY;
 		//fprintf(UART_p, "JoyX: %4d ", can_joystick.data[0]);
 		//fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
-		CAN_send(&can_joystick);
+		//CAN_send(&can_joystick);
 		
 
 		//packet score2 = CAN_read();

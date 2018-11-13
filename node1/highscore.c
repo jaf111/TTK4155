@@ -3,6 +3,7 @@
 
 #include <stdio.h>			
 #include <avr/io.h> 
+#include <stdlib.h>
 #include <util/delay.h>			
 
 
@@ -11,41 +12,49 @@
 #include "adc.h"
 #include "highscore.h"		
 
-int char_selector;
+int char_selector = 0;
 int array_pos = 0;
 
 
-highscore_t nr1;
-highscore_t nr2;
-highscore_t nr3;
-highscore_t nr4;
-highscore_t nr5;
-highscore_t nr6;
 highscore_t nr7;
+highscore_t nr6;
+highscore_t nr5;
+highscore_t nr4;
+highscore_t nr3;
+highscore_t nr2;
+highscore_t nr1;
+
 highscore_t new_score;
 
 
 void highscore_init(){
-	nr1 = (highscore_t){NULL, NULL, &nr2}; 
-	nr2 = (highscore_t){NULL, NULL, &nr3};
-	nr3 = (highscore_t){NULL, NULL, &nr4};
-	nr4 = (highscore_t){NULL, NULL, &nr5};
-	nr5 = (highscore_t){NULL, NULL, &nr6};
-	nr6 = (highscore_t){NULL, NULL, &nr7};
 	nr7 = (highscore_t){NULL, NULL, NULL};
+	nr6 = (highscore_t){NULL, NULL, &nr7};
+	nr5 = (highscore_t){NULL, NULL, &nr6};
+	nr4 = (highscore_t){NULL, NULL, &nr5};
+	nr3 = (highscore_t){NULL, NULL, &nr4};
+	nr2 = (highscore_t){NULL, NULL, &nr3};
+	nr1 = (highscore_t){"NULL", 10, &nr2}; 
+		
+	new_score = (highscore_t){NULL, NULL, NULL};
 
 }
 
 
 void print_highscore(){
-	OLED_clear_all();
+	//OLED_clear_all();
+	OLED_update();
 	uint8_t line = 1;
 	highscore_t* highscore;
-	highscore = nr1;
+	highscore = &nr1;
 
-	while(highscore && (line < 7)) {
-		OLED_pos(line,20);
-		fprintf(OLED_p, menu->name,0);
+	while(highscore->next != NULL || (line < 8)) {
+		OLED_pos(line, 20);
+		OLED_print_all(line);
+		OLED_pos(line, 24);
+		OLED_print_all(highscore->name);
+		OLED_pos(line, 40);
+		OLED_print_all(highscore->score);
 		line++;
 		highscore = highscore->next;
 	}
@@ -53,9 +62,15 @@ void print_highscore(){
 }
 
 
-void create_name(){
+highscore_t create_name(){
 	OLED_update(); 
 	char new_name[8];
+	//char new_name = malloc(sizeof(char) * 9);
+	
+	if(!new_name){
+		fprintf (UART_p, "error: name allocation failed, exiting.\r\n", 0);
+    	return;
+	}
 	int char_selector = 0;
 	OLED_pos(3,0);
 	fprintf(OLED_p, "Name: ", 0);
@@ -72,6 +87,7 @@ void create_name(){
 			new_name[array_pos] = letter_select();
 			array_pos += 1;
 		}
+		fprintf(UART_p, "%d\r\n", letter_select);
 		if(BUTTON_L && array_pos >= 0){
 			new_name[array_pos] = ' ';
 			array_pos -= 1;
@@ -79,15 +95,19 @@ void create_name(){
 			if (array_pos <= 0){
 				array_pos = 0;
 			}
-		} 
+
+		}
+		fprintf(UART_p, "%s\r\n", new_name);
+		 
 
 	}
-	new_score = (highscore_t){new_name, NULL};
+	new_score.name = &new_name;
+	return new_score;
 }
 
 
 char letter_select(){
-	char letter = 'A';
+	char letter = 'A'; //starts select on A
 	
 	if (ADC_read(JOY_DU) >= 220) { //moved UP
 		if (char_selector <= 0){
@@ -97,6 +117,7 @@ char letter_select(){
 		char_selector -= 1;
 		
 	}
+	
 	if (ADC_read(JOY_DU) <= 30) { //moved DOWN
 		if (char_selector >= 25){
 			char_selector = 0;
@@ -110,48 +131,55 @@ char letter_select(){
 }
 
 
-void insert_score(char* name, uint8_t score){
+void insert_score(char* name, uint8_t* score){
 	highscore_t* highscore;
-	highscore = nr1;
+	highscore = &nr1;
 	int place = check_score(score);
-	
 	if (place == 0){
 		return;
 	}
-	highscore_copy(place);
 
 	for (int i = 1; i < place; i++){
 	 	highscore = highscore->next;
 	}
-	highscore.name = &name;
-	highscore.score = score;
+	highscore_copy(highscore, highscore->next);
+	highscore->name = name;
+	highscore->score = score;
 }
 
-void highscore_copy(int place){
-	//make sure the highscore does not owerwrite itself
-	highscore_t* highscore;
-	highscore = nr1;
-	for (int i = place; i > 0; i--){
-		highscore.name = highscore.next;
-		highscore.score = score;
+
+void highscore_copy(highscore_t* highscore_current, highscore_t* highscore_next){
+	char name = highscore_next->name;
+	uint8_t score = highscore_next->score;
+	highscore_next->name = highscore_current;
+	highscore_next->score = highscore_current->score; 
+	if (highscore_next->next = NULL){
+		return;
 	}
+
+	highscore_current = highscore_current->next;
+	highscore_current->name = name;
+	highscore_current->score = score;
+	highscore_copy(highscore_current, highscore_current->next);	
 }
 
-void check_score(uint8_t score){
+
+int check_score(uint8_t* score){
 	highscore_t* highscore;
-	highscore = nr1;
+	highscore = &nr1;
 	int place = 1;
-	
-	while(highscore && (line < 7)){
-		if (score > highscore->score){
+	int line = 1; 
+	while(highscore->next && (line < 7)){
+		line++;
+		if (score > &(highscore->score)){
 			return place;
 		}
 		highscore = highscore->next;
 		place += 1;
 	}
+
 	return 0;
 }
-
 
 
 
