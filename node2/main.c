@@ -19,6 +19,7 @@
 #include "TWI_Master.h" //Prototype functions of TWI controller
 #include "motor.h"      //Prototype functions of motor
 #include "pid_contr.h"	//Prototype functions of PID control
+#include "pid.h"		//Prototype functions of PID control 2
 #include "solenoid.h"	//Prototype functions of solenoid
 #include "IR.h"			//Prototype functions of IR sensor
 #include "game.h"
@@ -68,6 +69,8 @@ int main() {
 	IR_init();
 
 	//PID initialization
+	struct PID_DATA pidData;
+	pid2_Init(&pidData, 100);
 	//pid_init(2, 50);	//Type 2 (PI) and frequency of 1000Hz
 
 	/*packet can_message1 = {.id=0x13, .length=0x08, .data={0x07,0x02,0x03,0x04,0x05,0x06,0x07,0x09}};	//Struct initialization
@@ -122,14 +125,13 @@ int main() {
 
 		//fprintf(UART_p, "IR: %4d \r\n", ADC_read());
 
-		/*Move_Servo(can_joystick.data[0]);	//Change Servo direction
+		Move_Servo(can_joystick.data[0]);	//Change Servo direction
 		int16_t motor_pos = motor_read_encoder();
 		uint8_t setpoint = can_joystick.data[0];
-		motor_move(pid_controller(setpoint, motor_encoder_max)); //pid_controller(setpoint, 300)
-		*/
+		//motor_move(pid_controller(setpoint, motor_encoder_max));
+		motor_move(pid2_Controller(&pidData, setpoint, get_measuredValue()));
 
-		/*
-		packet score_send = {.id=0x17, .length=0x02, .data={0x05,0x03}};
+		/*packet score_send = {.id=0x17, .length=0x02, .data={0x05,0x03}};
 		if (IR_triggered()){
 			//fprintf(UART_p,"Sent %d \r\n",score_send.data[0]);
 			CAN_send(&score_send);
