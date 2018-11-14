@@ -21,7 +21,7 @@
 #include "pid_contr.h"	//Prototype functions of PID control
 #include "solenoid.h"	//Prototype functions of solenoid
 #include "IR.h"			//Prototype functions of IR sensor
-
+#include "game.h"
 
 int main() {
 	cli();
@@ -108,21 +108,17 @@ int main() {
 		}
 		_delay_ms(50);*/
 
-		/*CAN_send(&can_message1);
-		_delay_ms(500);
-		packet new_message1 = CAN_read();
-		CAN_send(&can_message2);
-		_delay_ms(500);
-		packet new_message2 = CAN_read();
-		CAN_send(&can_message3);
-		_delay_ms(500);
-		packet new_message3 = CAN_read();*/
+		packet CAN_recieved = CAN_read();
+		fprintf(UART_p,"Packet ID: %X 	Data: %d \r\n", CAN_recieved.id, CAN_recieved.data[0]);
+		if (CAN_recieved.id == CAN_START_GAME_ID){		// Can also maybe be moved into an interrupt
+			game_play();
+		}
+		//packet can_joystick = CAN_read();
 
-		packet can_joystick = CAN_read();
-
-		//_delay_ms(250);
 		//fprintf(UART_p, "JoyX: %4d ", can_joystick.data[0]);
 		//fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
+		
+
 
 		//fprintf(UART_p, "IR: %4d \r\n", ADC_read());
 
@@ -132,11 +128,12 @@ int main() {
 		motor_move(pid_controller(setpoint, motor_encoder_max)); //pid_controller(setpoint, 300)
 		*/
 
+		/*
 		packet score_send = {.id=0x17, .length=0x02, .data={0x05,0x03}};
 		if (IR_triggered()){
 			//fprintf(UART_p,"Sent %d \r\n",score_send.data[0]);
 			CAN_send(&score_send);
-		}
+		}*/
 	}
 	return 0;
 }

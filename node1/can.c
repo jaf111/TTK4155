@@ -10,7 +10,7 @@
 uint8_t recieve_flag = 0;
 
 void CAN_init() {
-	MCP2515_init();
+	//MCP2515_init();
 	
 	//2nd element (mask) defines which numbers are allowed to change
 	//MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK);	//Set in loopback mode
@@ -77,5 +77,5 @@ uint8_t CAN_message_recieved(){
 
 ISR(INT1_vect){
 	recieve_flag = 1;
-	//fprintf(UART_p, "M! \r\n", 0);
+	fprintf(UART_p, "M! \r\n", 0);
 }

@@ -11,6 +11,7 @@ typedef enum motor_direction {
 void motor_init(void);
 void motor_reset_encoder(void);
 int16_t motor_read_encoder(void);
+uint16_t motor_get_encoder_max();
 void motor_set_direction(joy_direction_t direction);
 void motor_move(int16_t speed);
 void motor_set_speed(uint8_t speed);

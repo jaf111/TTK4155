@@ -35,7 +35,7 @@ int main() {
 	ADC_init();
 	buttons_init();
 	OLED_init();
-	//menu_init();
+	menu_init();
 	SPI_init();
 	highscore_init();
 	CAN_init();
@@ -45,15 +45,17 @@ int main() {
 	packet can_message1 = {.id = 0x13, .length = 0x08, .data = {0x07,0x02,0x03,0x04,0x05,0x06,0x07,0x09}};	//Struct initialization
 	packet can_message2 = {.id = 0x14, .length = 0x07, .data = {0x05,0x02,0x03,0x04,0x13,0x06,0x07}};
 	packet can_message3 = {.id = 0x15, .length = 0x07, .data = {0x01,0x02,0x03,0x04,0x13,0x06,0x07}};*/
-	packet can_joystick = {.id = 0x06, .length = 0x02, .data = {0x01,0x02}};
-	packet score2 = {.id=0x17, .length=0x02, .data={0x02,0x03}};
+	//packet can_joystick = {.id = CAN_INPUT_ID, .length = 0x02, .data = {0x01,0x02}};
+	packet score2 = {.id=CAN_SCORE_ID, .length=0x02, .data={0x02,0x03}};
 
 	//play_countdown();	//DO NOT FORGET THAT DELAYS MUST BE REMOVED TO PLAY THE SONG PROPERLY!
 
 	sei();
-	;
+
 	while(1) {
 		
+		cursor_move();
+
 		//all code to make highscore work (some problems with memory and buttons?)
 		/*highscore_t highscore;
 		highscore = create_name();
@@ -62,22 +64,21 @@ int main() {
 		print_highscore();
 		fprintf(UART_p, "%s\r\n", "hello");*/
 		
-
+		/*
 		joy_position_t joy_coord = buttons_get_joy_coord();	// (use struct from buttons.h to get coordinates (joy_coord.XX etc))
 		slider_position_t slider_pos = buttons_get_slider_positions();
 		can_joystick.data[0] = joy_coord.XX;
 		can_joystick.data[1] = joy_coord.YY;
 		//fprintf(UART_p, "JoyX: %4d ", can_joystick.data[0]);
 		//fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
-		//CAN_send(&can_joystick);
+		CAN_send(&can_joystick);*/
 		
+
 
 		//packet score2 = CAN_read();
 		//fprintf(UART_p, "score: %d \r\n", score2.data[0]);
 		
 		//play_song();
-		
-		//cursor_move();
 
 		/*MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK);	//Set loopback mode
 		_delay_ms(500);

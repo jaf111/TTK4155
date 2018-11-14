@@ -17,7 +17,7 @@
  
 motor_dir_t dir = IDLE;
 uint8_t message_buffer[3];	//
-//uint16_t motor_encoder_max = 0;
+uint16_t motor_encoder_max = 0;
 
 
 void motor_init() {
@@ -56,9 +56,9 @@ int16_t motor_read_encoder() {		//Normal procedure of reading the encoder:
    return encoder_pos;
 }
 
-/*uint16_t motor_get_encoder_max() {
+uint16_t motor_get_encoder_max() {
 	return motor_encoder_max;
-}*/
+}
 
 void motor_set_direction(joy_direction_t direction) {	// Take in direction from joystick and set motor direction
 	switch(direction) {

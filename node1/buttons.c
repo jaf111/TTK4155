@@ -15,7 +15,7 @@ slider_position_t slider_pos = {0, 0};			//Initialization of slider positions
 joy_position_t joy_coord;
 
 //Packet for sending input data over CAN communication
-packet can_joystick = {.id = 0x16, .length = 0x02, .data = {0x01,0x02}};
+packet can_joystick = {.id = 0x02, .length = 0x03, .data = {0x01,0x02,0x03}};
 
 //Variables used for digital average filtering:
 uint8_t index = 0;
@@ -154,6 +154,7 @@ void buttons_send_CAN_message(){
 
 	can_joystick.data[0] = joy_coord.XX;
 	can_joystick.data[1] = joy_coord.YY;
+	can_joystick.data[2] = slider_pos.left;
 
 	CAN_send(&can_joystick);
 }
