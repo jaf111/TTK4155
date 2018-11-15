@@ -56,7 +56,7 @@ void game_play(){
 
 		//fprintf(UART_p,"ID: %X 	Data: %d\r\n", CAN_recieved.id, CAN_recieved.data[2]);
 
-		if (CAN_recieved.id == CAN_INPUT_ID){							// Update coordinates if USB input is sent
+		if (CAN_recieved.id == CAN_INPUT_ID) {							// Update coordinates if USB input is sent
 			joy_recieved_coords.XX = CAN_recieved.data[0];
 			joy_recieved_coords.YY = CAN_recieved.data[1];
 			sliders_recieved.left = CAN_recieved.data[2];

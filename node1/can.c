@@ -19,11 +19,10 @@ void CAN_init() {
 	MCP2515_bit_modify(MCP_BFPCTRL, 0b0000101, 0xFF);
 	MCP2515_bit_modify(MCP_RXB0CTRL, 0b01100000, 0xFF);				//Disables all filters (security)
 
-	DDRD &= ~(1 << PD3);
-	MCUCR |= (1<<ISC11);				//Falling edge activation for INT0
+	DDRD &= ~(1 << PD3);			//PD3 configured as input
+	MCUCR |= (1 << ISC11);			//Falling edge activation for INT1
 	MCUCR &= ~(1 << ISC10);		
-	GICR |= (1<<INT1);					//External interrupt 2 enabled (pin PE0)
-	
+	GICR |= (1<<INT1);				//External interrupt 1 enabled (pin PD3)
 }
 
 void CAN_send(packet* message) {	//Everything is done only through Buffer 0
@@ -75,7 +74,7 @@ uint8_t CAN_message_recieved(){
 	}
 }
 
-ISR(INT1_vect){
+ISR(INT1_vect) {		//Interrupt function for INT1
 	recieve_flag = 1;
 	fprintf(UART_p, "M!\r\n", 0);
 }

@@ -1,7 +1,11 @@
-/*This file has been prepared for Doxygen automatic documentation generation.*/
-#include "pid.h"
+#include <avr/io.h> 	//Specific IO for AVR micro (all registers defined inside)
+#include <stdio.h> 		//Standard constants and functions for C (printf..., scanf...)
 #include "stdint.h"
+#include <avr/interrupt.h>	//Functions to implement the interruptions
+	
+#include "pid.h"
 
+#include "uart.h"
 #include "PWM.h"
 #include "motor.h"
 
@@ -9,8 +13,9 @@
 #define Ki	1.00
 #define Kd	0.00
 #define SCALING_FACTOR  128		// OPTIMIZED TO 128??
+#define BYTE_RANGE  35			// encoder_max/255
 
-void pid2_Init(struct PID_DATA *pid, uint16_t frequency) {	// Set up PID controller parameters
+void pid2_Init(pidData_t *pid, uint16_t frequency) {	// Set up PID controller parameters
 	PWM_PE3_init(256, frequency);
 	
 	// Start values for PID controller
@@ -25,14 +30,14 @@ void pid2_Init(struct PID_DATA *pid, uint16_t frequency) {	// Set up PID control
 	pid->maxSumError = MAX_I_TERM / (pid->I_Factor + 1);
 }
 
-int16_t pid2_Controller(struct PID_DATA *pid_st, int16_t setPoint, int16_t processValue) {
+int16_t pid2_Controller(pidData_t *pid_st, int16_t setPoint, int16_t processValue) {
 	if (int_tim8 == 1) {
 		int_tim8 = 0;
 		
 		int16_t error, p_term, d_term;
 		int32_t i_term, output, totalError;
 
-		//setpoint *= motor_encoder_max/255;	//To have setpoint and processValue in the same range...
+		setpoint *= BYTE_RANGE;			//To have setpoint and processValue in the same range...
 		error = setPoint - processValue;
 
 		// Calculate Pterm and limit error overflow
@@ -66,12 +71,19 @@ int16_t pid2_Controller(struct PID_DATA *pid_st, int16_t setPoint, int16_t proce
 
 		pid_st->lastProcessValue = processValue;
 
-		output = (p_term + i_term + d_term) / SCALING_FACTOR;
-		if(output > MAX_INT) {
+
+		output = ((p_term + i_term + d_term) / SCALING_FACTOR) / BYTE_RANGE;
+		/*if(output > MAX_INT) {
 			output = MAX_INT;
 		}
 		else if(output < -MAX_INT) {
 			output = -MAX_INT;
+		}*/
+		if(output > 150) {
+			output = 150;
+		}
+		else if(output < -150) {
+			output = -150;
 		}
 	}
 	return((int16_t)output);

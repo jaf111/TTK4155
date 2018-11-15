@@ -4,7 +4,6 @@
 typedef struct {
 	char name[8];
 	uint8_t score;
-	struct highscore_t* next;
 } highscore_t;
 
 /**
@@ -22,9 +21,9 @@ void print_highscore(void);
 
 /**
   * @desc Creating name by selecting letters with right button and erase with left button  
-  * @return highscore struct - with new name but NULL score
+  * @param highscore struct - with (NULL) name and (NULL) score
 */
-highscore_t create_name(void);
+void create_name(highscore_t * foo);
 
 
 /**

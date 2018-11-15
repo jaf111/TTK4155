@@ -9,13 +9,13 @@
 #include "uart.h"			//Added to use fprintf function
 #include "notes_songs.h"	//Notes & Songs (stored in FLASH)
 
-void buzzer_init() {		//Buzzer from USB board connected in MISC pin 3
-	DDRE |= (1 << DDE2);	//Enable pin 2 (bit DDB4) of PORT B (register DDRB)
-	PORTE &= ~(1 << PE2);	//Clear pin 2 (bit PB2) in PORT B (register PORTB), leave other bits unchanged
+void buzzer_init() {
+	DDRE |= (1 << DDE2);	//Pin 2 (bit DDE2) of PORT E (register DDRE) defined as output
+	PORTE &= ~(1 << PE2);	//Clear pin 2 in PORT E, leave other bits unchanged
 }
 
 void buzzer_on() {
-	PORTE |= (1 << PE2);	//Set pin 2 (bit PB2) in PORT B (register PORTB) to 1, leave other bits unchanged
+	PORTE |= (1 << PE2);	//Set pin 2 (bit PE2) in PORT E (register PORTE), leave other bits unchanged
 }
 
 void buzzer_off() {

@@ -1,4 +1,5 @@
-#define F_CPU 4915200
+#ifndef F_CPU
+#define F_CPU 4915200	//Clock Speed (Oscillator)
 
 #include <util/delay.h>	//Functions for busy-wait delay loops
 #include <stdlib.h>		//Functions for dynamic memory management and process control
@@ -272,3 +273,5 @@ void print_sub_menu(uint8_t menNum) {
 
 
 // gdb server (avr)
+
+#endif //F_CPU*/

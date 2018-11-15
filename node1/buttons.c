@@ -25,7 +25,6 @@ uint8_t joyY_readings[4];
 uint16_t joyX_sum = 0;
 uint16_t joyY_sum = 0;
 
-
 void buttons_init(void) {
 	DDRB |= (1 << DDB0);	//Enable pin 0 (PB0) of port B (register DDRB)	(BUTTONS)
 	DDRB |= (1 << DDB1);	//Enable pin 1 (PB1) of port B (register DDRB)
@@ -40,7 +39,6 @@ void buttons_init(void) {
 	joy_coord.XX_init = joyX_readings[3];		//Update initial joystick positions
 	joy_coord.YY_init = joyY_readings[3];
 }
-
 
 void buttons_update_joy_coord() {				//Update joystick coordinates with the average of the 4 previous values
 	
@@ -67,8 +65,6 @@ void buttons_update_joy_coord() {				//Update joystick coordinates with the aver
 	if (joyY_avg != (joy_coord.YY_init + 1) && joyY_avg != (joy_coord.YY_init -1)){
 		joy_coord.YY = joyY_avg;
 	}
-	
-	
 
 	//BELOW: transform coordinates to (-100, 0, 100)
 
@@ -98,7 +94,6 @@ joy_position_t buttons_get_joy_coord(){		// #TODO: Implement interrupt for this?
 	return joy_coord;
 }
 
-
 void buttons_update_slider_positions(){
 	uint8_t slider_right_read = ADC_read(SLIDER_R);	//Read raw data from sliders
 	uint8_t slider_left_read = ADC_read(SLIDER_L);
@@ -112,12 +107,10 @@ void buttons_update_slider_positions(){
 	}
 }
 
-
 slider_position_t buttons_get_slider_positions(){
 	buttons_update_slider_positions(); 			//Make sure the newest positions are returned
 	return slider_pos;
 }
-
 
 joy_direction_t buttons_get_joy_direction(int16_t X_coord, int16_t Y_coord) {	//Current joystick direction
 	if (X_coord>Mov23_Pos) {			//More than 2/3 right

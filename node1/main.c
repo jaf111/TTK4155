@@ -35,9 +35,9 @@ int main() {
 	ADC_init();
 	buttons_init();
 	OLED_init();
-	menu_init();
+	//menu_init();
 	SPI_init();
-	highscore_init();
+	//highscore_init();
 	CAN_init();
 	fprintf(UART_p, "init\n\r", 0);
 
@@ -53,16 +53,19 @@ int main() {
 		//cursor_move();
 		
 		//all code to make highscore work (some problems with memory and buttons?)
+		/*
 		highscore_t highscore;
-		highscore = create_name();
-			
-		while(1){
-			fprintf(UART_p, "NAM: \r\n", 0);
-			fprintf(UART_p, "%s\n\r",highscore.name);
-		}
-		//insert_score(highscore.name, 10); // random number 10
+		create_name(&highscore);
+		
+		uint8_t* a;
+		a = 10; 
+		*/
+		//insert_score(highscore.name, a); 
 		//print_highscore();
 		//fprintf(UART_p, "%s\r\n", "hello");*/
+		
+
+
 		
 		/*
 		joy_position_t joy_coord = buttons_get_joy_coord();	// (use struct from buttons.h to get coordinates (joy_coord.XX etc))
@@ -76,8 +79,6 @@ int main() {
 
 		//packet score2 = CAN_read();
 		//fprintf(UART_p, "score: %d \r\n", score2.data[0]);
-		
-		//play_song();
 
 		/*MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK);	//Set loopback mode
 		_delay_ms(500);

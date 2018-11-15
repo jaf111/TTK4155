@@ -26,22 +26,26 @@ highscore_t nr1;
 
 highscore_t new_score;
 
+//volatile uint8_t *score_data = (uint8_t *) 0x1900; 	//OLED Data start address
+
+//volatile uint8_t *score_name = (uint8_t *) 0x1950; 	//OLED Data start address
+
+//#define name ( (uint8_t(*)[8]) (score_name) )	
+
 
 void highscore_init(){
-	nr7 = (highscore_t){NULL, NULL, NULL};
-	nr6 = (highscore_t){NULL, NULL, &nr7};
-	nr5 = (highscore_t){NULL, NULL, &nr6};
-	nr4 = (highscore_t){NULL, NULL, &nr5};
-	nr3 = (highscore_t){NULL, NULL, &nr4};
-	nr2 = (highscore_t){NULL, NULL, &nr3};
-	nr1 = (highscore_t){NULL, 10, &nr2}; 
+	nr7 = (highscore_t){NULL, NULL};
+	nr6 = (highscore_t){NULL, NULL};
+	nr5 = (highscore_t){NULL, NULL};
+	nr4 = (highscore_t){NULL, NULL};
+	nr3 = (highscore_t){NULL, NULL};
+	nr2 = (highscore_t){NULL, NULL};
+	nr1 = (highscore_t){"Jan", NULL}; 
 		
 	new_score = (highscore_t){NULL, NULL, NULL};
-
 }
 
-
-void print_highscore(){
+/*void print_highscore(){
 	OLED_clear_all();
 	OLED_update();
 	uint8_t line = 1;
@@ -59,22 +63,21 @@ void print_highscore(){
 		highscore = highscore->next;
 	}
 	OLED_home();
-}
+}*/
 
 
-highscore_t create_name(highscore_t * foo){
+void create_name(highscore_t* foo){
 	OLED_clear_all();
 	OLED_update(); 
-	char new_name[8] = {0};
-	//char new_name = malloc(sizeof(char) * 9);
+	foo->name[7] = '\0';
 	
-	if(!new_name){
+	if(!foo->name){
 		//fprintf (UART_p, "error\r\n", 0);
     	return;
 	}
 	int char_selector = 0;
 	OLED_pos(3,0);
-	OLED_print_all("Name: ");//fprintf(OLED_p, "Name: ", 0);
+	OLED_print_all("Name: ");
 	
 	while(!(BUTTON_R && BUTTON_L)){
 		OLED_update(); 
@@ -84,28 +87,23 @@ highscore_t create_name(highscore_t * foo){
 		OLED_print_char(letter_select());
 		_delay_ms(200);
 
-		if(BUTTON_R && array_pos <= 4){
-			foo->new_name[array_pos] = letter_select();
+		if(BUTTON_R && array_pos <= 4) {
+			foo->name[array_pos] = letter_select();
 			array_pos += 1;
 		}
 		
-		if(BUTTON_L && array_pos >= 0){
-			new_name[array_pos] = ' ';
+		if(BUTTON_L && array_pos >= 0) {
+			foo->name[array_pos] = ' ';
 			array_pos -= 1;
-			new_name[array_pos] = ' ';
+			foo->name[array_pos] = ' ';
 			if (array_pos <= 0){
 				array_pos = 0;
 			}
-
 		}
-		fprintf(UART_p, "%s\n\r",new_name);
+		fprintf(UART_p, "%s\n\r", foo->name);
 		fprintf(UART_p, "\r\n",0);
-		 
-
 	}
-	return foo;
 }
-
 
 char letter_select(){
 	char letter = 'A'; //starts select on A
@@ -116,17 +114,14 @@ char letter_select(){
 			return(letter + char_selector);
 		}
 		char_selector -= 1;
-		
 	}
 	
 	if (ADC_read(JOY_DU) <= 30) { //moved DOWN
 		if (char_selector >= 25){
 			char_selector = 0;
 			return(letter + char_selector);
-			
 		}
-		char_selector += 1;
-		 		
+		char_selector += 1;		
 	}
 	return(letter + char_selector);
 }
@@ -135,20 +130,22 @@ char letter_select(){
 void insert_score(char* name, uint8_t* score){
 	highscore_t* highscore;
 	highscore = &nr1;
-	int place = check_score(score);
-	if (place == 0){
+	//fprintf(UART_p, "%s\n", highscore->name);
+	/*int place = check_score(score);
+	if (place == 0) {
 		return;
 	}
 
 	for (int i = 1; i < place; i++){
 	 	highscore = highscore->next;
 	}
-	highscore_copy(highscore, highscore->next);
+	//highscore_copy(highscore, highscore->next);
 	highscore->name = name;
-	highscore->score = score;
+	highscore->score = score;*/
 }
 
 
+/*
 void highscore_copy(highscore_t* highscore_current, highscore_t* highscore_next){
 	char name = highscore_next->name;
 	uint8_t score = highscore_next->score;
@@ -164,26 +161,21 @@ void highscore_copy(highscore_t* highscore_current, highscore_t* highscore_next)
 	highscore_copy(highscore_current, highscore_current->next);	
 }
 
-
-int check_score(uint8_t* score){
+*/
+/*int check_score(uint8_t score){
 	highscore_t* highscore;
 	highscore = &nr1;
 	int place = 1;
 	int line = 1; 
 	while(highscore->next && (line < 7)){
 		line++;
-		if (score > &(highscore->score)){
+		if (score > (highscore->score)){
 			return place;
 		}
 		highscore = highscore->next;
 		place += 1;
 	}
-
 	return 0;
 }
-
-
-
-
+*/
 #endif //F_CPU
-
