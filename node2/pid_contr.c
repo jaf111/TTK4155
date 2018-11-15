@@ -12,7 +12,7 @@
 //Continuous version =>	u = Kp*e + Ki*∫edt + Kd*(de/dt) where e is the error (the difference between actual and target
 //Discrete version =>	u(n) = Kp*e(n) + T*Ki*∑e(i) + (Kd/T)*(e(n)−e(n−1)), where T is the sampling period.
 
-int16_t PID_output = 0;
+/*int16_t PID_output = 0;
 int16_t error = 0;
 int16_t previous_error = 0;
 uint8_t Ku = 3;		//Ultimate gain
@@ -86,7 +86,7 @@ int16_t pid_controller(int16_t setpoint, int16_t motor_encoder_max) {	//Calculat
 			PID_output = -150;
 		}
 
-		/*if(PID_output >= 255) {
+		if(PID_output >= 255) {
 			PID_output = 160; 
 		}
 		else if((PID_output < 255) && (PID_output >= 200)) {
@@ -124,7 +124,7 @@ int16_t pid_controller(int16_t setpoint, int16_t motor_encoder_max) {	//Calculat
 		}
 		else {
 			PID_output = -160;
-		}*/
+		}
 
 		fprintf(UART_p, "REAL PID_output %4d \r\n", PID_output);
 	}
@@ -170,17 +170,16 @@ int16_t pid_controller(int16_t setpoint, int16_t motor_encoder_max) {	//Calculat
 		
 		//fprintf(UART_p, "REAL PID_output %4d \r\n", PID_output);
 	}
-	*/
 
 //ISR checks the interruptions vector once the previously defined interruption is executed.
 //If a function for it is not defined, the AVR would restart the system automatically
 
-/*ISR(TIMER0_COMPA_vect) {	
+ISR(TIMER0_COMPA_vect) {	
 	int_tim8 = 1;		//Global variable for internal 8-bits timer interruption
 	fprintf(UART_p,"Anterrupt \r\n",0);
-}*/
+}
 
 ISR(TIMER3_COMPA_vect) {	
 	int_tim8 = 1;		//Global variable for internal 8-bits timer interruption
 	//fprintf(UART_p,"Anterddddddddddddddddddddddddddddddddddrupt \r\n",0);
-}
+}*/

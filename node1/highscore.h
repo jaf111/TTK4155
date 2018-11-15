@@ -1,8 +1,13 @@
 #ifndef HIGHSCORE_H
 #define HIGHSCORE_H
 
+void highscore_save_sram(char* word, uint8_t score);
+uint8_t highscore_check_sram(uint8_t score);
+void highscore_display_sram();
+char* highscore_get_player_name();
+
 typedef struct {
-	char name[8];
+	char namee[8];
 	uint8_t score;
 } highscore_t;
 
@@ -23,7 +28,8 @@ void print_highscore(void);
   * @desc Creating name by selecting letters with right button and erase with left button  
   * @param highscore struct - with (NULL) name and (NULL) score
 */
-void create_name(highscore_t * foo);
+void create_name();
+//void create_name(highscore_t * foo);
 
 
 /**
@@ -46,7 +52,7 @@ void insert_score(char* name, uint8_t* score);
   * @desc Moves highscores down on the highscoretable so you can insert a new highscore arbitrary
   * @param highscore structs - he message to be displayed
 */
-void highscore_copy(highscore_t* highscore_current, highscore_t* highscorre_next);
+void highscore_copy(highscore_t* highscore_current, highscore_t* highscore_next);
 
 
 /**

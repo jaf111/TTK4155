@@ -78,18 +78,29 @@ void OLED_init(void) {	//OLED display initialization
 }
 
 void OLED_print_char(char ch) {		//To print JUST one character
-	for(int i = 0; i < FONTWIDTH; i++){
+	for(uint8_t i = 0; i < FONTWIDTH; i++){
 		//In ASCII, space or ' ' is 32. So taking the char and subtracting it with ' '
 		//will give us the "correct" symbol from fonts.h 
+		//fprintf(UART_p,"FLASH: %d \r\n",pgm_read_byte(&(font8[ch - ' '][i])));
 		write_s(pgm_read_byte(&(font8[ch - ' '][i])));		//pgm_read_byte(&()) is required to take data from FLASH mem
 	}
 }
 
 void OLED_print_all(char* word) {	//To print the whole word/sentence (pointer where char starts)
-	int i = 0;
+	uint8_t i = 0;
 	while(word[i] != '\0') {		//If the received character is different from NULL (\0),
 		OLED_print_char(word[i]);	//such character is printed on the OLED
 		i++;
+	}
+}
+
+void OLED_print_number(uint8_t number){
+	//uint8_t index = 0;
+	//uint8_t* digits[5];						// Digits are retrieved in reverse order. Store them to print them in
+	while (number > 0){
+		uint8_t digit = number % 10;		// Extract each digit
+		OLED_print_char('0' + digit);		// From position 0 (in ASCII) + the real score
+		number /= 10;						// See OLED_print_char for explanation
 	}
 }
 

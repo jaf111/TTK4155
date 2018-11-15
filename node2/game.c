@@ -11,6 +11,7 @@
 #include "pid_contr.h"	
 #include "solenoid.h"
 #include "PWM.h"
+#include "pid.h"
 
 uint8_t time_score = 0;
 int bool_game_play = 1;
@@ -47,6 +48,8 @@ uint8_t game_over(){
 	return 0;
 }
 
+pidData_t pidData2;
+
 void game_play(){
 	game_init();
 	bool_game_play = 1;
@@ -65,6 +68,10 @@ void game_play(){
 		Move_Servo(joy_recieved_coords.XX);	
 
 		//motor_move(pid_controller(joy_recieved_coords.XX, motor_get_encoder_max()));
+		int16_t motor_pos = -motor_read_encoder();
+		uint8_t setpoint = CAN_recieved.data[0];
+		//motor_move(pid_controller(setpoint, motor_encoder_max));
+		motor_move(pid2_Controller(&pidData2, setpoint, motor_pos));
 
 		if(CAN_recieved.id == CAN_SHOOT_ID){
 			solenoid_push();

@@ -15,6 +15,7 @@
 #include "buttons.h"	//Prototype functions of buttons (USB board) unit
 #include "adc.h"		//Prototype functions of ADC unit
 #include "can.h"		//Prototype functions of CAN unit
+#include "highscore.h"
 
 uint8_t pointerUP = 1;	//Arrow position (starts in 1, after title)
 uint8_t pointerLR = 0;	//Menu level (menu or sub-menu)
@@ -32,7 +33,8 @@ t_menu options;
 t_menu screensaver;
 t_menu songs;
 t_menu paint;
-t_menu brightness;
+t_menu player_select;		// Player select
+//t_menu brightness;
 
 
 void menu_system() {
@@ -42,6 +44,7 @@ void menu_system() {
 	highscore = (t_menu){"Highscore", &main_menu, NULL, NULL};
 	extras = (t_menu){"Extras", &main_menu, NULL, NULL};
 	options = (t_menu){"Options", &main_menu, NULL, NULL};
+	//player_select = (t_menu){"Options", &main_menu, NULL, NULL};
 
 	//Extras page create
 	screensaver = (t_menu){"Screensaver", &extras, NULL, NULL};
@@ -49,7 +52,7 @@ void menu_system() {
 	paint = (t_menu){"Paint", &extras, NULL, NULL};
 
 	//Options page create
-	brightness = (t_menu){"Brightness", &options, NULL, NULL};
+	//brightness = (t_menu){"Brightness", &options, NULL, NULL};
 
 	//Main menu config
 	main_menu.children = &game;
@@ -63,7 +66,7 @@ void menu_system() {
 	songs.sibling = &paint;
 	
 	//Options config
-	options.children = &brightness;
+	//options.children = &brightness;
 	current_menu = &main_menu;
 	print_menu(current_menu);
 }
@@ -204,8 +207,12 @@ void menu_handler(void){				// Executes menu options
 		OLED_paint();
 
 	} else if (current_menu == &game){
+		// Might want to add submenus for selecting current player name and "play game" under game menu or somewhere else
+		//highscore_create_name();			// Don't want to do this before every game, so maybe move this elsewhere
 		uint8_t score = game_node1_play();
-		//current_menu = &main_menu;
+		//highscore_save_sram(highscore_get_player_name(),score);		// Score will be printed in wrong order (backwards) pls fix :)
+		//highscore_display_sram();
+		// todo: add play again option (same player name)
 	}
 }
 

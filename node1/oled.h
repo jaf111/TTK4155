@@ -15,6 +15,7 @@ void OLED_init(void);			//OLED display initialization
 
 void OLED_print_char(char c);	//To print JUST one character
 void OLED_print_all(char* word);//To print the whole word/sentence (pointer where char starts)
+void OLED_print_number(uint8_t number);
 
 void OLED_home(void);			//It goes to position 0,0 in OLED
 

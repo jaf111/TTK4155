@@ -1,6 +1,6 @@
 /*This file has been prepared for Doxygen automatic documentation generation.*/
-#ifndef PID_H
-#define PID_H
+#ifndef PID2_H
+#define PID2_H
 
 #include "stdint.h"
 
@@ -20,7 +20,7 @@ typedef struct {
 } pidData_t;
 
 void pid2_Init(pidData_t *pid, uint16_t frequency);
-int16_t pid2_Controller(pidData_t *pid_st, int16_t setPoint, int16_t processValue);
+int16_t pid2_Controller(pidData_t *pid_st, uint8_t setPoint, int16_t processValue);
 void pid_Reset_Integrator(pidData_t *pid_st);
 int16_t get_setPoint(void);
 int16_t get_measuredValue(void);
