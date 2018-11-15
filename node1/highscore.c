@@ -181,8 +181,6 @@ char letter_select(){
 	return(letter + char_selector);
 }
 
-
-
 /*void create_name(highscore_t* foo) {
 	OLED_clear_all();
 	OLED_update(); 

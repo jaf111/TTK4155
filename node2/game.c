@@ -71,7 +71,7 @@ void game_play(){
 		int16_t motor_pos = -motor_read_encoder();
 		uint8_t setpoint = CAN_recieved.data[0];
 		//motor_move(pid_controller(setpoint, motor_encoder_max));
-		motor_move(pid2_Controller(&pidData2, setpoint, motor_pos));
+		motor_move(pid_Controller(&pidData2, setpoint, motor_pos));
 
 		if(CAN_recieved.id == CAN_SHOOT_ID){
 			solenoid_push();

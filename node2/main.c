@@ -18,7 +18,6 @@
 #include "play_song.h"	//Prototype functions of play songs
 #include "TWI_Master.h" //Prototype functions of TWI controller
 #include "motor.h"      //Prototype functions of motor
-//#include "pid_contr.h"	//Prototype functions of PID control
 #include "pid.h"		//Prototype functions of PID control 2
 #include "solenoid.h"	//Prototype functions of solenoid
 #include "IR.h"			//Prototype functions of IR sensor
@@ -35,7 +34,7 @@ int main() {
 
 	//GPIO initialization
 	//led_init();
-	buzzer_init();
+	//buzzer_init();
 
 	//Buttons initialization
 	//buttons_init();
@@ -66,12 +65,12 @@ int main() {
 	//Solenoid initialization
 	solenoid_init();
 
+	//Infra-red sensor initialization
 	IR_init();
 
 	//PID initialization
 	pidData_t pidData;
-	pid2_Init(&pidData, 20);
-	//pid_init(2, 50);	//Type 2 (PI) and frequency of 1000Hz
+	pid_Init(&pidData, 20);		//PID controller with frequency of 1000Hz
 
 	/*packet can_message1 = {.id=0x13, .length=0x08, .data={0x07,0x02,0x03,0x04,0x05,0x06,0x07,0x09}};	//Struct initialization
 	packet can_message2 = {.id=0x14, .length=0x07, .data={0x05,0x02,0x03,0x04,0x13,0x06,0x07}};
@@ -81,24 +80,18 @@ int main() {
 
 	/*motor_set_direction(LEFT);
 	motor_set_speed(100);
-	
 	_delay_ms(1000);*/
 	motor_reset_encoder();
 	/*motor_set_speed(0);
-
 	_delay_ms(10);
 	motor_set_direction(RIGHT);
 	motor_set_speed(100);
 	_delay_ms(1000);
 	int16_t motor_encoder_max = -motor_read_encoder();*/
 
-	//buzzer_on();
-
 	sei();			// Enable all interrupts
 
 	while(1) {
-		
-
 		//solenoid_push();
 		
 		//fprintf(UART_p, "%d\n\r", motor_encoder_max); 
@@ -111,26 +104,22 @@ int main() {
 		}
 		_delay_ms(50);*/
 
-		packet CAN_recieved = CAN_read();
+		/*packet CAN_recieved = CAN_read();
 		//fprintf(UART_p,"main ID: %X 	Data: %d\r\n", CAN_recieved.id, CAN_recieved.data[0]);
-		if (CAN_recieved.id == CAN_START_GAME_ID){		// Can also maybe be moved into an interrupt
+		if (CAN_recieved.id == CAN_START_GAME_ID) {		// Can also maybe be moved into an interrupt
 			//fprintf(UART_p,"game start",0);
 			game_play();
-		}
+		}*/
+		
 		packet can_joystick = CAN_read();
-
 		//fprintf(UART_p, "JoyX: %4d ", can_joystick.data[0]);
 		//fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
-		
-
 		//fprintf(UART_p, "IR: %4d \r\n", ADC_read());
 
-		/*Move_Servo(can_joystick.data[0]);	//Change Servo direction
+		Move_Servo(can_joystick.data[0]);	//Change Servo direction
 		int16_t motor_pos = -motor_read_encoder();
 		uint8_t setpoint = can_joystick.data[0];
-		//motor_move(pid_controller(setpoint, motor_encoder_max));
-		motor_move(pid2_Controller(&pidData, setpoint, motor_pos));*/
-		//fprintf(UART_p, "motor_pos %4d \r\n", motor_pos);
+		motor_move(pid_Controller(&pidData, setpoint, motor_pos));
 
 		/*packet score_send = {.id=0x17, .length=0x02, .data={0x05,0x03}};
 		if (IR_triggered()){
