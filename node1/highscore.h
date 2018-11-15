@@ -2,8 +2,8 @@
 #define HIGHSCORE_H
 
 typedef struct {
-	char* name;
-	uint8_t* score;
+	char name[8];
+	uint8_t score;
 	struct highscore_t* next;
 } highscore_t;
 

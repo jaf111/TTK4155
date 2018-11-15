@@ -69,8 +69,8 @@ int main() {
 	IR_init();
 
 	//PID initialization
-	struct PID_DATA pidData;
-	pid2_Init(&pidData, 100);
+	//struct PID_DATA pidData;
+	//pid2_Init(&pidData, 100);
 	//pid_init(2, 50);	//Type 2 (PI) and frequency of 1000Hz
 
 	/*packet can_message1 = {.id=0x13, .length=0x08, .data={0x07,0x02,0x03,0x04,0x05,0x06,0x07,0x09}};	//Struct initialization
@@ -112,8 +112,9 @@ int main() {
 		_delay_ms(50);*/
 
 		packet CAN_recieved = CAN_read();
-		fprintf(UART_p,"Packet ID: %X 	Data: %d \r\n", CAN_recieved.id, CAN_recieved.data[0]);
+		fprintf(UART_p,"main ID: %X 	Data: %d\r\n", CAN_recieved.id, CAN_recieved.data[0]);
 		if (CAN_recieved.id == CAN_START_GAME_ID){		// Can also maybe be moved into an interrupt
+			fprintf(UART_p,"game start",0);
 			game_play();
 		}
 		//packet can_joystick = CAN_read();
@@ -125,11 +126,11 @@ int main() {
 
 		//fprintf(UART_p, "IR: %4d \r\n", ADC_read());
 
-		Move_Servo(can_joystick.data[0]);	//Change Servo direction
-		int16_t motor_pos = motor_read_encoder();
-		uint8_t setpoint = can_joystick.data[0];
+		//Move_Servo(can_joystick.data[0]);	//Change Servo direction
+		//int16_t motor_pos = motor_read_encoder();
+		//uint8_t setpoint = can_joystick.data[0];
 		//motor_move(pid_controller(setpoint, motor_encoder_max));
-		motor_move(pid2_Controller(&pidData, setpoint, get_measuredValue()));
+		//motor_move(pid2_Controller(&pidData, setpoint, get_measuredValue()));
 
 		/*packet score_send = {.id=0x17, .length=0x02, .data={0x05,0x03}};
 		if (IR_triggered()){

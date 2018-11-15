@@ -39,14 +39,10 @@ int main() {
 	SPI_init();
 	highscore_init();
 	CAN_init();
-	fprintf(UART_p, "init done \n\r", 0);
+	fprintf(UART_p, "init\n\r", 0);
 
-	/*
-	packet can_message1 = {.id = 0x13, .length = 0x08, .data = {0x07,0x02,0x03,0x04,0x05,0x06,0x07,0x09}};	//Struct initialization
-	packet can_message2 = {.id = 0x14, .length = 0x07, .data = {0x05,0x02,0x03,0x04,0x13,0x06,0x07}};
-	packet can_message3 = {.id = 0x15, .length = 0x07, .data = {0x01,0x02,0x03,0x04,0x13,0x06,0x07}};*/
 	//packet can_joystick = {.id = CAN_INPUT_ID, .length = 0x02, .data = {0x01,0x02}};
-	packet score2 = {.id=CAN_SCORE_ID, .length=0x02, .data={0x02,0x03}};
+	//packet score2 = {.id=CAN_SCORE_ID, .length=0x02, .data={0x02,0x03}};
 
 	//play_countdown();	//DO NOT FORGET THAT DELAYS MUST BE REMOVED TO PLAY THE SONG PROPERLY!
 
@@ -54,15 +50,19 @@ int main() {
 
 	while(1) {
 		
-		cursor_move();
-
+		//cursor_move();
+		
 		//all code to make highscore work (some problems with memory and buttons?)
-		/*highscore_t highscore;
+		highscore_t highscore;
 		highscore = create_name();
-		fprintf(UART_p, highscore.name, 0);
-		insert_score(highscore.name, 10); // random number 10
-		print_highscore();
-		fprintf(UART_p, "%s\r\n", "hello");*/
+			
+		while(1){
+			fprintf(UART_p, "NAM: \r\n", 0);
+			fprintf(UART_p, "%s\n\r",highscore.name);
+		}
+		//insert_score(highscore.name, 10); // random number 10
+		//print_highscore();
+		//fprintf(UART_p, "%s\r\n", "hello");*/
 		
 		/*
 		joy_position_t joy_coord = buttons_get_joy_coord();	// (use struct from buttons.h to get coordinates (joy_coord.XX etc))
@@ -71,8 +71,7 @@ int main() {
 		can_joystick.data[1] = joy_coord.YY;
 		//fprintf(UART_p, "JoyX: %4d ", can_joystick.data[0]);
 		//fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
-		CAN_send(&can_joystick);*/
-		
+		CAN_send(&can_joystick);*/	
 
 
 		//packet score2 = CAN_read();
@@ -112,7 +111,7 @@ int main() {
 		//fprintf(UART_p, "JoyY CAN: %4d   JOYY; %4d \r\n", MCP2515_read(MCP_TXB0D0+1),JoyY);
 		
 		OLED_update(); 
-		//OLED_clear_all();
+
 		//fprintf(UART_p, "Message data: %4x \r\n", new_message.length);
 		/*for (uint8_t i=0; i < 8; i++) {
 			fprintf(UART_p, "DATA %2x: %4x \r\n", i, new_message2.data[i]);

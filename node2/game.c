@@ -13,7 +13,7 @@
 #include "PWM.h"
 
 uint8_t time_score = 0;
-int bool_game_play;
+int bool_game_play = 1;
 //uint8_t shoot = 0;
 joy_position_t joy_recieved_coords;
 slider_position_t sliders_recieved;
@@ -49,10 +49,12 @@ uint8_t game_over(){
 
 void game_play(){
 	game_init();
-
+	bool_game_play = 1;
 	while(bool_game_play){
-		fprintf(UART_p,"     Playing",0);
+		fprintf(UART_p,"   Playing\r\n",0);
 		packet CAN_recieved = CAN_read();
+
+		//fprintf(UART_p,"ID: %X 	Data: %d\r\n", CAN_recieved.id, CAN_recieved.data[2]);
 
 		if (CAN_recieved.id == CAN_INPUT_ID){							// Update coordinates if USB input is sent
 			joy_recieved_coords.XX = CAN_recieved.data[0];
@@ -70,7 +72,7 @@ void game_play(){
 		}
 
 		if (game_over() || (CAN_recieved.id == CAN_END_GAME_ID)){		// End game if node 1 sends message telling node 2 to stop
-			send_score.data[0] = time_score;
+			send_score.data[0] = 6;  //time_score;
 			fprintf(UART_p, "Score sent!",0);
 			CAN_send(&send_score);
 			bool_game_play = 0;

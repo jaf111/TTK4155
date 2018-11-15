@@ -28,7 +28,7 @@ void CAN_init() {
 
 void CAN_send(packet* message) {	//Everything is done only through Buffer 0
 	if (CAN_error()) {				//If there is an error in the transmission
-		fprintf(UART_p, "ERROR %4x \r\n", MCP2515_read(MCP_TXB0CTRL));
+		fprintf(UART_p, "ERROR %4x\r\n", MCP2515_read(MCP_TXB0CTRL));
 	}
 
 	while (MCP_TXB0CTRL & (1<<TXREQ));	//Waits until last transmission finishes
@@ -77,5 +77,5 @@ uint8_t CAN_message_recieved(){
 
 ISR(INT1_vect){
 	recieve_flag = 1;
-	fprintf(UART_p, "M! \r\n", 0);
+	fprintf(UART_p, "M!\r\n", 0);
 }

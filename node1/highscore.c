@@ -34,7 +34,7 @@ void highscore_init(){
 	nr4 = (highscore_t){NULL, NULL, &nr5};
 	nr3 = (highscore_t){NULL, NULL, &nr4};
 	nr2 = (highscore_t){NULL, NULL, &nr3};
-	nr1 = (highscore_t){"NULL", 10, &nr2}; 
+	nr1 = (highscore_t){NULL, 10, &nr2}; 
 		
 	new_score = (highscore_t){NULL, NULL, NULL};
 
@@ -42,7 +42,7 @@ void highscore_init(){
 
 
 void print_highscore(){
-	//OLED_clear_all();
+	OLED_clear_all();
 	OLED_update();
 	uint8_t line = 1;
 	highscore_t* highscore;
@@ -62,32 +62,33 @@ void print_highscore(){
 }
 
 
-highscore_t create_name(){
+highscore_t create_name(highscore_t * foo){
+	OLED_clear_all();
 	OLED_update(); 
-	char new_name[8];
+	char new_name[8] = {0};
 	//char new_name = malloc(sizeof(char) * 9);
 	
 	if(!new_name){
-		fprintf (UART_p, "error: name allocation failed, exiting.\r\n", 0);
+		//fprintf (UART_p, "error\r\n", 0);
     	return;
 	}
 	int char_selector = 0;
 	OLED_pos(3,0);
-	fprintf(OLED_p, "Name: ", 0);
+	OLED_print_all("Name: ");//fprintf(OLED_p, "Name: ", 0);
 	
-	while(!(BUTTON_R && BUTTON_R)){
+	while(!(BUTTON_R && BUTTON_L)){
 		OLED_update(); 
 		OLED_pos(3,40);
-		OLED_print_all(new_name);
+		OLED_print_all(foo->name);
 		OLED_pos(5,30);
 		OLED_print_char(letter_select());
 		_delay_ms(200);
 
 		if(BUTTON_R && array_pos <= 4){
-			new_name[array_pos] = letter_select();
+			foo->new_name[array_pos] = letter_select();
 			array_pos += 1;
 		}
-		fprintf(UART_p, "%d\r\n", letter_select);
+		
 		if(BUTTON_L && array_pos >= 0){
 			new_name[array_pos] = ' ';
 			array_pos -= 1;
@@ -97,12 +98,12 @@ highscore_t create_name(){
 			}
 
 		}
-		fprintf(UART_p, "%s\r\n", new_name);
+		fprintf(UART_p, "%s\n\r",new_name);
+		fprintf(UART_p, "\r\n",0);
 		 
 
 	}
-	new_score.name = &new_name;
-	return new_score;
+	return foo;
 }
 
 
