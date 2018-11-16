@@ -9,10 +9,10 @@
 #include "motor.h"
 
 #define KP	0.75
-#define KI	0.07
+#define KI	0.10
 #define KD	0.02
 #define SCALING_FACTOR  128		// OPTIMIZED TO 128
-#define BYTE_RANGE  35			// max_encoder/255
+#define BYTE_RANGE  36			// max_encoder/255
 
 uint8_t int_timer = 0;
 
@@ -43,7 +43,7 @@ int16_t pid_Controller(pidData_t *pid_st, uint8_t setPoint, int16_t processValue
 		int_timer = 0;
 
 		error = setPoint - processValue/BYTE_RANGE;	//Both values between 0 and 255
-		//fprintf(UART_p, "error %4d \r\n", error);
+		fprintf(UART_p, "error %4d", error);
 
 		if((error < 10) && (error > -10)) {
 			pid_st->sumError = 0;
@@ -88,13 +88,13 @@ int16_t pid_Controller(pidData_t *pid_st, uint8_t setPoint, int16_t processValue
 		else if(output < -120) {
 			output = -120;
 		}
-		else if ((output < 55) && (output > 20)) {
-			output = 55;
+		else if ((output < 65) && (output > 20)) {
+			output = 65;
 		}
-		else if ((output > -55) && (output < -20)) {
-			output = -55;
+		else if ((output > -65) && (output < -20)) {
+			output = -65;
 		}
-		//fprintf(UART_p, "output %4d", output);
+		fprintf(UART_p, ", output %4d", output);
 		fprintf(UART_p, ", setPoint %4d", setPoint);
 		fprintf(UART_p, ", processValue %4d \r\n", processValue/BYTE_RANGE);
 

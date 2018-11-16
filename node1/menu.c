@@ -99,32 +99,6 @@ uint8_t JoyDU_now = 0;
 uint8_t JoyLR_last = 0;
 uint8_t JoyLR_now = 0;
 
-/*
-t_menu* menu_cursor = &main_menu.children;
-
-void menu_navigate(joy_direction_t joy_dir){
-	OLED_pos(pointerUP, 5);			//Pointer located on left side (column 5) of current option
-	OLED_print_arrow(pointerUP, 5);	//Arrow printed
-	switch (joy_dir){
-		case JOY_NEUTRAL:
-			break;
-		case JOY_UP:
-			OLED_clear_arrow(pointerUP, 5);	//Current arrow removed
-			pointerUP--;					//Pointer updated
-			if (pointerUP < 1) {
-				pointerUP = displayed_lines-1;	//To ensure a cyclical pointer
-			}
-			break;
-		case JOY_DOWN:
-			OLED_clear_arrow(pointerUP, 5);
-			pointerUP++;
-			if (pointerUP > displayed_lines) {
-				pointerUP = 1;
-			}
-	}
-}
-*/
-
 void cursor_move() {			//To manage the arrow in the current screen
 	OLED_pos(pointerUP, 5);		//Pointer located on left side (column 5) of current option
 	if (currsor_io == 0){
@@ -208,12 +182,22 @@ void menu_handler(void){				// Executes menu options
 
 	} else if (current_menu == &game){
 		// Might want to add submenus for selecting current player name and "play game" under game menu or somewhere else
-		//highscore_create_name();			// Don't want to do this before every game, so maybe move this elsewhere
-		uint8_t score = game_node1_play();
+		OLED_clear_all();
+		//currsor_io = 1;
+		highscore_create_name(); // Don't want to do this before every game, so maybe move this elsewhere
+		game_node1_play();
+		highscore_save_sram(highscore_get_player_name(), 0); //= Score should get from CAN
+		//uint8_t score = game_node1_play();
 		//highscore_save_sram(highscore_get_player_name(),score);		// Score will be printed in wrong order (backwards) pls fix :)
 		//highscore_display_sram();
 		// todo: add play again option (same player name)
 	}
+	else if (current_menu == &highscore){
+		OLED_clear_all();
+		currsor_io = 1;
+		highscore_display_sram();
+	}
+	
 }
 
 

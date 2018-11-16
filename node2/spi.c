@@ -1,4 +1,3 @@
-#include <util/delay.h>	//Functions for busy-wait delay loops
 #include <avr/io.h> 	//Specific IO for AVR micro (all registers defined inside)
 #include <stdio.h> 		//Standard constants and functions for C (printf..., scanf...)
 

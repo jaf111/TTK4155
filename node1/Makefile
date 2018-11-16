@@ -1,5 +1,5 @@
 # List all source files to be compiled; separate with space
-SOURCE_FILES := main.c led.c uart.c sram.c adc.c buttons.c oled.c menu.c spi.c can.c MCP2515.c game_node1.c highscore.c
+SOURCE_FILES := main.c led.c uart.c sram.c adc.c buttons.c oled.c menu.c play_song.c spi.c can.c MCP2515.c game_node1.c highscore.c
 
 # highscore.c
 

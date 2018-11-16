@@ -24,8 +24,8 @@ uint8_t game_node1_play() {
 		//score = CAN_read();
 		//fprintf(UART_p,"score:%d \r\n",score.data[0]);
 
-		if (BUTTON_L || CAN_message_recieved()) {	// Can message recieved => game over
-			CAN_send(&end_game);					// Tell node 2 to stop game
+		if (/*BUTTON_L ||*/ CAN_message_recieved()) {	// Can message recieved => game over
+			//CAN_send(&end_game);					// Tell node 2 to stop game
 			score = CAN_read();						// Retrieve score
 			fprintf(UART_p,"score:%d \r\n",score.data[0]);
 		

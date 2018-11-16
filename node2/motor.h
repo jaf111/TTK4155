@@ -9,6 +9,7 @@ typedef enum motor_direction {
 } motor_dir_t;
 
 void motor_init(void);
+void motor_calibr_encoder(void);
 void motor_reset_encoder(void);
 int16_t motor_read_encoder(void);
 uint16_t motor_get_encoder_max();

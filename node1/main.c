@@ -6,27 +6,23 @@
 #include <avr/io.h> 	//Specific IO for AVR micro (all registers defined inside)
 #include <avr/interrupt.h>
 
-#include "led.h"		
-#include "uart.h"		
-#include "sram.h"		
-#include "adc.h"		
-#include "buttons.h"	
-#include "oled.h"		
+#include "led.h"
+#include "uart.h"
+#include "sram.h"
+#include "adc.h"
+#include "buttons.h"
+#include "oled.h"
 #include "menu.h"
 #include "play_song.h"
-#include "spi.h"		
+#include "spi.h"
 #include "MCP2515.h"	
 #include "can.h"		
 #include "highscore.h"
 
-#define MENU1 0			//Position of parent menu 1
-#define MENU2 4			//Position of parent menu 2
-#define MENU3 10		//Position of parent menu 3
-
 int main() {
 	//GPIO initialization
 	//led_init();		//LED initialization
-	//buzzer_init();		//Buzzer initialization
+	buzzer_init();		//Buzzer initialization
 
 	cli();
 
@@ -44,37 +40,23 @@ int main() {
 	packet can_joystick = {.id = CAN_INPUT_ID, .length = 0x02, .data = {0x01,0x02}};
 	//packet score2 = {.id=CAN_SCORE_ID, .length=0x02, .data={0x02,0x03}};
 
-	//play_countdown();	//DO NOT FORGET THAT DELAYS MUST BE REMOVED TO PLAY THE SONG PROPERLY!
+	//play_song();	//DO NOT FORGET THAT DELAYS MUST BE REMOVED TO PLAY THE SONG PROPERLY!
 
 	sei();
 
-	highscore_sram_init();
+	//highscore_sram_init();
 
-	highscore_save_sram("ONE ",8);
-	//save_highscore_sram("TWO ",7);
-	//save_highscore_sram("THRE",4);
-	//save_highscore_sram("FOUR",3);
-	highscore_save_sram("FIVE",2);
+	//highscore_save_sram("ONE ",8);
+	//highscore_save_sram("FIVE", 123);
+	//highscore_save_sram("FIVE", 120);
 
-	/*
-	create_name();
-
+	/*create_name();
 	save_highscore_sram(highscore_get_player_name(),20);
-	
 	display_highscores_sram();*/
 
-
 	while(1) {
-		
 		// NB! HIGHSCORE NUMBER WILL BE PRINTED IN REVERSE ORDER!
-
-
-
 		cursor_move();
-
-		
-
-
 	
 		//all code to make highscore work (some problems with memory and buttons?)
 		/*
@@ -97,6 +79,8 @@ int main() {
 		fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
 		CAN_send(&can_joystick);*/
 
+		//if (can_joystick.data[0] > 200) {play_start();}
+		//if (can_joystick.data[1] > 200) {play_finish();}
 
 		//packet score2 = CAN_read();
 		//fprintf(UART_p, "score: %d \r\n", score2.data[0]);

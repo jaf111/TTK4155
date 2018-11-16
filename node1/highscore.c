@@ -15,7 +15,7 @@
 int char_selector = 0;
 int array_pos = 0;
 
-
+/*
 highscore_t nr7;
 highscore_t nr6;
 highscore_t nr5;
@@ -25,6 +25,7 @@ highscore_t nr2;
 highscore_t nr1;
 
 highscore_t new_score;
+*/
 
 volatile uint8_t *score_data = (uint8_t *) 0x1C00; 	//OLED Data start address
 
@@ -74,56 +75,24 @@ uint8_t highscore_check_sram(uint8_t score){
 void highscore_display_sram(){
 	OLED_clear_all();
 	OLED_home();
+	OLED_pos(0,25);
 	OLED_print_all("Highscores");
 	for (uint8_t i=0; i<highscores_n; i++){
-		OLED_pos(i+2,20);
+		OLED_pos(i+2,30);
+		OLED_print_number(i+1);
+		OLED_pos(i+2,40);
+		
 		for (uint8_t j=0; j<4; j++){
 			OLED_print_char(name[i][j]);	
 		}
-		OLED_pos(i+2,60);
+		OLED_pos(i+2,80);
 		OLED_print_number(score_data[i]);
 	}
 }
 
-/*
-void highscore_init(){
-	nr7 = (highscore_t){NULL, NULL};
-	nr6 = (highscore_t){NULL, NULL};
-	nr5 = (highscore_t){NULL, NULL};
-	nr4 = (highscore_t){NULL, NULL};
-	nr3 = (highscore_t){NULL, NULL};
-	nr2 = (highscore_t){NULL, NULL};
-	nr1 = (highscore_t){"Jan", NULL}; 
-		
-	new_score = (highscore_t){NULL, NULL, NULL};
-}
-*/
-
-
-/*void print_highscore(){
-	OLED_clear_all();
-	OLED_update();
-	uint8_t line = 1;
-	highscore_t* highscore;
-	highscore = &nr1;
-
-	while(highscore->next != NULL || (line < 8)) {
-		OLED_pos(line, 20);
-		OLED_print_all(line);
-		OLED_pos(line, 24);
-		OLED_print_all(highscore->name);
-		OLED_pos(line, 40);
-		OLED_print_all(highscore->score);
-		line++;
-		highscore = highscore->next;
-	}
-	OLED_home();
-}*/
-
 void highscore_create_name() {
 	OLED_clear_all();
 	OLED_update(); 
-	
 	int char_selector = 0;
 	OLED_pos(3,0);
 	OLED_print_all("Name: ");
@@ -138,7 +107,6 @@ void highscore_create_name() {
 
 		if(BUTTON_R && array_pos < 4) {
 			player_name[array_pos] = letter_select();
-			fprintf(UART_p,"pr",0);
 			array_pos += 1;
 		}
 		
@@ -153,6 +121,7 @@ void highscore_create_name() {
 		fprintf(UART_p, "%s\n\r", player_name);
 		//fprintf(UART_p, "\r\n",0);
 	}
+	printf(UART_p, "%s\n\r", "WRROFN");
 }
 
 char* highscore_get_player_name(){
@@ -180,6 +149,11 @@ char letter_select(){
 	}
 	return(letter + char_selector);
 }
+
+
+//-----------------------------------------------------------------------
+//OLD VERSION REMOVE WHEN NEW VERSION WORK
+
 
 /*void create_name(highscore_t* foo) {
 	OLED_clear_all();

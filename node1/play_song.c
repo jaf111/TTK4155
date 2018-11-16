@@ -37,23 +37,24 @@ void buzz(uint16_t frequency, uint8_t length) {
 	}
 }
 
-void play_song(uint8_t song_num) {		// iterate over the notes of the melody:
-	uint8_t size = sizeof(songs_melody[song_num]) / sizeof(uint16_t);
-	fprintf(UART_p, "SIZE %4d   \n\r", size);
+void game_song(uint8_t song_num) {		// iterate over the notes of the melody:
+	//uint8_t size = sizeof(songs_melody[song_num]) / sizeof(uint16_t);
+	uint8_t size = sizeof(game_melody[song_num]) / sizeof(uint16_t);
 
 	for (uint8_t thisNote=0; thisNote<size; thisNote++) {
 		//to calculate the note duration, take 1 second divided by the note type
 		//e.g. quarter note = 1000/4, eighth note = 1000/8, etc.
 		
-		uint8_t noteDuration = pgm_read_byte(&(songs_tempo[song_num][thisNote]));
+		//uint8_t noteDuration = pgm_read_byte(&(songs_tempo[song_num][thisNote]));
+		uint8_t noteDuration = pgm_read_byte(&(game_tempo[song_num][thisNote]));
 		if (noteDuration != 0) {
 			noteDuration = 1000 / noteDuration;	//Duration in ms!
 		} else {
-			fprintf(UART_p, "thisNote %4d \n\r", thisNote);
 			return;		//If noteDuration = 0, it means the songs is over
 		}
 
-		buzz(pgm_read_word(&(songs_melody[song_num][thisNote])), noteDuration);	//Time in ms!!
+		//buzz(pgm_read_word(&(songs_melody[song_num][thisNote])), noteDuration);	//Time in ms!!
+		buzz(pgm_read_word(&(game_melody[song_num][thisNote])), noteDuration);	//Time in ms!!
 
 		//to distinguish the notes, set a minimum time between them.
 		uint16_t pauseBetweenNotes = noteDuration * 1.30;	//the note's duration + 30%
@@ -64,9 +65,8 @@ void play_song(uint8_t song_num) {		// iterate over the notes of the melody:
 	}
 }
 
-/*void play_song(uint8_t song_num) {		// iterate over the notes of the melody:
+void play_song() {		// iterate over the notes of the melody:
 	uint8_t size = sizeof(mario_melody) / sizeof(uint16_t);
-	fprintf(UART_p, "SIZE %4d   \n\r", size);
 
 	for (uint8_t thisNote = 0; thisNote<size; thisNote++) {
 		//to calculate the note duration, take 1 second divided by the note type
@@ -82,7 +82,7 @@ void play_song(uint8_t song_num) {		// iterate over the notes of the melody:
 		//stop the tone playing:
 		buzz(0, noteDuration);
 	}
-}*/
+}
 
 void my_delay_ms(uint16_t n) {	//Delay of ms using a variable as input
 	while(n--) {
@@ -96,17 +96,20 @@ void my_delay_us(uint16_t n) {	//Delay of us using a variable as input
 	}
 }
 
-void play_mario() 		{play_song(0);}		//Mario song
-void play_underworld()	{play_song(1);}		//Underworld song
-void play_adventure()	{play_song(2);}		//Adventure time song
-void play_star_wars()	{play_song(3);}		//Star Wars song
-void play_popcorn()		{play_song(4);}		//Popcorn song
-void play_twinkle()		{play_song(5);}		//Twinkle Twinkle song
-void play_frog()		{play_song(6);}		//Crazy frog song
-void play_halls()		{play_song(7);}		//Deck_the_halls song
-void play_manaderna()	{play_song(8);}		//Manaderna song
-void play_bonnagard()	{play_song(9);}		//Bonnagard song
-void play_countdown()	{play_song(10);}	//Final countdown song
+void play_mario() 		{game_song(0);}		//Mario song
+void play_underworld()	{game_song(1);}		//Underworld song
+void play_adventure()	{game_song(2);}		//Adventure time song
+void play_star_wars()	{game_song(3);}		//Star Wars song
+void play_popcorn()		{game_song(4);}		//Popcorn song
+void play_twinkle()		{game_song(5);}		//Twinkle Twinkle song
+void play_frog()		{game_song(6);}		//Crazy frog song
+void play_halls()		{game_song(7);}		//Deck_the_halls song
+void play_manaderna()	{game_song(8);}		//Manaderna song
+void play_bonnagard()	{game_song(9);}		//Bonnagard song
+void play_countdown()	{game_song(10);}	//Final countdown song
+
+void play_start()		{game_song(0);}		//Starting song
+void play_finish()		{game_song(1);}		//Finishing song
 
 
 #endif

@@ -7,8 +7,7 @@
 #include "IR.h"	
 #include "can.h"		
 #include "servo.h"		
-#include "motor.h"      
-#include "pid_contr.h"	
+#include "motor.h"	
 #include "solenoid.h"
 #include "PWM.h"
 #include "pid.h"
@@ -21,6 +20,7 @@ slider_position_t sliders_recieved;
 
 packet send_score = {.id = CAN_SCORE_ID, .length = 0x01, .data = {0x00}};
 
+pidData_t pidData2;
 
 ISR(TIMER5_COMPA_vect){
 	time_score++;		// Increment time score once every seond
@@ -28,13 +28,14 @@ ISR(TIMER5_COMPA_vect){
 
 void game_init(){
 	time_score = 0;
-	/*
-	Servo_init();
+	/*Servo_init();
 	motor_init();
 	solenoid_init();
-	pid_init(2, 50);	//Type 2 (PI) and frequency of 1000Hz
-	*/
+	pid_init(2, 50);	//Type 2 (PI) and frequency of 1000Hz*/
 
+	pid_Init(&pidData2, 20);		//PID controller with frequency of 1000Hz
+	motor_calibr_encoder();
+	
 	PWM_PL3_init(256, 1);	// Generate interrupt once every second in order to count score (time)
 
 	// Calibrate motor position etc . . . . . .
@@ -43,12 +44,11 @@ void game_init(){
 
 uint8_t game_over(){
 	if (IR_triggered()){
+		printf(UART_p, "IR SENSOR %4d \r\n",IR_triggered);
 		return 1;
 	}
 	return 0;
 }
-
-pidData_t pidData2;
 
 void game_play(){
 	game_init();
@@ -59,10 +59,11 @@ void game_play(){
 
 		//fprintf(UART_p,"ID: %X 	Data: %d\r\n", CAN_recieved.id, CAN_recieved.data[2]);
 
-		if (CAN_recieved.id == CAN_INPUT_ID) {							// Update coordinates if USB input is sent
+		if (CAN_recieved.id == CAN_START_GAME_ID) {							// Update coordinates if USB input is sent
 			joy_recieved_coords.XX = CAN_recieved.data[0];
 			joy_recieved_coords.YY = CAN_recieved.data[1];
 			sliders_recieved.left = CAN_recieved.data[2];
+			fprintf(UART_p,"Joystick:%d \r\n",CAN_recieved.data[0]);
 		}
 
 		Move_Servo(joy_recieved_coords.XX);	
@@ -72,6 +73,7 @@ void game_play(){
 		uint8_t setpoint = CAN_recieved.data[0];
 		//motor_move(pid_controller(setpoint, motor_encoder_max));
 		motor_move(pid_Controller(&pidData2, setpoint, motor_pos));
+
 
 		if(CAN_recieved.id == CAN_SHOOT_ID){
 			solenoid_push();

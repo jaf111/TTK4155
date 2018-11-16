@@ -95,12 +95,23 @@ void OLED_print_all(char* word) {	//To print the whole word/sentence (pointer wh
 }
 
 void OLED_print_number(uint8_t number){
-	//uint8_t index = 0;
-	//uint8_t* digits[5];						// Digits are retrieved in reverse order. Store them to print them in
-	while (number > 0){
-		uint8_t digit = number % 10;		// Extract each digit
-		OLED_print_char('0' + digit);		// From position 0 (in ASCII) + the real score
-		number /= 10;						// See OLED_print_char for explanation
+	uint8_t new_number = number;
+	while (new_number > 0){
+		if(new_number > 99){	
+			uint8_t digit = (number/100) % 10;	// Extract each digit
+			OLED_print_char('0' + digit);		// From position 0 (in ASCII) + the real score
+			new_number /= 10;
+		}
+		else if(new_number > 9){	
+			uint8_t digit = (number/10) % 10;	// Extract each digit
+			OLED_print_char('0' + digit);		// From position 0 (in ASCII) + the real score
+			new_number /= 10;			
+		}
+		else{
+			uint8_t digit = number % 10;		// Extract each digit
+			OLED_print_char('0' + digit);		// From position 0 (in ASCII) + the real score
+			new_number /= 10;					
+		}
 	}
 }
 

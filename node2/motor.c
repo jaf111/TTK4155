@@ -1,3 +1,4 @@
+#ifndef F_CPU
 #define F_CPU 16000000	//Clock Speed (Oscillator)
 
 #include <avr/io.h>
@@ -30,10 +31,19 @@ void motor_init() {
 	DDRH |= (1 << PH3); 	//Enable SEL to output
 	DDRH |= (1 << PH6);		//Enable encoder !RTS pin
 
-	motor_set_speed(0);
+	motor_move(0);
 	motor_reset_encoder();
 }
 
+void motor_calibr_encoder() {	//Left=0	Right=Max_encoder
+	motor_move(-100);
+	_delay_ms(1500);
+	motor_reset_encoder();
+	motor_move(0);
+	motor_move(100);
+	_delay_ms(1500);
+	motor_encoder_max = -motor_read_encoder();
+}
 
 void motor_reset_encoder(){	//Toggles RST pin on MJ1
 	PORTH &= ~(1 << PH6);	//Clear RST pin
@@ -87,9 +97,10 @@ void motor_move(int16_t speed) {
 		dir = IDLE;
 		//motor_set_speed(0x00);	
 	}
-	speed = (uint8_t)speed; 
-	motor_set_speed(speed);
+	speed = (uint8_t)speed;
 	motor_set_direction(dir);
+	_delay_ms(1);
+	motor_set_speed(speed);
 }
 
 void motor_set_speed(uint8_t speed){
@@ -98,6 +109,8 @@ void motor_set_speed(uint8_t speed){
 	message_buffer[0] = adr;		// First call consists of TWI slave address
 	message_buffer[1] = cmd;		// First byte is write command
 	message_buffer[2] = speed;		// Send desired motor speed to DAC
-	_delay_ms(50);
+	_delay_ms(100);
 	TWI_Start_Transceiver_With_Data(message_buffer, 3);	// start transmission
 }
+
+#endif

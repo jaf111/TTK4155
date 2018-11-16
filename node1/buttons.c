@@ -148,6 +148,7 @@ void buttons_send_CAN_message(){
 	can_joystick.data[0] = joy_coord.XX;
 	can_joystick.data[1] = joy_coord.YY;
 	can_joystick.data[2] = slider_pos.left;
+	fprintf(UART_p,"Joystick:%d \r\n",can_joystick.data[0]);
 
 	CAN_send(&can_joystick);
 }

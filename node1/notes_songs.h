@@ -101,9 +101,19 @@
 ****************** Songs + Tempo ******************
 **************************************************/
 
+//Starting song / Finishing song 
+const uint16_t PROGMEM game_melody[2][4] = {
+	{NOTE_E7,NOTE_E7,0,NOTE_E7},
+	{NOTE_C4,NOTE_C5,NOTE_A3,NOTE_A4},
+};
+const uint8_t PROGMEM game_tempo[2][4] = {
+	{12,12,12,12},
+	{12,12,12,12},
+};
+
 //https://github.com/gumslone/raspi_buzzer_player/blob/master/buzzer_player.py
 //mario 	//	underworld 	//	adventure_time 	//	star_wars 	//	popcorn 	//	twinkle_twinkle 	//	crazy_frog 	//	deck_the_halls 	//	manaderna 	//	bonnagard 	//	final_countdown
-const uint16_t PROGMEM songs_melody[11][116] = {	//The melody for all songs
+/*const uint16_t PROGMEM songs_melody[11][116] = {	//The melody for all songs
 	{NOTE_E7,NOTE_E7,0,NOTE_E7,0,NOTE_C7,NOTE_E7,0,NOTE_G7,0,0,0,NOTE_G6,0,0,0,NOTE_C7,0,0,NOTE_G6,	0,0,NOTE_E6,0,0,NOTE_A6,0,NOTE_B6,0,NOTE_AS6,NOTE_A6,0,NOTE_G6,NOTE_E7,NOTE_G7,NOTE_A7,0,NOTE_F7,NOTE_G7,0,NOTE_E7,0,NOTE_C7,NOTE_D7,NOTE_B6,0,0,NOTE_C7,0,0,NOTE_G6,0,0,NOTE_E6,0,0,NOTE_A6,0,NOTE_B6,0,NOTE_AS6,NOTE_A6,0,NOTE_G6,NOTE_E7,NOTE_G7,NOTE_A7,0,NOTE_F7,NOTE_G7,0,NOTE_E7,0,NOTE_C7,NOTE_D7,NOTE_B6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 	{NOTE_C4,NOTE_C5,NOTE_A3,NOTE_A4,NOTE_AS3,NOTE_AS4,0,0,NOTE_C4,NOTE_C5,NOTE_A3,NOTE_A4,NOTE_AS3,NOTE_AS4,0,0,NOTE_F3,NOTE_F4,NOTE_D3,NOTE_D4,NOTE_DS3,NOTE_DS4,0,0,NOTE_F3,NOTE_F4,NOTE_D3,NOTE_D4,NOTE_DS3,NOTE_DS4,0,0,NOTE_DS4,NOTE_CS4,NOTE_D4,NOTE_CS4,NOTE_DS4,NOTE_DS4,NOTE_GS3,NOTE_G3,NOTE_CS4,NOTE_C4,NOTE_FS4,NOTE_F4,NOTE_E3,NOTE_AS4,NOTE_A4,NOTE_GS4,NOTE_DS4,NOTE_B3,NOTE_AS3,NOTE_A3,NOTE_GS3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 	{NOTE_D5,NOTE_G5,NOTE_G5,NOTE_G5,NOTE_G5,NOTE_FS5,NOTE_FS5,NOTE_E5,NOTE_D5,NOTE_E5,NOTE_D5,NOTE_D5,NOTE_C5,NOTE_B5,NOTE_A5,NOTE_G4,0,NOTE_C5,NOTE_B5,NOTE_A5,NOTE_G4,0,NOTE_G5,0,NOTE_G5,NOTE_G5,0,NOTE_G5,NOTE_FS5,0,NOTE_E5,NOTE_E5,NOTE_D5,NOTE_D5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_D5,NOTE_D5,NOTE_A5,NOTE_B5,NOTE_A5,NOTE_G4,NOTE_G5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -128,9 +138,9 @@ const uint8_t PROGMEM songs_tempo[11][116] = {		//The tempo for all songs
 	{2,2,2,2,2,2,2,2,2,2,2,2,2,4,4,2,4,2,2,2,2,2,2,2,2,2,2,2,2,2,4,4,2,4,2,2,2,2,2,4,4,2,2,2,4,4,2,2,2,2,1,4,2,2,2,2,2,2,2,2,2,2,2,2,2,4,4,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 	{2,2,2,2,2,2,1,2,2,2,2,1,2,2,2,2,2,2,2,2,1,2,2,2,2,1,2,4,4,2,2,2,4,4,2,2,1,4,4,2,4,4,2,4,4,4,4,2,2,4,2,2,2,2,2,2,1,2,2,2,2,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 	{1,16,16,4,4,1,16,16,8,8,4,1,16,16,4,4,2,4,16,16,8,8,8,8,4,4,16,16,4,4,1,16,16,8,8,4,1,16,16,4,4,2,4,16,16,8,8,8,8,4,16,16,4,16,16,8,8,8,8,4,4,2,8,4,16,16,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-};
+};*/
 
-/*const uint16_t PROGMEM mario_melody[] = {
+const uint16_t PROGMEM mario_melody[] = {
   NOTE_E7,NOTE_E7,0,NOTE_E7,0,NOTE_C7,NOTE_E7,0,NOTE_G7,0,0,0,NOTE_G6,0,0,
   0,NOTE_C7,0,0,NOTE_G6,0,0,NOTE_E6,0,0,NOTE_A6,0,NOTE_B6,0,NOTE_AS6,
   NOTE_A6,0,NOTE_G6,NOTE_E7,NOTE_G7,NOTE_A7,0,NOTE_F7,NOTE_G7,0,NOTE_E7,0,NOTE_C7,NOTE_D7,NOTE_B6,
@@ -160,7 +170,7 @@ const uint8_t PROGMEM underworld_tempo[] = {
 	18,18,18,6,6,6,6,6,6,18,18,18,18,18,18,10,
 	10,10,10,10,10,3,3,3
 };
-const uint16_t PROGMEM adventure_time_melody[] = {
+/*const uint16_t PROGMEM adventure_time_melody[] = {
     NOTE_D5,NOTE_G5,NOTE_G5,NOTE_G5,NOTE_G5,NOTE_FS5,
     NOTE_FS5,NOTE_E5,NOTE_D5,NOTE_E5,NOTE_D5,NOTE_D5,
     NOTE_C5,NOTE_B5,NOTE_A5,NOTE_G4,0,NOTE_C5,NOTE_B5,
