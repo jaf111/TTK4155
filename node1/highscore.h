@@ -62,5 +62,7 @@ void highscore_copy(highscore_t* highscore_current, highscore_t* highscore_next)
 */
 int check_score(uint8_t* score);
 
+void clear_name_in_sram();
+
 
 #endif //HIGHSCORE_H

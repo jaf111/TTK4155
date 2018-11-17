@@ -21,7 +21,7 @@ uint8_t MCP2515_init() {	//CAN-controller initialization
 	// Self-test to confirm CAN-controller is config mode after reset
 	value = MCP2515_read(MCP_CANSTAT);
 	if ((value & MODE_MASK) != MODE_CONFIG) {
-		fprintf(UART_p, "MCP2515 is NOT in configuration mode after reset!\r\n",0);
+		fprintf(UART_p, "MCP2515 NOT config mode after rst\r\n", 0);
 		return 1;
 	}
 	return 0;

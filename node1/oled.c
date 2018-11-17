@@ -7,7 +7,7 @@
 #include <avr/pgmspace.h>	//Interfaces to access data stored in program space (flash memory) of AVR
 
 #include "oled.h"			//Prototype functions
-#include <util/delay.h>	//Functions for busy-wait delay loops
+#include <util/delay.h>		//Functions for busy-wait delay loops
 #include "fonts.h"			//All characters to print in the OLED (saved in FLASH)
 #include "sram.h"			//Functions to directly write into the SRAM
 #include "buttons.h"

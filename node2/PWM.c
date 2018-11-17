@@ -53,7 +53,7 @@ void PWM_PE3_init(uint16_t prescaler, uint16_t frequency) {		//PWM in timer 3, c
 	uint16_t TOP = (F_CPU/frequency) / prescaler - 1;
 	ICR3 = TOP;		//ICR3 (defined as TOP) is loaded according to the requested frequency
 	
-	OCR3A = 0x0020;		//Width of the PWM (initialized to 0 = NOT WORKING)
+	OCR3A = TOP-1;		//Width of the Timer (it must count until just before the limit)
 
 	TIMSK3 |= (1<<OCIE3A);
 }
@@ -65,12 +65,12 @@ void PWM_PL3_init(uint16_t prescaler, uint16_t frequency) {		//PWM in timer 5, c
 	TCCR5B |= PWM_setPrescaler(prescaler);	//Prescaler is set in the PWM output
 
 	TCCR5A |= (0<<COM5A0) | (1<<COM5A1);	//PWM output in channel A (called OC5A) enabled. it clears on Compare Match, and sets at BOTTOM (non-inverting mode)
-	DDRL |= (1<<DDL3);	//OC3A is physically connected in Port L, Pin 3 (PL3), so such pin (bit DDL3, register DDRL) is defined as output (1=output, 0=input)
+	//DDRL |= (1<<DDL3);	//OC3A is physically connected in Port L, Pin 3 (PL3), so such pin (bit DDL3, register DDRL) is defined as output (1=output, 0=input)
 
 	uint16_t TOP = (F_CPU/frequency) / prescaler - 1;
 	ICR5 = TOP;		//ICR3 (defined as TOP) is loaded according to the requested frequency
 	
-	OCR5A = 0x0020;		//Width of the PWM (initialized to 0 = NOT WORKING)
+	OCR5A = TOP-1;		//Width of the Timer (it must count until just before the limit)
 
 	TIMSK5 |= (1<<OCIE5A);
 }

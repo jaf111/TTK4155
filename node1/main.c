@@ -15,13 +15,14 @@
 #include "menu.h"
 #include "play_song.h"
 #include "spi.h"
+#include "timer.h"
 #include "MCP2515.h"	
 #include "can.h"		
 #include "highscore.h"
+#include "game_node1.h"
 
 int main() {
-	//GPIO initialization
-	//led_init();		//LED initialization
+	//led_init();		
 	buzzer_init();		//Buzzer initialization
 
 	cli();
@@ -33,31 +34,29 @@ int main() {
 	OLED_init();
 	menu_init();
 	SPI_init();
-	//highscore_init();
+	highscore_sram_init();
 	CAN_init();
 	fprintf(UART_p, "init\n\r", 0);
 
 	packet can_joystick = {.id = CAN_INPUT_ID, .length = 0x02, .data = {0x01,0x02}};
 	//packet score2 = {.id=CAN_SCORE_ID, .length=0x02, .data={0x02,0x03}};
 
-	//play_song();	//DO NOT FORGET THAT DELAYS MUST BE REMOVED TO PLAY THE SONG PROPERLY!
+	//play_song();
 
 	sei();
 
-	//highscore_sram_init();
-
-	//highscore_save_sram("ONE ",8);
-	//highscore_save_sram("FIVE", 123);
-	//highscore_save_sram("FIVE", 120);
-
-	/*create_name();
-	save_highscore_sram(highscore_get_player_name(),20);
-	display_highscores_sram();*/
+	timer1_init(256, 60);
 
 	while(1) {
-		// NB! HIGHSCORE NUMBER WILL BE PRINTED IN REVERSE ORDER!
 		cursor_move();
+		OLED_update(); 
+
+		//--------------------------------------------
+		//TEST FUNCTIONS UNDER
 	
+
+
+
 		//all code to make highscore work (some problems with memory and buttons?)
 		/*
 		highscore_t highscore;
@@ -116,7 +115,7 @@ int main() {
 		//fprintf(UART_p, "JoyX CAN: %4d   JOYX; %4d \r\n", MCP2515_read(MCP_TXB0D0+0),JoyX);
 		//fprintf(UART_p, "JoyY CAN: %4d   JOYY; %4d \r\n", MCP2515_read(MCP_TXB0D0+1),JoyY);
 		
-		OLED_update(); 
+		
 
 		//fprintf(UART_p, "Message data: %4x \r\n", new_message.length);
 		/*for (uint8_t i=0; i < 8; i++) {

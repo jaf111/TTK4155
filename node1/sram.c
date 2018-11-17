@@ -14,14 +14,14 @@ void SRAM_write(uint8_t data, unsigned int address) {	//Address and value to be 
 	volatile char *ext_ram = (char *) sram_init_address;	// Start address for the SRAM
 	ext_ram[address] = data; 	//Value is assigned to the defined address
 
-	fprintf(UART_p, "SENT data: %04u, address: %04X \n\r", data, address);
+	fprintf(UART_p, "SNT data: %04u, addr: %04X \n\r", data, address);
 }
 
 uint8_t SRAM_read(unsigned int address) {	//Value read from the requested address
 	volatile char *ext_ram = (char *) sram_init_address;	// Start address for the SRAM
 	uint8_t data = ext_ram[address]; 		//- sram_init_address
 
-	fprintf(UART_p, "RECEIVED data: %04u, address: %04X \n\r", data, address);
+	fprintf(UART_p, "RCV data: %04u, addr: %04X \n\r", data, address);
 	
 	return data;
 }
@@ -31,7 +31,7 @@ void SRAM_test(void) {		//Test to write and read in every position of the extern
 	uint16_t ext_ram_size = 0x800;		//The complete address size dedicated to external SRAM
 	uint16_t write_errors = 0;
 	uint16_t retrieval_errors = 0;
-	fprintf(UART_p, "Starting SRAM test...%d \n\r");
+	fprintf(UART_p, "Start SRAM test:%d \n\r");
 	//printf("Starting SRAM test...\n\r");
 
 	// rand() stores some internal state, so calling this function in a loop will
@@ -47,8 +47,8 @@ void SRAM_test(void) {		//Test to write and read in every position of the extern
 		uint8_t retreived_value = ext_ram[i];
 		
 		if (retreived_value != some_value) {
-			fprintf(UART_p, "Write phase error: ext_ram[%d] = %02X (should be %02X)\n\r", i, retreived_value, some_value);
-			//printf("Write phase error: ext_ram[%d] = %02X (should be %02X)\n\r", i, retreived_value, some_value);
+			fprintf(UART_p, "Write error: ext_ram[%d]=%02X (should be %02X)\n\r", i, retreived_value, some_value);
+			//printf("Write phase error: ext_ram[%d]=%02X (should be %02X)\n\r", i, retreived_value, some_value);
 			write_errors++;
 		}
 	}
@@ -61,11 +61,11 @@ void SRAM_test(void) {		//Test to write and read in every position of the extern
 		uint8_t retreived_value = ext_ram[i];
 		
 		if (retreived_value != some_value) {
-			fprintf(UART_p, "Retrieval phase error: ext_ram[%4d] = %02X (should be %02X)\n\r", i, retreived_value, some_value);
-			printf("Retrieval phase error: ext_ram[%4d] = %02X (should be %02X)\n\r", i, retreived_value, some_value);
+			fprintf(UART_p, "Retriev error: ext_ram[%4d]=%02X (should be %02X)\n\r", i, retreived_value, some_value);
+			//printf("Retriev error: ext_ram[%4d]=%02X (should be %02X)\n\r", i, retreived_value, some_value);
 			retrieval_errors++;
 		}
 	}
-	fprintf(UART_p, "SRAM test completed with\n\r%4d errors in write phase and\n\r%4d errors in retrieval phase \n \n\r", write_errors, retrieval_errors);
+	fprintf(UART_p, "SRAM test done with\n\r%4d errors (WR phase) &\n\r%4d errors (RETR phase)\n\r", write_errors, retrieval_errors);
 	//printf("SRAM test completed with\n\r%4d errors in write phase and\n\r%4d errors in retrieval phase \n \n\r", write_errors, retrieval_errors);
 }

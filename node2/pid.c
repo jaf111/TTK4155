@@ -88,11 +88,11 @@ int16_t pid_Controller(pidData_t *pid_st, uint8_t setPoint, int16_t processValue
 		else if(output < -120) {
 			output = -120;
 		}
-		else if ((output < 65) && (output > 20)) {
-			output = 65;
+		else if ((output < 55) && (output > 20)) {
+			output = 55;
 		}
-		else if ((output > -65) && (output < -20)) {
-			output = -65;
+		else if ((output > -55) && (output < -20)) {
+			output = -55;
 		}
 		fprintf(UART_p, ", output %4d", output);
 		fprintf(UART_p, ", setPoint %4d", setPoint);

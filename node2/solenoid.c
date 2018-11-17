@@ -23,8 +23,9 @@ void solenoid_OFF() {		//Solenoid activation
 
 void solenoid_push() {		//Solenoid push
     solenoid_ON();
-	_delay_ms(500);
+	_delay_ms(100);
     solenoid_OFF();
+    _delay_ms(10);
 }
 
 #endif

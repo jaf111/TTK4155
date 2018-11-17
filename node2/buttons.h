@@ -21,6 +21,11 @@ typedef struct {
 	uint8_t right;
 } slider_position_t;
 
+typedef struct {
+	uint8_t left;
+	uint8_t right;
+} buttons_value_t;
+
 typedef enum JoyDir{JOY_LEFT, JOY_RIGHT, JOY_UP, JOY_DOWN, JOY_NEUTRAL} joy_direction_t;	//Enum with all joystick directions
 
 void buttons_init(void);		//Using Port B, pin PB0 & PB1 on ATmega162

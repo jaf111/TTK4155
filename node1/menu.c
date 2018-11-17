@@ -34,7 +34,12 @@ t_menu screensaver;
 t_menu songs;
 t_menu paint;
 t_menu player_select;		// Player select
-//t_menu brightness;
+t_menu brightness;
+t_menu low;
+t_menu high;
+t_menu song1;
+t_menu song2;
+t_menu song3;
 
 
 void menu_system() {
@@ -52,7 +57,9 @@ void menu_system() {
 	paint = (t_menu){"Paint", &extras, NULL, NULL};
 
 	//Options page create
-	//brightness = (t_menu){"Brightness", &options, NULL, NULL};
+	brightness = (t_menu){"Brightness", &options, NULL, NULL};
+	low = (t_menu){"Low", &brightness, NULL, NULL};
+	high = (t_menu){"High", &brightness, NULL, NULL};
 
 	//Main menu config
 	main_menu.children = &game;
@@ -66,7 +73,12 @@ void menu_system() {
 	songs.sibling = &paint;
 	
 	//Options config
-	//options.children = &brightness;
+	options.children = &brightness;
+
+	//Brightness config
+	brightness.children = &high;
+	high.sibling = &low;
+	
 	current_menu = &main_menu;
 	print_menu(current_menu);
 }
@@ -105,67 +117,56 @@ void cursor_move() {			//To manage the arrow in the current screen
 		OLED_print_arrow(pointerUP, 5);	
 	}
 
-	/*JoyDU_now = ADC_read(JOY_DU);
-	JoyLR_now = ADC_read(JOY_LR);
-
-	if ((JoyDU_now != JoyDU_last) && (JoyLR_now != JoyLR_last)) {
-		 JoyDU_last = JoyDU_now;
-		 JoyLR_last = JoyLR_now;*/
-
-
-		if (ADC_read(JOY_DU) >= 220) {		//If joystick is moved UP
-			OLED_clear_arrow(pointerUP, 5);	//Current arrow removed
-			pointerUP--;					//Pointer updated
-			if (pointerUP < 1) {
-				pointerUP = displayed_lines-1;	//To ensure a cyclical pointer
-			}
+	if (ADC_read(JOY_DU) >= 220) {		//If joystick is moved UP
+		OLED_clear_arrow(pointerUP, 5);	//Current arrow removed
+		pointerUP--;					//Pointer updated
+		if (pointerUP < 1) {
+			pointerUP = displayed_lines-1;	//To ensure a cyclical pointer
 		}
-		else if (ADC_read(JOY_DU) <= 30) {	//If joystick is moved DOWN
-			OLED_clear_arrow(pointerUP, 5);
-			pointerUP++;
-			if (pointerUP > displayed_lines) {
-				pointerUP = 1;
-			}
+	}
+	else if (ADC_read(JOY_DU) <= 30) {	//If joystick is moved DOWN
+		OLED_clear_arrow(pointerUP, 5);
+		pointerUP++;
+		if (pointerUP > displayed_lines) {
+			pointerUP = 1;
 		}
-		else if (ADC_read(JOY_LR) >= 220) {	//If joystick is moved RIGHT
-			if (current_menu->children == NULL){
-				return;
-			}
-			else{
-				OLED_home();
-				current_menu = current_menu->children;
-				
-				//fprintf(OLED_p, current_menu->name, 0);
-
-				for (int i = 0; i < pointerUP - 1; i++) {
-					current_menu = current_menu->sibling;
-				}
-				print_menu(current_menu);
-				pointerLR = pointerUP;		//Arrow position determines sub-menu screen
-				pointerUP = 1;				//Arrow placed in the first line again
-				menu_handler();
-			}
+	}
+	else if (ADC_read(JOY_LR) >= 220) {	//If joystick is moved RIGHT
+		if (current_menu->children == NULL){
+			return;
+		}
+		else{
+			OLED_home();
+			current_menu = current_menu->children;
 			
+			//fprintf(OLED_p, current_menu->name, 0);
+			for (int i = 0; i < pointerUP - 1; i++) {
+				current_menu = current_menu->sibling;
+			}
+			print_menu(current_menu);
+			pointerLR = pointerUP;		//Arrow position determines sub-menu screen
+			pointerUP = 1;				//Arrow placed in the first line again
+			menu_handler();
 		}
-		else if (ADC_read(JOY_LR) <= 30) {	//If joystick is moved LEFT
-			if (pointerLR != 0) {			//Only if I am in a child screen
-				OLED_clear_all();
-				pointerLR = 0;				//Go back to the parent screen
-				pointerUP = 1;				//Arrow placed in the first line again
-			}
-			if (current_menu->parent == NULL){
-				return;
-			}
-				
-			else{
-				currsor_io = 0;
-				current_menu = current_menu->parent;
-				print_menu(current_menu);
-				//menu_handler();
-			}
+		
+	}
+	else if (ADC_read(JOY_LR) <= 30) {	//If joystick is moved LEFT
+		if (pointerLR != 0) {			//Only if I am in a child screen
+			OLED_clear_all();
+			pointerLR = 0;				//Go back to the parent screen
+			pointerUP = 1;				//Arrow placed in the first line again
 		}
-	//}
-	_delay_ms(100);
+		if (current_menu->parent == NULL){
+			return;
+		}
+			
+		else{
+			currsor_io = 0;
+			current_menu = current_menu->parent;
+			print_menu(current_menu);
+		}
+	}
+_delay_ms(100);
 }
 
 
@@ -183,20 +184,33 @@ void menu_handler(void){				// Executes menu options
 	} else if (current_menu == &game){
 		// Might want to add submenus for selecting current player name and "play game" under game menu or somewhere else
 		OLED_clear_all();
-		//currsor_io = 1;
 		highscore_create_name(); // Don't want to do this before every game, so maybe move this elsewhere
 		game_node1_play();
-		highscore_save_sram(highscore_get_player_name(), 0); //= Score should get from CAN
-		//uint8_t score = game_node1_play();
-		//highscore_save_sram(highscore_get_player_name(),score);		// Score will be printed in wrong order (backwards) pls fix :)
+		current_menu = current_menu->parent;
+		print_menu(current_menu);
 		//highscore_display_sram();
-		// todo: add play again option (same player name)
 	}
 	else if (current_menu == &highscore){
 		OLED_clear_all();
 		currsor_io = 1;
 		highscore_display_sram();
 	}
+	else if (current_menu == &low){
+		OLED_clear_all();
+		currsor_io = 0;
+		OLED_set_brightness(0x00);
+		current_menu = current_menu->parent;
+		print_menu(current_menu);
+	}
+
+	else if (current_menu == &high){
+		OLED_clear_all();
+		currsor_io = 0;
+		OLED_set_brightness(0xFF);
+		current_menu = current_menu->parent;
+		print_menu(current_menu);
+	}
+
 	
 }
 
