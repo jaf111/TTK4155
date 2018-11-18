@@ -33,13 +33,13 @@ t_menu options;
 t_menu screensaver;
 t_menu songs;
 t_menu paint;
-t_menu player_select;		// Player select
+//t_menu player_select;		// Player select
 t_menu brightness;
 t_menu low;
 t_menu high;
-t_menu song1;
-t_menu song2;
-t_menu song3;
+//t_menu song1;
+//t_menu song2;
+//t_menu song3;
 
 
 void menu_system() {
@@ -166,7 +166,7 @@ void cursor_move() {			//To manage the arrow in the current screen
 			print_menu(current_menu);
 		}
 	}
-_delay_ms(100);
+	_delay_ms(100);
 }
 
 
@@ -175,20 +175,18 @@ void menu_handler(void){				// Executes menu options
 		OLED_clear_all();
 		currsor_io = 1;
 		OLED_screen_Saver();
-
-	} else if (current_menu == &paint){
+	}
+	else if (current_menu == &paint){
 		OLED_clear_all();
 		currsor_io = 1;
 		OLED_paint();
-
-	} else if (current_menu == &game){
-		// Might want to add submenus for selecting current player name and "play game" under game menu or somewhere else
+	} 
+	else if (current_menu == &game){
 		OLED_clear_all();
-		highscore_create_name(); // Don't want to do this before every game, so maybe move this elsewhere
+		highscore_create_name(); 
 		game_node1_play();
 		current_menu = current_menu->parent;
 		print_menu(current_menu);
-		//highscore_display_sram();
 	}
 	else if (current_menu == &highscore){
 		OLED_clear_all();
@@ -202,7 +200,6 @@ void menu_handler(void){				// Executes menu options
 		current_menu = current_menu->parent;
 		print_menu(current_menu);
 	}
-
 	else if (current_menu == &high){
 		OLED_clear_all();
 		currsor_io = 0;
@@ -210,11 +207,14 @@ void menu_handler(void){				// Executes menu options
 		current_menu = current_menu->parent;
 		print_menu(current_menu);
 	}
-
-	
+	else if (current_menu == &songs){
+		play_mario();
+		//play_adventure();		//It is called Adventure time!!
+	}
 }
 
 
+////////////////////////////////////////////////////////////
 
 /*
 void ext_INT0_ON(void) {
@@ -231,52 +231,6 @@ void ext_INT0_OFF(void) {
 
 ISR(EXT_INT0_vect) {	
 	;
-}
-
-*/
-
-
-
-////////////////////////////////////////////////////////////
-
-
-/*
-char* menu_matrix[5][menu_col_max] = {
-	{"---Main Menu---", "Game", "Scores", "Extras", "Options", ""},
-	{"Game", "a", "b", "c", "", ""},
-	{"Scores", "a", "b", "c", "d", ""},
-	{"Hacking", "Screensaver", "b", "c", "d", "e"},
-	{"Options", "Change font", "Brightness", "sub2_opt3", "sub2_opt4", "sub2_opt5"},
-};
-
-
-size_t menu_length = 0;
-
-void print_sub_menu(uint8_t menNum) {
-	menNum = menNum + pointerLR;
-
-	OLED_pos(0, 0);
-	OLED_print(menu_matrix[menNum][0]);
-	
-	//size_t n = sizeof(menu_print[menNum]) / sizeof(char*);
-	//fprintf(UART_p, "Util: %4d \n\r", n);
-
-	menu_length = 0;		//To know how many positions inside the array are really valid
-	for(int j=0; j < menu_col_max; j++) {
-		if (menu_matrix[menNum][j] != "") menu_length++;
-	}
-	//fprintf(UART_p, "Util: %4d \n\r", menu_length);
-
-	for(int i = 1; i < menu_length; i++){
-		OLED_pos(i, 20);
-		OLED_print(menu_matrix[menNum][i]);
-	}
-
-	fprintf(UART_p, "menNum: %4d     ", menNum);
-}
-*/
-
-
-// gdb server (avr)
+}*/
 
 #endif //F_CPU*/

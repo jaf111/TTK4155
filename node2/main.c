@@ -34,7 +34,6 @@ int main() {
 	//JoyX_init = JoyCoord_init(ADC_read(JOY_LR));
 	//JoyY_init = JoyCoord_init(ADC_read(JOY_DU));
 
-	
 	SPI_init();
 	CAN_init();
 	//TWCR |= (1<<TWIE)|(1<<TWINT); // Enable specific interupt
@@ -44,7 +43,6 @@ int main() {
 	motor_init();
 	solenoid_init();
 	IR_init();
-
 
 	//PID initialization
 	/*pidData_t pidData;
@@ -62,10 +60,8 @@ int main() {
 			game_node2_play();
 		}
 
-
 		//----------------------------------------------------------------------------------
 		//TEST FUNCTIONS UNDER
-
 		
 		//fprintf(UART_p, "%d\n\r", motor_encoder_max); 
 		//_delay_ms(500);
@@ -77,9 +73,6 @@ int main() {
 		}
 		_delay_ms(50);*/
 
-		
-
-		
 		/*packet can_joystick = CAN_read();
 		fprintf(UART_p, "JoyX: %4d ", can_joystick.data[0]);
 		fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);

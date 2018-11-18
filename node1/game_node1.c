@@ -11,6 +11,7 @@
 #include "can.h"
 #include "game_node1.h"
 #include "highscore.h"
+#include "play_song.h"
 
 packet start_game = {.id=CAN_START_GAME_ID, .length=0x01, .data={0x06}};
 packet end_game = {.id=CAN_END_GAME_ID, .length=0x00, .data={}};
@@ -34,7 +35,7 @@ uint8_t game_node1_play() {
 	int player_want_to_play = 1;
 	int player_option = 1;
 	
-
+	game_start_song();
 	
 	//OLED_update(); 
 	while(player_want_to_play) {
@@ -47,11 +48,14 @@ uint8_t game_node1_play() {
 			CAN_send(&shoot_ball);		
 		}*/
 
-		if ( BUTTON_L ||CAN_message_recieved()) {	// Can message recieved => game over
+		if (BUTTON_L || CAN_message_recieved()) {	// Can message recieved => game over
 			CAN_send(&end_game);					// Tell node 2 to stop game
 			score = CAN_read();						// Retrieve score
 			highscore_save_sram(highscore_get_player_name(), score.data[0]);
 			OLED_clear_all();
+
+			game_finish_song();
+
 			while(player_option){
 				OLED_update();
 				OLED_pos(0,25);
@@ -65,6 +69,7 @@ uint8_t game_node1_play() {
 				OLED_pos(6,20);
 				OLED_print_all("LEFT=QUIT");
 				_delay_ms(500);
+
 				if(BUTTON_R){
 					OLED_clear_all();
 					OLED_update(); 
@@ -78,6 +83,7 @@ uint8_t game_node1_play() {
 					CAN_send(&start_game);
 					CAN_send(&start_game);
 					player_option = 0;
+					game_start_song();
 				}
 
 				if(BUTTON_L){

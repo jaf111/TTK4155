@@ -41,8 +41,6 @@ int main() {
 	packet can_joystick = {.id = CAN_INPUT_ID, .length = 0x02, .data = {0x01,0x02}};
 	//packet score2 = {.id=CAN_SCORE_ID, .length=0x02, .data={0x02,0x03}};
 
-	//play_song();
-
 	sei();
 
 	timer1_init(256, 60);
@@ -50,6 +48,7 @@ int main() {
 	while(1) {
 		cursor_move();
 		OLED_update(); 
+
 
 		//--------------------------------------------
 		//TEST FUNCTIONS UNDER
