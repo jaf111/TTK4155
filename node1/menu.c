@@ -16,6 +16,7 @@
 #include "adc.h"		//Prototype functions of ADC unit
 #include "can.h"		//Prototype functions of CAN unit
 #include "highscore.h"
+#include "menu_names.h"
 
 uint8_t pointerUP = 1;	//Arrow position (starts in 1, after title)
 uint8_t pointerLR = 0;	//Menu level (menu or sub-menu)
@@ -37,29 +38,34 @@ t_menu paint;
 t_menu brightness;
 t_menu low;
 t_menu high;
-//t_menu song1;
-//t_menu song2;
-//t_menu song3;
 
+char* retrieved_name_buffer[16];			// Buffer for retrieving menu names
+
+void menu_name_retrieve(uint8_t menu_id){	// Loads menu names from PROGMEM into buffer for printing
+
+	strcpy_P(retrieved_name_buffer,(PGM_P)pgm_read_word(&(string_table[menu_id])));
+	
+	return retrieved_name_buffer;
+} 
 
 void menu_system() {
 	//Main menu page create
-	main_menu = (t_menu){"---Main Menu---", NULL, NULL, NULL}; 
-	game = (t_menu){"Game", &main_menu, NULL, NULL};
-	highscore = (t_menu){"Highscore", &main_menu, NULL, NULL};
-	extras = (t_menu){"Extras", &main_menu, NULL, NULL};
-	options = (t_menu){"Options", &main_menu, NULL, NULL};
+	main_menu = (t_menu){main_menu_id, NULL, NULL, NULL}; 		// Menu names are stored in PROGMEM
+	game = (t_menu){game_id, &main_menu, NULL, NULL};			// Use pointers to retireve them
+	highscore = (t_menu){highscore_id, &main_menu, NULL, NULL};
+	extras = (t_menu){extras_id, &main_menu, NULL, NULL};
+	options = (t_menu){options_id, &main_menu, NULL, NULL};
 	//player_select = (t_menu){"Options", &main_menu, NULL, NULL};
 
 	//Extras page create
-	screensaver = (t_menu){"Screensaver", &extras, NULL, NULL};
-	songs = (t_menu){"Songs", &extras, NULL, NULL};
-	paint = (t_menu){"Paint", &extras, NULL, NULL};
+	screensaver = (t_menu){screensaver_id, &extras, NULL, NULL};
+	songs = (t_menu){songs_id, &extras, NULL, NULL};
+	paint = (t_menu){paint_id, &extras, NULL, NULL};
 
 	//Options page create
-	brightness = (t_menu){"Brightness", &options, NULL, NULL};
-	low = (t_menu){"Low", &brightness, NULL, NULL};
-	high = (t_menu){"High", &brightness, NULL, NULL};
+	brightness = (t_menu){brightness_id, &options, NULL, NULL};
+	low = (t_menu){low_id, &brightness, NULL, NULL};
+	high = (t_menu){high_id, &brightness, NULL, NULL};
 
 	//Main menu config
 	main_menu.children = &game;
@@ -80,21 +86,23 @@ void menu_system() {
 	high.sibling = &low;
 	
 	current_menu = &main_menu;
+	menu_name_retrieve(main_menu_id);
 	print_menu(current_menu);
 }
 
 void print_menu(t_menu* menu){
 	OLED_clear_all();       		//Entire screen is cleared
 	displayed_lines = 0;
-
-	fprintf(OLED_p, menu->name, 0);
+	menu_name_retrieve(menu->menu_id);			
+	fprintf(OLED_p, retrieved_name_buffer, 0);
 	uint8_t line = 1;
 
 	menu = menu->children;
 	while(menu && (line < 5)) {
+		menu_name_retrieve(menu->menu_id);
 		displayed_lines++;
 		OLED_pos(line,20);
-		fprintf(OLED_p, menu->name,0);
+		fprintf(OLED_p, retrieved_name_buffer, 0);
 		line++;
 		menu = menu->sibling;
 	}

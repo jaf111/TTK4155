@@ -19,7 +19,7 @@ volatile uint8_t *score_data = (uint8_t *) 0x1C00; 	//OLED Data start address
 
 volatile uint8_t *score_name = (uint8_t *) 0x1C09; 	//OLED Data start address
 
-#define name ( (uint8_t(*)[4]) (score_name) )		// Each name is 4 bytes long
+#define name ( (uint8_t(*)[4]) (score_name) )		// Each name is 4 bytes long.
 
 volatile char* player_name = (uint8_t *) 0x1C30;	// Name of current player (selected by writing it in with create_name())
 
@@ -40,7 +40,7 @@ void highscore_save_sram(char* word, uint8_t score){
 		for (uint8_t j=5; j>placement; j--){
 			score_data[j] = score_data[j-1];
 			for (uint8_t k=0; k<4; k++){
-				name[j][k] = name[j-1][k];
+				name[j][k] = name[j-1][k];		// Name[player ranking][player name character(iterate 0-3)]
 			}
 		}
 		score_data[placement] = score;
