@@ -1,15 +1,41 @@
 #ifndef __MCP2515_H
 #define __MCP2515_H
 
-//****************************** HEADER FUNCTIONS **************************************
-uint8_t MCP2515_init();									//CAN-controller initialization
-void MCP2515_reset();									//CAN-controller reset (registers initialization)
-uint8_t MCP2515_read_status();							//Checks CAN-controller status
-uint8_t MCP2515_read(uint8_t address);					//Reads data from CAN-controller
-void MCP2515_write(uint8_t CANdata, uint8_t address);	//Sends data to CAN-controller
-void MCP2515_request_to_send(uint8_t buffer);			//Sends a request to send data
-void MCP2515_bit_modify(uint8_t address, uint8_t mask, uint8_t data);	//Modifies one (or more) bits of a register
-//**************************************************************************************
+/****************************************************************************
+CAN-controller initialization
+****************************************************************************/
+uint8_t MCP2515_init();
+
+/****************************************************************************
+CAN-controller reset (registers initialization)
+****************************************************************************/
+void MCP2515_reset();
+
+/****************************************************************************
+Checks CAN-controller status
+****************************************************************************/
+uint8_t MCP2515_read_status();
+
+/****************************************************************************
+Reads data from CAN-controller
+****************************************************************************/
+uint8_t MCP2515_read(uint8_t address);
+
+/****************************************************************************
+Sends data to CAN-controller
+****************************************************************************/
+void MCP2515_write(uint8_t CANdata, uint8_t address);
+
+/****************************************************************************
+Sends a request to send data
+****************************************************************************/
+void MCP2515_request_to_send(uint8_t buffer);
+
+/****************************************************************************
+Modifies one (or more) bits of a register
+****************************************************************************/
+void MCP2515_bit_modify(uint8_t address, uint8_t mask, uint8_t data);
+
 
 
 /*mcp2515.h - This file contains constants that are specific to the MCP2515

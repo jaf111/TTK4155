@@ -1,7 +1,14 @@
 #ifndef SERVO_H
 #define SERVO_H
 
-void servo_init(void);	//Servo initialization (connected in PB5)
-void move_servo(uint8_t width);	//Change Servo direction
+/****************************************************************************
+Servo initialization
+****************************************************************************/
+void servo_init(void);
+
+/****************************************************************************
+Change the direction of the Servo
+****************************************************************************/
+void move_servo(uint8_t width);
 	
 #endif // SERVO_H

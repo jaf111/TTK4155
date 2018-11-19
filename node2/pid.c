@@ -1,6 +1,6 @@
-#include <avr/io.h> 	//Specific IO for AVR micro (all registers defined inside)
-#include <stdio.h> 		//Standard constants and functions for C (printf..., scanf...)
-#include <avr/interrupt.h>	//Functions to implement the interruptions
+#include <avr/io.h>
+#include <stdio.h>
+#include <avr/interrupt.h>
 #include "stdint.h"
 
 #include "pid.h"
@@ -23,7 +23,7 @@ int32_t i_term = 0;
 int32_t output = 0;
 int32_t totalError = 0;
 
-void pid_init(pidData_t *pid, uint16_t frequency) {	// Set up PID controller parameters
+void pid_init(pidData_t *pid, uint16_t frequency) {
 	PWM_PE3_init(256, frequency);
 	
 	// Start values for PID controller
@@ -57,7 +57,7 @@ int16_t pid_controller(pidData_t *pid_st, uint8_t setPoint, int16_t processValue
 		}
 		else {
 			p_term = (pid_st->P_Factor + (3/error)) * error;
-		}	//Lars added the "+ (3/error)"
+		}	
 		
 		// Calculate Iterm and limit integral runaway
 		totalError = pid_st->sumError + error;
@@ -78,7 +78,6 @@ int16_t pid_controller(pidData_t *pid_st, uint8_t setPoint, int16_t processValue
 		d_term = pid_st->D_Factor * (pid_st->lastProcessValue - processValue);
 		pid_st->lastProcessValue = processValue;
 
-
 		output = ((p_term + i_term + d_term) / SCALING_FACTOR);
 
 		if(output > 120) {
@@ -93,14 +92,16 @@ int16_t pid_controller(pidData_t *pid_st, uint8_t setPoint, int16_t processValue
 		else if ((output > -55) && (output < -20)) {
 			output = -55;
 		}
+
 		//fprintf(UART_p, ", output %4d", output);
 		//fprintf(UART_p, ", setPoint %4d", setPoint);
 		//fprintf(UART_p, ", processValue %4d \r\n", processValue/BYTE_RANGE);
+
 
 	}
 	return((int16_t)output);
 }
 
 ISR(TIMER3_COMPA_vect) {	
-	int_timer = 1;	//Global variable for internal 8-bits timer interruption
+	int_timer = 1;	//Global variable for internal timer interruption
 }

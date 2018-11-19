@@ -86,12 +86,12 @@ void motor_set_direction(joy_direction_t direction) {	// Take in direction from 
 }
 
 void motor_move(int16_t speed) {
-	if(speed > 0) {
+	if(speed > 0) {			// Speed value for left direction comes positive
 		dir = RIGHT;
 	}
 	else if (speed < 0) {
 		dir = LEFT;
-		speed = -speed;
+		speed = -speed;		// Speed value for left direction comes negative
 	}
 	else {
 		dir = IDLE;

@@ -6,20 +6,20 @@
 #include <avr/io.h> 	//Specific IO for AVR micro (all registers defined inside)
 #include <avr/interrupt.h>	//Functions to implement the interruptions
 
-#include "led.h"		//Prototype functions of GPIO
-#include "uart.h"		//Prototype functions of USART unit
-#include "adc.h"		//Prototype functions of ADC unit
-#include "buttons.h"	//Prototype functions of buttons (USB board) unit
-#include "spi.h"		//Prototype functions of SPI communication
-#include "MCP2515.h"	//Prototype functions of CAN controller unit
-#include "can.h"		//Prototype functions of CAN communication
-#include "PWM.h"		//Prototype functions of PWM output
-#include "servo.h"		//Prototype functions of Servo motor
-#include "TWI_Master.h" //Prototype functions of TWI controller
-#include "motor.h"      //Prototype functions of motor
-#include "pid.h"		//Prototype functions of PID control 2
-#include "solenoid.h"	//Prototype functions of solenoid
-#include "IR.h"			//Prototype functions of IR sensor
+#include "led.h"
+#include "uart.h"
+#include "adc.h"
+#include "buttons.h"
+#include "spi.h"
+#include "MCP2515.h"
+#include "can.h"
+#include "PWM.h"
+#include "servo.h"
+#include "TWI_Master.h"
+#include "motor.h"
+#include "pid.h"
+#include "solenoid.h"
+#include "IR.h"
 #include "game_node2.h"
 
 int main() {
@@ -28,7 +28,6 @@ int main() {
 	USART_init(MYUBRR);
 	//USART_transmit(USART_receive());	//To make printf() working in USART if not working check usart_Receive() ->while loop
 	fprintf(UART_p, "INIT_N2\n\r", 0);
-	//buzzer_init();
 
 	SPI_init();
 	CAN_init();
@@ -39,10 +38,6 @@ int main() {
 	solenoid_init();
 	IR_init();
 
-	//PID initialization
-	/*pidData_t pidData;
-	pid_init(&pidData, 20);	*/	//PID controller with frequency of 1000Hz
-
 	packet can_joystick = {.id=0x12, .length=0x02, .data={0x01,0x02}};
 
 	sei();			// Enable all interrupts
@@ -50,10 +45,16 @@ int main() {
 	while(1) {
 		
 		packet CAN_recieved = CAN_read();
+
 		//fprintf(UART_p, "%d\r\n", CAN_recieved.id);
 		fprintf(UART_p, "IR: %d \r\n", ADC_read());
+
+		fprintf(UART_p, "%d\r\n", CAN_recieved.id);
+
 		_delay_ms(200);
+
 		if (CAN_recieved.id == CAN_START_GAME_ID) {		// Can also maybe be moved into an interrupt
+
 			game_node2_play();
 		}
 
@@ -85,13 +86,11 @@ int main() {
 		uint8_t setpoint = can_joystick.data[0];
 		motor_move(pid_controller(&pidData, setpoint, motor_pos));*/
 	}
-	
 	return 0;
 }
 #endif
 
 /* 	dmesg --follow
 	lsusb
-
 	ttyACM0 = USB
 */
