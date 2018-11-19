@@ -30,15 +30,10 @@ int main() {
 	fprintf(UART_p, "INIT_N2\n\r", 0);
 	//buzzer_init();
 
-	//Stand-by joystick positions read (for the offset)
-	//JoyX_init = JoyCoord_init(ADC_read(JOY_LR));
-	//JoyY_init = JoyCoord_init(ADC_read(JOY_DU));
-
 	SPI_init();
 	CAN_init();
-	//TWCR |= (1<<TWIE)|(1<<TWINT); // Enable specific interupt
 	TWI_master_init();
-	servo_init();	//(connected in PB5)
+	servo_init();			//(connected in PB5)
 	ADC_init();
 	motor_init();
 	solenoid_init();
@@ -51,17 +46,26 @@ int main() {
 	packet can_joystick = {.id=0x12, .length=0x02, .data={0x01,0x02}};
 
 	sei();			// Enable all interrupts
+
 	while(1) {
+		
 		packet CAN_recieved = CAN_read();
-		fprintf(UART_p, "%d\r\n", CAN_recieved.id);
-		_delay_ms(100);
+		//fprintf(UART_p, "%d\r\n", CAN_recieved.id);
+		fprintf(UART_p, "IR: %d \r\n", ADC_read());
+		_delay_ms(200);
 		if (CAN_recieved.id == CAN_START_GAME_ID) {		// Can also maybe be moved into an interrupt
 			game_node2_play();
 		}
 
+
+
 		//----------------------------------------------------------------------------------
 		//TEST FUNCTIONS UNDER
 		
+
+		//game_can_test();
+		//fprintf(UART_p, "working \r\n", 0);
+
 		//fprintf(UART_p, "%d\n\r", motor_encoder_max); 
 		//_delay_ms(500);
 		

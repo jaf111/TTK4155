@@ -13,7 +13,6 @@ void CAN_init() {
 	MCP2515_init();
 	
 	//2nd element (mask) defines which numbers are allowed to change
-	//MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK);	//Set in loopback mode
 	MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_NORMAL);
 	MCP2515_bit_modify(MCP_CANINTE, 0b00000001, 0xFF);				//Enabling receive buffer interrupt
 	MCP2515_bit_modify(MCP_RXB0CTRL, 0b01100000, 0xFF);				//Disables all filters (security)
@@ -53,7 +52,6 @@ packet CAN_read() {
 		//fprintf(UART_p, "MCP_RXB0D %4x: %4x \r\n", i, MCP2515_read(MCP_RXB0D0+i));
 	}
 	MCP2515_bit_modify(MCP_CANINTF, MCP_RX0IF, 0x00);
-	//fprintf(UART_p, "\r\n \r\n", 0);
 	
 	return message;
 }

@@ -60,7 +60,6 @@ packet CAN_read() {
 		//fprintf(UART_p, "MCP_RXB0D %4x: %4x \r\n", i, MCP2515_read(MCP_RXB0D0+i));
 	}
 	MCP2515_bit_modify(MCP_CANINTF, MCP_RX0IF, 0x00);
-	//fprintf(UART_p, "\r\n \r\n", 0);
 	
 	return message;
 }
@@ -80,5 +79,5 @@ uint8_t CAN_message_recieved(){
 
 ISR(INT1_vect) {		//Interrupt function for INT1
 	recieve_flag = 1;
-	//fprintf(UART_p, "INT1_CAN\r\n", 0);
+	fprintf(UART_p, "INT1_CAN\r\n", 0);
 }

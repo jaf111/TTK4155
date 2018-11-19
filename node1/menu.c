@@ -34,7 +34,6 @@ t_menu options;
 t_menu screensaver;
 t_menu songs;
 t_menu paint;
-//t_menu player_select;		// Player select
 t_menu brightness;
 t_menu low;
 t_menu high;
@@ -91,7 +90,7 @@ void menu_system() {
 }
 
 void print_menu(t_menu* menu){
-	OLED_clear_all();       		//Entire screen is cleared
+	OLED_clear_all();       		
 	displayed_lines = 0;
 	menu_name_retrieve(menu->menu_id);			
 	fprintf(OLED_p, retrieved_name_buffer, 0);
@@ -119,38 +118,37 @@ uint8_t JoyDU_now = 0;
 uint8_t JoyLR_last = 0;
 uint8_t JoyLR_now = 0;
 
-void cursor_move() {			//To manage the arrow in the current screen
-	OLED_pos(pointerUP, 5);		//Pointer located on left side (column 5) of current option
+void cursor_move() {			
+	OLED_pos(pointerUP, 5);				//currsor_io = 1/0 ->arrow off/on
 	if (currsor_io == 0){
 		OLED_print_arrow(pointerUP, 5);	
 	}
 
-	if (ADC_read(JOY_DU) >= 220) {		//If joystick is moved UP
-		OLED_clear_arrow(pointerUP, 5);	//Current arrow removed
-		pointerUP--;					//Pointer updated
+	if (ADC_read(JOY_DU) >= 240) {		//If joystick is moved UP
+		OLED_clear_arrow(pointerUP, 5);	
+		pointerUP--;					
 		if (pointerUP < 1) {
-			pointerUP = displayed_lines-1;	//To ensure a cyclical pointer
+			pointerUP = displayed_lines-1;	
 		}
 	}
-	else if (ADC_read(JOY_DU) <= 30) {	//If joystick is moved DOWN
+	else if (ADC_read(JOY_DU) <= 10) {	//If joystick is moved DOWN
 		OLED_clear_arrow(pointerUP, 5);
 		pointerUP++;
 		if (pointerUP > displayed_lines) {
 			pointerUP = 1;
 		}
 	}
-	else if (ADC_read(JOY_LR) >= 220) {	//If joystick is moved RIGHT
+	else if (ADC_read(JOY_LR) >= 240) {	//If joystick is moved RIGHT
 		if (current_menu->children == NULL){
 			return;
 		}
 		else{
 			OLED_home();
 			current_menu = current_menu->children;
-			
-			//fprintf(OLED_p, current_menu->name, 0);
 			for (int i = 0; i < pointerUP - 1; i++) {
 				current_menu = current_menu->sibling;
 			}
+			
 			print_menu(current_menu);
 			pointerLR = pointerUP;		//Arrow position determines sub-menu screen
 			pointerUP = 1;				//Arrow placed in the first line again
@@ -158,12 +156,13 @@ void cursor_move() {			//To manage the arrow in the current screen
 		}
 		
 	}
-	else if (ADC_read(JOY_LR) <= 30) {	//If joystick is moved LEFT
+	else if (ADC_read(JOY_LR) <= 10) {	//If joystick is moved LEFT
 		if (pointerLR != 0) {			//Only if I am in a child screen
 			OLED_clear_all();
 			pointerLR = 0;				//Go back to the parent screen
 			pointerUP = 1;				//Arrow placed in the first line again
 		}
+		
 		if (current_menu->parent == NULL){
 			return;
 		}
@@ -178,7 +177,7 @@ void cursor_move() {			//To manage the arrow in the current screen
 }
 
 
-void menu_handler(void){				// Executes menu options
+void menu_handler(void){				
 	if(current_menu == &screensaver){
 		OLED_clear_all();
 		currsor_io = 1;
@@ -191,7 +190,13 @@ void menu_handler(void){				// Executes menu options
 	} 
 	else if (current_menu == &game){
 		OLED_clear_all();
-		highscore_create_name(); 
+		highscore_create_name();
+		if((ADC_read(JOY_LR) <= 60)){
+			//current_menu = current_menu->parent;
+			//print_menu(current_menu);
+			currsor_io = 1;
+			return;
+		} 
 		game_node1_play();
 		current_menu = current_menu->parent;
 		print_menu(current_menu);
@@ -216,8 +221,11 @@ void menu_handler(void){				// Executes menu options
 		print_menu(current_menu);
 	}
 	else if (current_menu == &songs){
-		play_mario();
-		//play_adventure();		//It is called Adventure time!!
+		//play_mario();			// mario song
+		play_adventure();		//It is called Adventure time!!
+		currsor_io = 0;
+		current_menu = current_menu->parent;
+		print_menu(current_menu);
 	}
 }
 

@@ -151,7 +151,6 @@ void buttons_send_CAN_message(){
 	can_joystick.data[3] = slider_pos.right;
 	can_joystick.data[4] = BUTTON_L;
 	can_joystick.data[5] = BUTTON_R;
-	fprintf(UART_p,"JoyX:%d \r\n",can_joystick.data[0]);
 
 	CAN_send(&can_joystick);
 }

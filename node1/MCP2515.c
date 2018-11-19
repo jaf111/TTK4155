@@ -27,11 +27,11 @@ uint8_t MCP2515_init() {	//CAN-controller initialization
 	return 0;
 }
 
-void MCP2515_reset() {			//CAN-controller reset (registers initialization)
-	SPI_select(); 	//Select CAN-controller (~CS=0)
-	SPI_write(MCP_RESET); 		//Re-initialize all internal registers
-	SPI_deselect(); 	//Deselect CAN-controller (~CS=1)
-	_delay_ms(10);     //Delay for synchronization between ATmega 2560 and 162 (the first one is far faster)
+void MCP2515_reset() {		//CAN-controller reset (registers initialization)
+	SPI_select(); 			//Select CAN-controller (~CS=0)
+	SPI_write(MCP_RESET); 	//Re-initialize all internal registers
+	SPI_deselect(); 		//Deselect CAN-controller (~CS=1)
+	_delay_ms(10);   		//Delay for synchronization between ATmega 2560 and 162 (the first one is far faster)
 }
 
 uint8_t MCP2515_read_status() {	//Checks CAN-controller status

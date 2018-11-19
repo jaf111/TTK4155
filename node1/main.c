@@ -39,17 +39,22 @@ int main() {
 	fprintf(UART_p, "init\n\r", 0);
 
 	//packet can_joystick = {.id = CAN_INPUT_ID, .length = 0x02, .data = {0x01,0x02}};
+	//packet score;
 
 	sei();
-
-	timer1_init(256, 60);
 
 	while(1) {
 		cursor_move();
 		OLED_update();
+
+
 		//--------------------------------------------
 		//TEST FUNCTIONS UNDER
-	
+
+		//score = CAN_read();	
+		//fprintf(UART_p, "score: %d\r\n", score.data[0]);
+
+
 		//all code to make highscore work (some problems with memory and buttons?)
 		/*
 		highscore_t highscore;

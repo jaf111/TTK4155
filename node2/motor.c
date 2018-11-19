@@ -109,7 +109,6 @@ void motor_set_speed(uint8_t speed){
 	message_buffer[0] = adr;		// First call consists of TWI slave address
 	message_buffer[1] = cmd;		// First byte is write command
 	message_buffer[2] = speed;		// Send desired motor speed to DAC
-	_delay_ms(100);
 	TWI_start_transceiver_with_data(message_buffer, 3);	// start transmission
 }
 

@@ -1,5 +1,6 @@
 #include <stdio.h>		//Standard constants and functions for C (printf..., scanf...) 
 #include <avr/io.h> 	//Specific IO for AVR micro (all registers defined inside)
+#include <util/delay.h>	//Functions for busy-wait delay loops
 
 #include "IR.h"
 #include "adc.h"
@@ -11,16 +12,20 @@ uint16_t IR_sum = 0;
 uint8_t IR_init_val = 0;
 
 void IR_init(){
+	_delay_ms(100);
 	for (uint8_t i = 0; i < n_IR_readings; i++){
 		IR_readings[i] = ADC_read();		// Fill readings with IR initial values
+		_delay_ms(100);
 		IR_sum += IR_readings[i];			// Initialize sum
 	}
-	IR_init_val = IR_read_filtered();
+	IR_init_val = IR_readings[3];
+	fprintf(UART_p, "IR init: %d \r\n", IR_init_val);
 }
 
 uint8_t IR_triggered(){
 	uint8_t IR_val = IR_read_filtered();
-	if (IR_val < (IR_init_val-50)){				// Cutoff for deciding if player missed the ball
+	fprintf(UART_p, "IR avg: %d \r\n", IR_val);
+	if (IR_val < (60)){				// Cutoff for deciding if player missed the ball
 		return 1;						
 	}
 	return 0;						

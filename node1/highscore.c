@@ -81,13 +81,14 @@ void highscore_display_sram(){
 void highscore_create_name() {
 	OLED_clear_all();
 	OLED_update(); 
-	//clear_name_in_sram();
-	int char_selector = 0;
+	clear_name_in_sram();
+	char_selector = 0;
+	array_pos = 0;
 	OLED_pos(3,0);
 	OLED_print_all("Name: ");
 	_delay_ms(500);
 	
-	while(!(ADC_read(JOY_LR) >= 220)){
+	while(!(ADC_read(JOY_LR) >= 240 || ADC_read(JOY_LR) <= 10) ){  
 		OLED_update(); 
 		OLED_pos(3,40);
 		OLED_print_all(player_name);
@@ -118,7 +119,7 @@ char* highscore_get_player_name(){
 char letter_select(){
 	char letter = 'A'; //starts select on A
 	
-	if (ADC_read(JOY_DU) >= 220) { //moved UP
+	if (ADC_read(JOY_DU) >= 240) { //moved UP
 		if (char_selector <= 0){
 			char_selector = 25;
 			return(letter + char_selector);
@@ -126,7 +127,7 @@ char letter_select(){
 		char_selector -= 1;
 	}
 	
-	if (ADC_read(JOY_DU) <= 30) { //moved DOWN
+	if (ADC_read(JOY_DU) <= 10) { //moved DOWN
 		if (char_selector >= 25){
 			char_selector = 0;
 			return(letter + char_selector);
@@ -139,7 +140,8 @@ char letter_select(){
 void clear_name_in_sram(){
 	for(int i = 0; i < 4; i++){
 		player_name[i] = ' ';	
-	}	
+	}
+
 }
 
 #endif //F_CPU

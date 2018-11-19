@@ -43,7 +43,6 @@ int16_t pid_controller(pidData_t *pid_st, uint8_t setPoint, int16_t processValue
 		int_timer = 0;
 
 		error = setPoint - processValue/BYTE_RANGE;	//Both values between 0 and 255
-		fprintf(UART_p, "error %4d", error);
 
 		if((error < 10) && (error > -10)) {
 			pid_st->sumError = 0;
