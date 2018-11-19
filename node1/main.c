@@ -27,7 +27,7 @@ int main() {
 
 	cli();
 
-	USART_Init(MYUBRR);
+	USART_init(MYUBRR);
 	SRAM_init();
 	ADC_init();
 	buttons_init();

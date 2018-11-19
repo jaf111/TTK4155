@@ -8,7 +8,7 @@
 #include "uart.h"
 #include "PWM.h"
 
-uint8_t PWM_setPrescaler(uint16_t presc_value) {	//To set the prescaler in the PWM output
+uint8_t PWM_set_prescaler(uint16_t presc_value) {	//To set the prescaler in the PWM output
 	uint8_t pres_config = 0;
 	switch(presc_value) {			//As all CSxx occupy the same position, one can just use the same all the time
 		case 1:		pres_config = (1<<CS00) | (0<<CS01) | (0<<CS02);	//PWM's clock activated, with prescaler N=1
@@ -30,7 +30,7 @@ void PWM_PB5_init(uint16_t prescaler, uint16_t frequency) {		//PWM in timer 1, c
 	TCCR1A |= (0<<WGM10) | (1<<WGM11);	 //Configure fast PWM (mode 14), with value TOP in ICR1
 	TCCR1B |= (1<<WGM12) | (1<<WGM13);
 
-	TCCR1B |= PWM_setPrescaler(prescaler);	//Prescaler is set in the PWM output
+	TCCR1B |= PWM_set_prescaler(prescaler);	//Prescaler is set in the PWM output
 
 	TCCR1A |= (0<<COM1A0) | (1<<COM1A1);	//PWM output in channel A (called OC1A) enabled. it clears on Compare Match, and sets at BOTTOM (non-inverting mode)
 	DDRB |= (1<<DDB5);		//OC1A is physically connected in Port B, Pin 5 (PB5), so such pin (bit DDB5, register DDRB) is defined as output (1=output, 0=input)
@@ -45,7 +45,7 @@ void PWM_PE3_init(uint16_t prescaler, uint16_t frequency) {		//PWM in timer 3, c
 	TCCR3A |= (0<<WGM30) | (1<<WGM31);	 //Configure fast PWM (mode 14), with value TOP in ICR3
 	TCCR3B |= (1<<WGM32) | (1<<WGM33);
 	
-	TCCR3B |= PWM_setPrescaler(prescaler);	//Prescaler is set in the PWM output
+	TCCR3B |= PWM_set_prescaler(prescaler);	//Prescaler is set in the PWM output
 
 	TCCR3A |= (0<<COM3A0) | (1<<COM3A1);	//PWM output in channel A (called OC3A) enabled. it clears on Compare Match, and sets at BOTTOM (non-inverting mode)
 	DDRE |= (1<<DDE3);	//OC3A is physically connected in Port E, Pin 3 (PB3), so such pin (bit DDB3, register DDRE) is defined as output (1=output, 0=input)
@@ -62,7 +62,7 @@ void PWM_PL3_init(uint16_t prescaler, uint16_t frequency) {		//PWM in timer 5, c
 	TCCR5A |= (0<<WGM50) | (1<<WGM51);	 //Configure fast PWM (mode 14), with value TOP in ICR5
 	TCCR5B |= (1<<WGM52) | (1<<WGM53);
 	
-	TCCR5B |= PWM_setPrescaler(prescaler);	//Prescaler is set in the PWM output
+	TCCR5B |= PWM_set_prescaler(prescaler);	//Prescaler is set in the PWM output
 
 	TCCR5A |= (0<<COM5A0) | (1<<COM5A1);	//PWM output in channel A (called OC5A) enabled. it clears on Compare Match, and sets at BOTTOM (non-inverting mode)
 	//DDRL |= (1<<DDL3);	//OC3A is physically connected in Port L, Pin 3 (PL3), so such pin (bit DDL3, register DDRL) is defined as output (1=output, 0=input)
@@ -75,11 +75,11 @@ void PWM_PL3_init(uint16_t prescaler, uint16_t frequency) {		//PWM in timer 5, c
 	TIMSK5 |= (1<<OCIE5A);
 }
 
-void Timer_PB7_init(uint16_t prescaler, uint16_t frequency) {		//(internal) Timer of 8 bits, in PB7 [D13 in Arduino]
+void timer_PB7_init(uint16_t prescaler, uint16_t frequency) {		//(internal) Timer of 8 bits, in PB7 [D13 in Arduino]
 	/*TCCR0A |= (1<<WGM00) | (1<<WGM01);	 //Configure Clear Timer on Compare Match (CTC), mode 2. TOP value is OCR0A
 	TCCR0B |= (1<<WGM02);
 	
-	TCCR0B |= PWM_setPrescaler(prescaler);	//Prescaler is set in the PWM output
+	TCCR0B |= PWM_set_prescaler(prescaler);	//Prescaler is set in the PWM output
 
 	TCCR0A |= (0<<COM0A0) | (1<<COM0A1);	//Clear OC0A on Compare Match
 
@@ -94,7 +94,7 @@ void Timer_PB7_init(uint16_t prescaler, uint16_t frequency) {		//(internal) Time
 */
 }
 
-void Set_PWMwidth(char* ch_PWM, uint8_t PWM_width) {
+void set_PWMwidth(char* ch_PWM, uint8_t PWM_width) {
 	if (ch_PWM == "PB5") {OCR1A = PWM_width;}
 	else if (ch_PWM == "PE3") {OCR3A = PWM_width;}
 }

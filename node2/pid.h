@@ -18,7 +18,7 @@ typedef struct {
 	int32_t maxSumError;
 } pidData_t;
 
-void pid_Init(pidData_t *pid, uint16_t frequency);
-int16_t pid_Controller(pidData_t *pid_st, uint8_t setPoint, int16_t processValue);
+void pid_init(pidData_t *pid, uint16_t frequency);
+int16_t pid_controller(pidData_t *pid_st, uint8_t setPoint, int16_t processValue);
 
 #endif //PID_H

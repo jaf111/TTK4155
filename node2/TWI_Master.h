@@ -50,12 +50,12 @@ extern union TWI_statusReg TWI_statusReg;
 /****************************************************************************
   Function definitions
 ****************************************************************************/
-void TWI_Master_Initialise( void );
-unsigned char TWI_Transceiver_Busy( void );
-unsigned char TWI_Get_State_Info( void );
-void TWI_Start_Transceiver_With_Data( unsigned char * , unsigned char );
-void TWI_Start_Transceiver( void );
-unsigned char TWI_Get_Data_From_Transceiver( unsigned char *, unsigned char );
+void TWI_master_init( void );
+unsigned char TWI_transceiver_busy( void );
+unsigned char TWI_get_state_info( void );
+void TWI_start_transceiver_with_data( unsigned char * , unsigned char );
+void TWI_start_transceiver( void );
+unsigned char TWI_get_data_from_transceiver( unsigned char *, unsigned char );
 
 /****************************************************************************
   Bit and byte definitions

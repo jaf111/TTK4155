@@ -34,11 +34,11 @@ ISR(TIMER5_COMPA_vect){
 
 void game_node2_init() {
 	time_score = 0;
-	/*Servo_init();
+	/*servo_init();
 	motor_init();
 	solenoid_init();*/
 
-	pid_Init(&pidData2, 500);//PID controller with frequency of 20Hz
+	pid_init(&pidData2, 500);//PID controller with frequency of 20Hz
 	motor_calibr_encoder();
 	
 	PWM_PL3_init(256, 1);	//Interrupt of 1Hz (1s) to count the score time
@@ -72,8 +72,8 @@ void game_node2_play() {
 
 		motor_pos = -motor_read_encoder();
 		setpoint = sliders_recieved.right;
-		motor_move(pid_Controller(&pidData2, setpoint, motor_pos));
-		Move_Servo(joy_recieved_coords.XX);
+		motor_move(pid_controller(&pidData2, setpoint, motor_pos));
+		move_servo(joy_recieved_coords.XX);
 		if(buttons_recieved.right != 0) {
 			solenoid_ON();
 		} 

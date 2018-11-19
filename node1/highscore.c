@@ -32,7 +32,6 @@ void highscore_sram_init(){
 	for (uint8_t j=0; j <50; j++){
 		score_name[j] = 0x00;
 	}
-
 }
 
 void highscore_save_sram(char* word, uint8_t score){
@@ -109,9 +108,7 @@ void highscore_create_name() {
 				array_pos = 0;
 			}
 		}
-		
-	}	
-	
+	}
 }
 
 char* highscore_get_player_name(){
@@ -142,9 +139,7 @@ char letter_select(){
 void clear_name_in_sram(){
 	for(int i = 0; i < 4; i++){
 		player_name[i] = ' ';	
-	}
-	
+	}	
 }
-
 
 #endif //F_CPU

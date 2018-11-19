@@ -23,7 +23,7 @@ int32_t i_term = 0;
 int32_t output = 0;
 int32_t totalError = 0;
 
-void pid_Init(pidData_t *pid, uint16_t frequency) {	// Set up PID controller parameters
+void pid_init(pidData_t *pid, uint16_t frequency) {	// Set up PID controller parameters
 	PWM_PE3_init(256, frequency);
 	
 	// Start values for PID controller
@@ -38,7 +38,7 @@ void pid_Init(pidData_t *pid, uint16_t frequency) {	// Set up PID controller par
 	pid->maxSumError = MAX_I_TERM / (pid->I_Factor + 1);
 }
 
-int16_t pid_Controller(pidData_t *pid_st, uint8_t setPoint, int16_t processValue) {
+int16_t pid_controller(pidData_t *pid_st, uint8_t setPoint, int16_t processValue) {
 	if (int_timer == 1) {
 		int_timer = 0;
 

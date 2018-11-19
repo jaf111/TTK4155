@@ -25,8 +25,8 @@
 int main() {
 	cli();
 
-	USART_Init(MYUBRR);
-	//USART_Transmit(USART_Receive());	//To make printf() working in USART if not working check usart_Receive() ->while loop
+	USART_init(MYUBRR);
+	//USART_transmit(USART_receive());	//To make printf() working in USART if not working check usart_Receive() ->while loop
 	fprintf(UART_p, "INIT_N2\n\r", 0);
 	//buzzer_init();
 
@@ -37,8 +37,8 @@ int main() {
 	SPI_init();
 	CAN_init();
 	//TWCR |= (1<<TWIE)|(1<<TWINT); // Enable specific interupt
-	TWI_Master_Initialise();
-	Servo_init();	//(connected in PB5)
+	TWI_master_init();
+	servo_init();	//(connected in PB5)
 	ADC_init();
 	motor_init();
 	solenoid_init();
@@ -46,7 +46,7 @@ int main() {
 
 	//PID initialization
 	/*pidData_t pidData;
-	pid_Init(&pidData, 20);	*/	//PID controller with frequency of 1000Hz
+	pid_init(&pidData, 20);	*/	//PID controller with frequency of 1000Hz
 
 	packet can_joystick = {.id=0x12, .length=0x02, .data={0x01,0x02}};
 
@@ -77,10 +77,10 @@ int main() {
 		fprintf(UART_p, "JoyX: %4d ", can_joystick.data[0]);
 		fprintf(UART_p, "JoyY: %4d \r\n", can_joystick.data[1]);
 		fprintf(UART_p, "IR: %4d \r\n", ADC_read());
-		Move_Servo(can_joystick.data[0]);	//Change Servo direction
+		move_servo(can_joystick.data[0]);	//Change Servo direction
 		int16_t motor_pos = -motor_read_encoder();
 		uint8_t setpoint = can_joystick.data[0];
-		motor_move(pid_Controller(&pidData, setpoint, motor_pos));*/
+		motor_move(pid_controller(&pidData, setpoint, motor_pos));*/
 	}
 	
 	return 0;
