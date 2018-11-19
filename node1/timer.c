@@ -44,11 +44,4 @@ void timer1_init(uint16_t prescaler, uint16_t frequency) {		//PWM in timer 5, ch
 	TIMSK |= (1<<OCIE1A);
 }
 
-//ISR checks the interruptions vector once the previously defined interruption is executed.
-//If a function for it is not defined, the AVR would restart the system automatically
-ISR(TIMER1_COMPA_vect) {	
-	int_tim1 = 1;		//Global variable for internal 8-bits timer interruption
-	//fprintf(UART_p, "EE \r\n", 0);
-}
-
 #endif

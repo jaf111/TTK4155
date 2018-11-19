@@ -54,9 +54,8 @@ int main() {
 	while(1) {
 		packet CAN_recieved = CAN_read();
 		fprintf(UART_p, "%d\r\n", CAN_recieved.id);
-		_delay_ms(200);
+		_delay_ms(100);
 		if (CAN_recieved.id == CAN_START_GAME_ID) {		// Can also maybe be moved into an interrupt
-			//fprintf(UART_p, "ENTER", 0);
 			game_node2_play();
 		}
 

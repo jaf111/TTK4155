@@ -94,9 +94,9 @@ int16_t pid_controller(pidData_t *pid_st, uint8_t setPoint, int16_t processValue
 		else if ((output > -55) && (output < -20)) {
 			output = -55;
 		}
-		fprintf(UART_p, ", output %4d", output);
-		fprintf(UART_p, ", setPoint %4d", setPoint);
-		fprintf(UART_p, ", processValue %4d \r\n", processValue/BYTE_RANGE);
+		//fprintf(UART_p, ", output %4d", output);
+		//fprintf(UART_p, ", setPoint %4d", setPoint);
+		//fprintf(UART_p, ", processValue %4d \r\n", processValue/BYTE_RANGE);
 
 	}
 	return((int16_t)output);

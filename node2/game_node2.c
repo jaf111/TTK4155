@@ -69,20 +69,21 @@ void game_node2_play() {
 			buttons_recieved.right = CAN_recieved.data[5];
 			fprintf(UART_p, "Joystick:%d \r\n", CAN_recieved.data[0]);
 		}
-
+		
 		motor_pos = -motor_read_encoder();
-		setpoint = sliders_recieved.right;
-		motor_move(pid_controller(&pidData2, setpoint, motor_pos));
-		move_servo(joy_recieved_coords.XX);
-		if(buttons_recieved.right != 0) {
-			solenoid_ON();
+		//setpoint = sliders_recieved.right;
+		//motor_move(pid_controller(&pidData2, setpoint, motor_pos));
+		//move_servo(joy_recieved_coords.XX);
+		if (buttons_recieved.right != 0) {
+			//solenoid_ON();
+			solenoid_push();
 		} 
 		
 		else {
 			solenoid_OFF();
 		}
 		
-		if (game_node2_over() || (CAN_recieved.id == CAN_END_GAME_ID)){		// End game if node 1 sends message telling node 2 to stop
+		if (/*game_node2_over || */(CAN_recieved.id == CAN_END_GAME_ID)){		// End game if node 1 sends message telling node 2 to stop
 			send_score.data[0] = time_score;  //time_score;
 			CAN_send(&send_score);
 			bool_game_play = 0;

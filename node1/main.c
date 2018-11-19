@@ -22,8 +22,8 @@
 #include "game_node1.h"
 
 int main() {
-	//led_init();		
-	buzzer_init();		//Buzzer initialization
+	// Initialization
+	buzzer_init();
 
 	cli();
 
@@ -38,8 +38,7 @@ int main() {
 	CAN_init();
 	fprintf(UART_p, "init\n\r", 0);
 
-	packet can_joystick = {.id = CAN_INPUT_ID, .length = 0x02, .data = {0x01,0x02}};
-	//packet score2 = {.id=CAN_SCORE_ID, .length=0x02, .data={0x02,0x03}};
+	//packet can_joystick = {.id = CAN_INPUT_ID, .length = 0x02, .data = {0x01,0x02}};
 
 	sei();
 
@@ -47,15 +46,10 @@ int main() {
 
 	while(1) {
 		cursor_move();
-		OLED_update(); 
-
-
+		OLED_update();
 		//--------------------------------------------
 		//TEST FUNCTIONS UNDER
 	
-
-
-
 		//all code to make highscore work (some problems with memory and buttons?)
 		/*
 		highscore_t highscore;
