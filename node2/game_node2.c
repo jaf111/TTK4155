@@ -1,24 +1,23 @@
-#include <stdio.h>		
-#include <avr/io.h> 	
+#include <stdio.h>
+#include <avr/io.h>
 #include <avr/interrupt.h>
 
-#include "uart.h"		
-#include "buttons.h"	
-#include "IR.h"	
-#include "can.h"		
-#include "servo.h"		
-#include "motor.h"	
+#include "uart.h"
+#include "buttons.h"
+#include "IR.h"
+#include "can.h"
+#include "servo.h"
+#include "motor.h"
 #include "solenoid.h"
 #include "PWM.h"
 #include "pid.h"
 #include "game_node2.h"
 
-uint8_t time_score = 0;
 int bool_game_play = 1;
-int16_t motor_pos = 0;
+uint8_t time_score = 0;
 uint8_t setpoint = 0;
+int16_t motor_pos = 0;
 
-//uint8_t shoot = 0;
 joy_position_t joy_recieved_coords;
 slider_position_t sliders_recieved;
 buttons_value_t buttons_recieved;
@@ -34,14 +33,11 @@ ISR(TIMER5_COMPA_vect){
 
 void game_node2_init() {
 	time_score = 0;
-	/*servo_init();
-	motor_init();
-	solenoid_init();*/
 
-	pid_init(&pidData2, 500);//PID controller with frequency of 20Hz
+	pid_init(&pidData2, 500);//PID controller with frequency 500Hz
 	motor_calibr_encoder();
 	
-	PWM_PL3_init(256, 1);	//Interrupt of 1Hz (1s) to count the score time
+	PWM_PL3_init(256, 1);	//Timer Interrupt of 1Hz (1s) to count score time
 }
 
 uint8_t game_node2_over() {
@@ -76,8 +72,7 @@ void game_node2_play() {
 		move_servo(joy_recieved_coords.XX);
 		if(buttons_recieved.right != 0) {
 			solenoid_ON();
-		} 
-		
+		}
 		else {
 			solenoid_OFF();
 		}

@@ -22,29 +22,28 @@ uint16_t joyY_sum = 0;
 
 
 void buttons_init(void) {
-	DDRB |= (1 << DDB0);	//Enable pin 0 (PB0) of port B (register DDRB)	(BUTTONS)
-	DDRB |= (1 << DDB1);	//Enable pin 1 (PB1) of port B (register DDRB)
+	DDRB |= (1 << DDB0);	//Pin PB0 enabled as output	(BUTTONS)
+	DDRB |= (1 << DDB1);	//Pin PB1 enabled as output
 
 	for (uint8_t i = 0; i < n_readings; i++){
-		joyX_readings[i] = ADC_read(JOY_LR);		//Fetch initial joystick positions
+		joyX_readings[i] = ADC_read(JOY_LR);	//Fetch initial joystick positions
 		joyY_readings[i] = ADC_read(JOY_DU);
 		joyX_sum += joyX_readings[i];
 		joyY_sum += joyY_readings[i];
 	}
-
 	joy_coord.XX_init = joyX_readings[0];		//Update initial joystick positions
 	joy_coord.YY_init = joyY_readings[0];
 }
 
 
-void buttons_update_joy_coord() {				//Update joystick coordinates with the average of the 4 previous values
-	joyX_sum -= joyX_readings[index];			//Make sure sum is total of only the 4 last measurements
+void buttons_update_joy_coord() {			
+	joyX_sum -= joyX_readings[index];		//Make sure sum is total of only the 4 last measurements
 	joyY_sum -= joyY_readings[index];
 
-	joyX_readings[index] = ADC_read(JOY_LR);	//Read raw data from joystick
+	joyX_readings[index] = ADC_read(JOY_LR);//Read raw data from joystick
 	joyY_readings[index] = ADC_read(JOY_DU);
 
-	joyX_sum += joyX_readings[index];			//Add measurement to total value
+	joyX_sum += joyX_readings[index];		//Add measurement to total value
 	joyY_sum += joyY_readings[index];
 
 	index++;
@@ -55,8 +54,9 @@ void buttons_update_joy_coord() {				//Update joystick coordinates with the aver
 	uint8_t joyX_avg = joyX_sum / n_readings;	//Calculate and update joystick position with the average of the 4 last measurements
 	uint8_t joyY_avg = joyY_sum / n_readings;
 
-	if (joyX_avg != (joy_coord.XX_init + 1) && joyX_avg != (joy_coord.XX_init -1)){	//Make sure coordinates dont change
-		joy_coord.XX = joyX_avg;													//when joystick is centered
+	//Make sure coordinates dont change when joystick is centered
+	if (joyX_avg != (joy_coord.XX_init + 1) && joyX_avg != (joy_coord.XX_init -1)){
+		joy_coord.XX = joyX_avg;													
 	}
 	if (joyY_avg != (joy_coord.YY_init + 1) && joyY_avg != (joy_coord.YY_init -1)){
 		joy_coord.YY = joyY_avg;
@@ -85,7 +85,7 @@ void buttons_update_joy_coord() {				//Update joystick coordinates with the aver
 	}*/
 }
 
-joy_position_t buttons_get_joy_coord(){		// #TODO: Implement interrupt for this?
+joy_position_t buttons_get_joy_coord(){
 	buttons_update_joy_coord();
 	return joy_coord;
 }
@@ -113,8 +113,8 @@ joy_direction_t buttons_get_joy_direction(int16_t X_coord, int16_t Y_coord) {	//
 		if (Y_coord>Mov23_Pos) {		//More than 2/3 up
 			if (X_coord>Y_coord) {direction = JOY_RIGHT;}	//The biggest number determines final position
 			else {direction = JOY_UP;}
-		} else if (Y_coord<Mov23_Neg) {		//More than 2/3 down, it is considered is DOWN
-			if (X_coord>2*Y_coord) {direction = JOY_RIGHT;}//Biggest number determines final position (2* corrects opposite direction)
+		} else if (Y_coord<Mov23_Neg) {
+			if (X_coord>2*Y_coord) {direction = JOY_RIGHT;}
 			else {direction = JOY_DOWN;}
 		} else {direction = JOY_RIGHT;}
 	}

@@ -1,9 +1,24 @@
 #ifndef SOLENOID_H
 #define SOLENOID_H
 
-void solenoid_init(void);	//Solenoid (PB6 [D12 Arduino]) initialization
-void solenoid_ON(void);		//Solenoid activation
-void solenoid_OFF(void);	//Solenoid deactivation
-void solenoid_push(void);	//Solenoid push
+/****************************************************************************
+//Solenoid initialization
+****************************************************************************/
+void solenoid_init(void);
 
-#endif // SOLENOID_H
+/****************************************************************************
+Solenoid activation
+****************************************************************************/
+void solenoid_ON(void);
+
+/****************************************************************************
+Solenoid deactivation
+****************************************************************************/
+void solenoid_OFF(void);
+
+/****************************************************************************
+Solenoid push (testing)
+****************************************************************************/
+void solenoid_push(void);
+
+#endif //SOLENOID_H

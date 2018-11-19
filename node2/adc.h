@@ -1,9 +1,16 @@
 #ifndef ADC_H
 #define ADC_H
 
-#include "uart.h"	//USART initialization to do printf
+#include "uart.h"
 
-void ADC_init(void);	//ADC initialization
-uint16_t ADC_read();	//Reading of ADC
+/****************************************************************************
+ADC converter initialization
+****************************************************************************/
+void ADC_init(void);
+
+/****************************************************************************
+Requests a new reading of the ADC converter
+****************************************************************************/
+uint16_t ADC_read();
 
 #endif //ADC_H

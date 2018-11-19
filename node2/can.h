@@ -11,16 +11,31 @@
 #define CAN_INPUT_ID 		0x04
 #define CAN_SHOOT_ID		0x05
 
+//Format of the CAN packages
 typedef struct {
 	uint8_t id;
 	uint8_t length;	
 	uint8_t data[8];
 } packet;
 
+/****************************************************************************
+CAN module (MCP2515) initialization
+****************************************************************************/
 void CAN_init();
+
+/****************************************************************************
+Sends a new package through CAN communication
+****************************************************************************/
 void CAN_send(packet* message);
+
+/****************************************************************************
+Reads an incoming package through CAN communication
+****************************************************************************/
 packet CAN_read();
+
+/****************************************************************************
+Reports any error in CAN communication
+****************************************************************************/
 uint8_t CAN_error();
-uint8_t CAN_message_recieved();
 
 #endif // CAN_H
