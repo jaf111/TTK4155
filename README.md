@@ -8,7 +8,7 @@ Authors:
     
    	- Lars Martin Moe
 
-This course involved designing an embedded system for a game which is based on a keep-up challenge. Node 1 consists of ATMEGA162, node 2 i an Arduino 2560, and node 3 is a Micro:bit (not functional). Features of this project inclded:
+This course involved designing an embedded system for a game which is based on a keep-up challenge. Node 1 consists of ATmega162, node 2 i an Arduino 2560, and node 3 is a Micro:bit (not functional). Features of this project inclded:
             
             - An OLED display for menu 
             - Saving of highscore
