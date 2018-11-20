@@ -1,3 +1,6 @@
+#ifndef F_CPU
+#define F_CPU 16000000
+
 #include <stdio.h>		
 #include <avr/io.h> 	
 #include <avr/interrupt.h>
@@ -93,3 +96,5 @@ void game_node2_play() {
 		}
 	}
 }
+
+#endif // F_CPU

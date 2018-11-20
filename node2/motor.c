@@ -1,9 +1,9 @@
 #ifndef F_CPU
-#define F_CPU 16000000	//Clock Speed (Oscillator)
+#define F_CPU 16000000	
 
 #include <avr/io.h>
 #include <stdio.h>
-#include <util/delay.h>	//Functions for busy-wait delay loops
+#include <util/delay.h>	
 
 #include "motor.h"
 #include "TWI_Master.h"
@@ -106,9 +106,9 @@ void motor_move(int16_t speed) {
 void motor_set_speed(uint8_t speed){
 	uint8_t adr = 0x50;
 	uint8_t cmd = 0x00;
-	message_buffer[0] = adr;		// First call consists of TWI slave address
-	message_buffer[1] = cmd;		// First byte is write command
-	message_buffer[2] = speed;		// Send desired motor speed to DAC
+	message_buffer[0] = adr;							// First call consists of TWI slave address
+	message_buffer[1] = cmd;							// First byte is write command
+	message_buffer[2] = speed;							// Send desired motor speed to DAC
 	TWI_start_transceiver_with_data(message_buffer, 3);	// start transmission
 }
 

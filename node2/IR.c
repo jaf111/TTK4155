@@ -1,9 +1,9 @@
 #ifndef F_CPU
-#define F_CPU 16000000	//Clock Speed (oscillator)
+#define F_CPU 16000000	
 
-#include <stdio.h>		//Standard constants and functions for C (printf..., scanf...) 
-#include <avr/io.h> 	//Specific IO for AVR micro (all registers defined inside)
-#include <util/delay.h>	//Functions for busy-wait delay loops
+#include <stdio.h>		
+#include <avr/io.h> 	
+#include <util/delay.h>	
 
 #include "IR.h"
 #include "adc.h"
