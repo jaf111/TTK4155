@@ -13,11 +13,15 @@
 #include "highscore.h"
 #include "play_song.h"
 
+
+//CAN messages defined
 packet start_game = {.id=CAN_START_GAME_ID, .length=0x01, .data={0x06}};
 packet end_game = {.id=CAN_END_GAME_ID, .length=0x00, .data={}};
 packet shoot_ball = {.id=CAN_SHOOT_ID, .length=0x00, .data={}};
 packet score;
 
+
+//gloabal variabels for quiting game 
 int player_want_to_play = 1;
 int player_option = 1;
 
@@ -40,11 +44,11 @@ uint8_t game_node1_play() {
 		buttons_send_CAN_message();	
 		OLED_update();
 		player_option = 1;
-		//fprintf(UART_p, "play \r\n", 0);
+		
 
-		if (BUTTON_L || CAN_message_recieved()) {	// Can message recieved => game over
+		if (BUTTON_L || CAN_message_recieved()) {	
 			_delay_ms(100);
-			CAN_send(&end_game);						// Tell node 2 to stop game
+			CAN_send(&end_game);						
 			score = CAN_read();	
 			fprintf(UART_p, "score: %d\r\n", score.data[0]);
 			highscore_save_sram(highscore_get_player_name(), score.data[0]);
@@ -59,6 +63,7 @@ uint8_t game_node1_play() {
 				OLED_print_all("SCORE");
 				OLED_pos(2,75);
 				OLED_print_number(score.data[0]);
+				fprintf(UART_p, "SCORE:  %d\n", score.data[0]);
 				OLED_pos(5,20);
 				OLED_print_all("RIGHT=RETRY");
 				OLED_pos(6,20);

@@ -10,6 +10,7 @@ void ADC_init(void);
 
 /****************************************************************************
 Requests a new reading of the ADC converter
+Returns converted analog data to digital 
 ****************************************************************************/
 uint16_t ADC_read();
 

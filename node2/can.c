@@ -33,6 +33,7 @@ void CAN_send(packet* message) {
 	for (uint8_t i=0; i<message->length; i++) {
 		MCP2515_bit_modify(MCP_TXB0D0 + i, 0xFF, message->data[i]);
 	}
+	
 	MCP2515_request_to_send(MCP_RTS_TX0);
 }
 
@@ -42,7 +43,6 @@ packet CAN_read() {
 	}
 
 	packet message;
-
 	message.id = ((MCP2515_read(MCP_RXB0SIDH)<<3) + (MCP2515_read(MCP_RXB0SIDL)>>5)); // Receive ID is checked
 	message.length = 0x0F & (MCP2515_read(MCP_RXB0DLC)); // Length of the last received message is checked
 	
@@ -55,5 +55,6 @@ packet CAN_read() {
 }
 
 uint8_t CAN_error() {
+	
 	return (MCP2515_read(MCP_TXB0CTRL) & (1 << TXERR) || (MCP2515_read(MCP_TXB0CTRL) & (1 << MLOA)));
 }

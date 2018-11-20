@@ -1,38 +1,37 @@
-#include <stdio.h>		//Standard constants and functions for C (printf..., scanf...) 
-#include <avr/io.h> 	//Specific IO for AVR micro (all registers defined inside)
-#include "uart.h"		//Necessary to enable the new fprintf
+#include <stdio.h>		
+#include <avr/io.h> 	
+#include "uart.h"		
 
-#define sram_init_address 0x1800	//SRAM address (just to inform the GAL to update Chip Select [CS])
+#define sram_init_address 0x1800	//SRAM address
 
-void SRAM_init(void) {		//External SRAM memory enabled for AT mega162
-	//EMCUCR &= ~(1 << SRL2)|( 1<<SRL1 )|(1 << SRL0);	//They are initially 0, so no point setting them
-	MCUCR |= (1 << SRE);	//SRE: External SRAM/XMEM Enable (bit 7 of register MCUCR). Rest unchanged
-	SFIOR |= (1 << XMM2);	//XMM2: External Memory High Mask [PC7 - PC4] (bit 5 of register SFIOR)
+
+void SRAM_init(void) {		
+	MCUCR |= (1 << SRE);	//External SRAM/XMEM Enable 
+	SFIOR |= (1 << XMM2);	//External Memory High Mask [PC7 - PC4] 
 }
 
-void SRAM_write(uint8_t data, unsigned int address) {	//Address and value to be written in RAM
-	volatile char *ext_ram = (char *) sram_init_address;	// Start address for the SRAM
-	ext_ram[address] = data; 	//Value is assigned to the defined address
 
-	fprintf(UART_p, "SNT data: %04u, addr: %04X \n\r", data, address);
+void SRAM_write(uint8_t data, unsigned int address) {		
+	volatile char *ext_ram = (char *) sram_init_address;	// Start address for the SRAM
+	ext_ram[address] = data; 								//Value is assigned to the defined address
 }
 
-uint8_t SRAM_read(unsigned int address) {	//Value read from the requested address
-	volatile char *ext_ram = (char *) sram_init_address;	// Start address for the SRAM
-	uint8_t data = ext_ram[address]; 		//- sram_init_address
 
-	fprintf(UART_p, "RCV data: %04u, addr: %04X \n\r", data, address);
-	
+uint8_t SRAM_read(unsigned int address) {					
+	volatile char *ext_ram = (char *) sram_init_address;	// Start address for the SRAM
+	uint8_t data = ext_ram[address]; 						
+
 	return data;
 }
 
-void SRAM_test(void) {		//Test to write and read in every position of the external RAM memory
-	volatile char *ext_ram = (char *) sram_init_address; // Start address for the SRAM
-	uint16_t ext_ram_size = 0x800;		//The complete address size dedicated to external SRAM
+
+void SRAM_test(void) {		
+	volatile char *ext_ram = (char *) sram_init_address; 	// Start address for the SRAM
+	uint16_t ext_ram_size = 0x800;							//The complete address size dedicated to external SRAM
 	uint16_t write_errors = 0;
 	uint16_t retrieval_errors = 0;
 	fprintf(UART_p, "Start SRAM test:%d \n\r");
-	//printf("Starting SRAM test...\n\r");
+	
 
 	// rand() stores some internal state, so calling this function in a loop will
 	// yield different seeds each time (unless srand() is called before this function)
@@ -67,5 +66,5 @@ void SRAM_test(void) {		//Test to write and read in every position of the extern
 		}
 	}
 	fprintf(UART_p, "SRAM test done with\n\r%4d errors (WR phase) &\n\r%4d errors (RETR phase)\n\r", write_errors, retrieval_errors);
-	//printf("SRAM test completed with\n\r%4d errors in write phase and\n\r%4d errors in retrieval phase \n \n\r", write_errors, retrieval_errors);
+	
 }

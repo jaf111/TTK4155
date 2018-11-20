@@ -1,31 +1,33 @@
 #ifndef F_CPU
-#define F_CPU 4915200	//Clock Speed (Oscillator)
+#define F_CPU 4915200	
 
-#include <util/delay.h>	//Functions for busy-wait delay loops
-#include <stdlib.h>		//Functions for dynamic memory management and process control
-#include <stdio.h>		//Standard constants and functions for C (printf..., scanf...)
-#include <avr/io.h>		//Specific IO for AVR micro (all registers defined inside)
-#include <avr/pgmspace.h>	//Interfaces to access data stored in program space (flash memory) of AVR
+#include <util/delay.h>	
+#include <stdlib.h>		
+#include <stdio.h>		
+#include <avr/io.h>		
+#include <avr/pgmspace.h>	
 #include <string.h>
 #include <avr/interrupt.h>
 
-#include "menu.h"		//Prototype of functions here implemented
-#include "uart.h"		//Prototype functions of USART unit
-#include "oled.h"		//Prototype functions of OLED (USB board) unit
-#include "buttons.h"	//Prototype functions of buttons (USB board) unit
-#include "adc.h"		//Prototype functions of ADC unit
-#include "can.h"		//Prototype functions of CAN unit
+#include "menu.h"		
+#include "uart.h"		
+#include "oled.h"		
+#include "buttons.h"	
+#include "adc.h"		
+#include "can.h"		
 #include "highscore.h"
 #include "menu_names.h"
 
 uint8_t pointerUP = 1;	//Arrow position (starts in 1, after title)
 uint8_t pointerLR = 0;	//Menu level (menu or sub-menu)
 
-t_menu* current_menu; 
+t_menu* current_menu;   //menu the cursor is pointing at all the time
 
 int displayed_lines = 0;
 int currsor_io = 0;
 
+
+//All menu options
 t_menu main_menu;
 t_menu game;
 t_menu highscore;
@@ -40,54 +42,38 @@ t_menu high;
 
 char* retrieved_name_buffer[16];			// Buffer for retrieving menu names
 
-void menu_name_retrieve(uint8_t menu_id){	// Loads menu names from PROGMEM into buffer for printing
+
+void menu_name_retrieve(uint8_t menu_id){	
 
 	strcpy_P(retrieved_name_buffer,(PGM_P)pgm_read_word(&(string_table[menu_id])));
 	
 	return retrieved_name_buffer;
 } 
 
+
 void menu_system() {
 	//Main menu page create
-	main_menu = (t_menu){main_menu_id, NULL, NULL, NULL}; 		// Menu names are stored in PROGMEM
-	game = (t_menu){game_id, &main_menu, NULL, NULL};			// Use pointers to retireve them
-	highscore = (t_menu){highscore_id, &main_menu, NULL, NULL};
-	extras = (t_menu){extras_id, &main_menu, NULL, NULL};
-	options = (t_menu){options_id, &main_menu, NULL, NULL};
-	//player_select = (t_menu){"Options", &main_menu, NULL, NULL};
+	main_menu = (t_menu){main_menu_id, NULL, &game, NULL}; 		// Menu names are stored in PROGMEM
+	game = (t_menu){game_id, &main_menu, NULL, &highscore};			// Use pointers to retireve them
+	highscore = (t_menu){highscore_id, &main_menu, NULL, &extras};
+	extras = (t_menu){extras_id, &main_menu, &screensaver, &options};
+	options = (t_menu){options_id, &main_menu, &brightness, NULL};
 
 	//Extras page create
-	screensaver = (t_menu){screensaver_id, &extras, NULL, NULL};
-	songs = (t_menu){songs_id, &extras, NULL, NULL};
+	screensaver = (t_menu){screensaver_id, &extras, NULL, &songs};
+	songs = (t_menu){songs_id, &extras, NULL, &paint};
 	paint = (t_menu){paint_id, &extras, NULL, NULL};
 
 	//Options page create
-	brightness = (t_menu){brightness_id, &options, NULL, NULL};
+	brightness = (t_menu){brightness_id, &options, &high, NULL};
+	high = (t_menu){high_id, &brightness, NULL, &low};
 	low = (t_menu){low_id, &brightness, NULL, NULL};
-	high = (t_menu){high_id, &brightness, NULL, NULL};
-
-	//Main menu config
-	main_menu.children = &game;
-	game.sibling = &highscore;
-	highscore.sibling = &extras;
-	extras.sibling = &options;
-	
-	//Extras config
-	extras.children = &screensaver;
-	screensaver.sibling = &songs;
-	songs.sibling = &paint;
-	
-	//Options config
-	options.children = &brightness;
-
-	//Brightness config
-	brightness.children = &high;
-	high.sibling = &low;
 	
 	current_menu = &main_menu;
 	menu_name_retrieve(main_menu_id);
 	print_menu(current_menu);
 }
+
 
 void print_menu(t_menu* menu){
 	OLED_clear_all();       		
@@ -113,12 +99,8 @@ void menu_init(){
 	menu_system();
 }
 
-uint8_t JoyDU_last = 0;
-uint8_t JoyDU_now = 0;
-uint8_t JoyLR_last = 0;
-uint8_t JoyLR_now = 0;
 
-void cursor_move() {			
+void menu_move() {			
 	OLED_pos(pointerUP, 5);				//currsor_io = 1/0 ->arrow off/on
 	if (currsor_io == 0){
 		OLED_print_arrow(pointerUP, 5);	
@@ -140,6 +122,7 @@ void cursor_move() {
 	}
 	else if (ADC_read(JOY_LR) >= 240) {	//If joystick is moved RIGHT
 		if (current_menu->children == NULL){
+			
 			return;
 		}
 		else{
@@ -150,20 +133,21 @@ void cursor_move() {
 			}
 			
 			print_menu(current_menu);
-			pointerLR = pointerUP;		//Arrow position determines sub-menu screen
-			pointerUP = 1;				//Arrow placed in the first line again
+			pointerLR = pointerUP;		
+			pointerUP = 1;				
 			menu_handler();
 		}
 		
 	}
 	else if (ADC_read(JOY_LR) <= 10) {	//If joystick is moved LEFT
-		if (pointerLR != 0) {			//Only if I am in a child screen
+		if (pointerLR != 0) {			
 			OLED_clear_all();
-			pointerLR = 0;				//Go back to the parent screen
-			pointerUP = 1;				//Arrow placed in the first line again
+			pointerLR = 0;				
+			pointerUP = 1;				
 		}
 		
 		if (current_menu->parent == NULL){
+			
 			return;
 		}
 			
@@ -192,9 +176,8 @@ void menu_handler(void){
 		OLED_clear_all();
 		highscore_create_name();
 		if((ADC_read(JOY_LR) <= 60)){
-			//current_menu = current_menu->parent;
-			//print_menu(current_menu);
 			currsor_io = 1;
+			
 			return;
 		} 
 		game_node1_play();

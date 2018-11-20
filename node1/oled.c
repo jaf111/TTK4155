@@ -1,15 +1,15 @@
 #ifndef F_CPU
-#define F_CPU 4915200	//Clock Speed (Oscillator)
+#define F_CPU 4915200	
 
-#include <stdio.h>			//Standard constants and functions for C (printf..., scanf...) 
-#include <avr/io.h> 		//Specific IO for AVR micro (all registers defined inside)
-#include <avr/interrupt.h>	//Interruptions for AVR micro
-#include <avr/pgmspace.h>	//Interfaces to access data stored in program space (flash memory) of AVR
+#include <stdio.h>			
+#include <avr/io.h> 		
+#include <avr/interrupt.h>	
+#include <avr/pgmspace.h>	
 
-#include "oled.h"			//Prototype functions
-#include <util/delay.h>		//Functions for busy-wait delay loops
-#include "fonts.h"			//All characters to print in the OLED (saved in FLASH)
-#include "sram.h"			//Functions to directly write into the SRAM
+#include "oled.h"			
+#include <util/delay.h>		
+#include "fonts.h"			
+#include "sram.h"			
 #include "buttons.h"
 #include "timer.c"
 
@@ -19,7 +19,7 @@
 
 #define FONTWIDTH 8			//Width of used fonts
 
-//The difference in command and start addresses (bit 9) is created to manage D/C pin in OLED
+
 volatile uint8_t *oled_cmd = (uint8_t *) 0x1000; 	//OLED Command start address
 volatile uint8_t *oled_data = (uint8_t *) 0x1200; 	//OLED Data start address
 
@@ -31,6 +31,7 @@ volatile uint8_t *frame_addr = (uint8_t*)0x1800;
 
 uint8_t timer1_flag = 0; 			// Timer flag for updating OLED
 
+
 // Paint variables
 tools_t paint_tool = BRUSH;			// Initial tool is a brush
 uint8_t cursor_x = 64;				// Cursor is initially in center of screen
@@ -40,15 +41,18 @@ uint8_t cursor_y_prev = 32;
 uint8_t clear_bits_x = 0xFF;		// Make note of which bits should be cleared after the cursor has moved
 uint8_t clear_bits_y = 0xFF;		// Do NOT clear a bit if something else was drawn there beforehand
 
-void write_c(uint8_t cmd) {			// To write a (configuration) command into the OLED
+
+void write_c(uint8_t cmd) {			
 	*oled_cmd = cmd;
 }
 
-void write_d(uint8_t cmd) {			// To print data into the OLED
+
+void write_d(uint8_t cmd) {			
 	*oled_data = cmd;
 }
 
-void write_s(uint8_t data){			// Stores data in two-dimensional array that represents the OLED buffer
+
+void write_s(uint8_t data){			
 	frame[gen_page][gen_col] = data;
 	gen_col++;						// SRAM pointer behaves like OLED pointer in page mode
 	if(gen_col >= 128){
@@ -56,7 +60,8 @@ void write_s(uint8_t data){			// Stores data in two-dimensional array that repre
 	}
 }
 
-void OLED_init(void) {	//OLED display initialization
+
+void OLED_init(void) {	
 	write_c(0xae);	//Display is switch OFF
 	write_c(0xa1);	//Segment remap (A1=Aligned to the right / A0=Aligned to the left)
 	write_c(0xda);	//Sets COM signals pin configuration to match OLED panel hardware layout
@@ -80,25 +85,27 @@ void OLED_init(void) {	//OLED display initialization
 	write_c(0xa6);	//A6h->Normal (data 1/0-> pixel ON/OFF), A7h->Inverse (data 1/0-> pixel OFF/ON)
 	write_c(0xaf);	//Display is switched ON
 
-	write_c(0xB0);		//Set page Start Address for page Addressing Mode
-	write_c(0x00);   	//Set Lower Column Start Address for page Addressing Mode
-	write_c(0x10);		//Set Higher Column Start Address for page Addressing Mode (NEED TO ASK ABOUT THIS)
+	write_c(0xB0);	//Set page Start Address for page Addressing Mode
+	write_c(0x00);  //Set Lower Column Start Address for page Addressing Mode
+	write_c(0x10);	//Set Higher Column Start Address for page Addressing Mode (NEED TO ASK ABOUT THIS)
 	
-	OLED_clear_all();	//All screen is cleared
-	OLED_home();		//Pointer goes to the home position
+	OLED_clear_all();//All screen is cleared
+	OLED_home();	//Pointer goes to the home position
 
-	timer1_init(256, 60);	// Initialize a timer for creating a 60 Hz refresh rate for the OLED
+	timer1_init(256, 60); // Initialize a timer for creating a 60 Hz refresh rate for the OLED
 }
 
-void OLED_print_char(char ch) {		//To print JUST one character
+
+void OLED_print_char(char ch) {		
 	for(uint8_t i = 0; i < FONTWIDTH; i++){
 		//In ASCII, space or ' ' is 32. So taking the char and subtracting it with ' '
 		//will give us the "correct" symbol from fonts.h 
-		write_s(pgm_read_byte(&(font8[ch - ' '][i])));		//pgm_read_byte(&()) is required to take data from FLASH mem
+		write_s(pgm_read_byte(&(font8[ch - ' '][i])));	//pgm_read_byte(&()) is required to take data from FLASH mem
 	}
 }
 
-void OLED_print_all(char* word) {	//To print the whole word/sentence (pointer where char starts)
+
+void OLED_print_all(char* word) {	
 	uint8_t i = 0;
 	while(word[i] != '\0') {		//If the received character is different from NULL (\0),
 		OLED_print_char(word[i]);	//such character is printed on the OLED
@@ -106,83 +113,90 @@ void OLED_print_all(char* word) {	//To print the whole word/sentence (pointer wh
 	}
 }
 
+
 void OLED_print_number(uint8_t number){
 	uint8_t new_number = number;
 	while (new_number > 0){
 		if(new_number > 99){	
-			uint8_t digit = (number/100) % 10;	// Extract each digit
-			OLED_print_char('0' + digit);		// From position 0 (in ASCII) + the real score
+			uint8_t digit = (number/100) % 10;	
+			OLED_print_char('0' + digit);		
 			new_number /= 10;
 		}
 		else if(new_number > 9){	
-			uint8_t digit = (number/10) % 10;	// Extract each digit
-			OLED_print_char('0' + digit);		// From position 0 (in ASCII) + the real score
+			uint8_t digit = (number/10) % 10;	
+			OLED_print_char('0' + digit);		
 			new_number /= 10;			
 		}
 		else{
-			uint8_t digit = number % 10;		// Extract each digit
-			OLED_print_char('0' + digit);		// From position 0 (in ASCII) + the real score
+			uint8_t digit = number % 10;		
+			OLED_print_char('0' + digit);		
 			new_number /= 10;					
 		}
 	}
 }
 
-void OLED_home(void) {	//Pointer goes to position 0,0 in OLED
+
+void OLED_home(void) {	
 	gen_page = 0;
 	gen_col = 0;
 	OLED_pos(0, 0);
 }
 
-void OLED_goto_line(uint8_t line) {	//Go to a specific line, first column in OLED
+
+void OLED_goto_line(uint8_t line) {	
 	gen_page = line;
 	gen_col = 0;
 	if (line < MAX_PAGES) {
 		write_c(0xB0 + line);	//Set line/page 0-7 (requested format B0h to B7h)
-		write_c(0x00);	//Lower nibble of start column address (00h)	
-		write_c(0x10);	//Upper nibble of start column address (10h)
+		write_c(0x00);			//Lower nibble of start column address (00h)	
+		write_c(0x10);			//Upper nibble of start column address (10h)
 	}
 }
 
-void OLED_goto_column(uint8_t column) {	//To go to a specific column in OLED
+
+void OLED_goto_column(uint8_t column) {	
 	gen_col = column;
-	if (column < MAX_COLUMNS) {			//Go to the requested column
-		uint8_t lower_nibble = (0x0F & column); 	//Set first 4 bits of column address
+	if (column < MAX_COLUMNS) {			
+		uint8_t lower_nibble = (0x0F & column); 				//Set first 4 bits of column address
 		uint8_t upper_nibble = 0x10 + (0x0F & (column >> 4));	//Set last 4 bits of column address	
-
-		write_c(lower_nibble); 	//Lower nibble of requested column (requested format 00h to 0Fh)
-		write_c(upper_nibble);	//Upper nibble of requested column (requested format 10h to 1Fh)
+		write_c(lower_nibble); 									//Lower nibble of requested column (requested format 00h to 0Fh)
+		write_c(upper_nibble);									//Upper nibble of requested column (requested format 10h to 1Fh)
 	}
 }
 
-void OLED_pos(uint8_t line, uint8_t column) {	//Go to requested position
+
+void OLED_pos(uint8_t line, uint8_t column) {	
 	gen_page = line;
 	gen_col = column;
 	OLED_goto_line(line);
 	OLED_goto_column(column);	
 }
 
-void OLED_clear_line(uint8_t line) {	//Clears an entire page
-	OLED_goto_line(line);
 
+void OLED_clear_line(uint8_t line) {	
+	OLED_goto_line(line);
 	for (uint8_t i=0; i<MAX_COLUMNS; i++) {
 		write_s(0x00);
 	}
 }
 
-void OLED_clear_all(void) {				//Clears the whole OLED
+
+void OLED_clear_all(void) {				
 	for(int p=0; p<MAX_PAGES; p++) {	
 		OLED_clear_line(p);
 	}
 	OLED_home();
 }
 
-void OLED_set_brightness(uint8_t lvl) {	//Define brightness level
+
+void OLED_set_brightness(uint8_t lvl) {	
 	write_c(0x81);		//Set contrast level
 	write_c(lvl);		//to the requested level (requested format from 00h to FFh)
 }
 
+
 void OLED_print_arrow(uint8_t row, uint8_t col) {
-	OLED_pos(row, col);		//To print an arrow in the requested position
+	OLED_pos(row, col);		
 	write_s(0b00011000);
 	write_s(0b00011000);
 	write_s(0b01111110);
@@ -190,8 +204,9 @@ void OLED_print_arrow(uint8_t row, uint8_t col) {
 	write_s(0b00011000);
 }
 
+
 void OLED_clear_arrow(uint8_t row, uint8_t col){
-	OLED_pos(row, col);		//To clear an arrow in the requested position
+	OLED_pos(row, col);		
 	write_s(0b00000000);
 	write_s(0b00000000);
 	write_s(0b00000000);
@@ -199,9 +214,10 @@ void OLED_clear_arrow(uint8_t row, uint8_t col){
 	write_s(0b00000000);
 }
 
-void OLED_screen_Saver() {	//Prints a complete screen saver
+
+void OLED_screen_Saver() {	
 	OLED_clear_all();
-	for(uint8_t p=0; p<MAX_PAGES; p++) { //Printing from up and down, and left to right
+	for(uint8_t p=0; p<MAX_PAGES; p++) { 
 		gen_page = p;
 		for(uint8_t c=0; c<MAX_COLUMNS; c++) {
 			write_s(pgm_read_byte(&(screenSaver[p][c])));
@@ -209,7 +225,8 @@ void OLED_screen_Saver() {	//Prints a complete screen saver
 	}
 }
 
-void OLED_update(){						// Loads SRAM content to OLED at frequency set by timer1 init
+
+void OLED_update(){						
 	if (timer1_flag == 1){
 		for (uint8_t r = 0; r < 8; r++){
 			OLED_goto_line(r);
@@ -221,7 +238,8 @@ void OLED_update(){						// Loads SRAM content to OLED at frequency set by timer
 	}
 }
 
-void OLED_frame_fill(uint8_t data){		// Fills OLED sram data (frame) with a given byte
+
+void OLED_frame_fill(uint8_t data){		
 	for (uint8_t r = 0; r < 8; r++){
 		for (uint8_t c = 0; c < 128; c++){
 			frame[r][c] = data;
@@ -229,32 +247,35 @@ void OLED_frame_fill(uint8_t data){		// Fills OLED sram data (frame) with a give
 	}
 }
 
-void OLED_frame_char_fill(char c){		// Fills frame with characters
+
+void OLED_frame_char_fill(char c){		
 	for (uint8_t r = 0; r < 8; r++){
 		OLED_goto_line(r);
 		OLED_print_all(c);
 	}
 }
 
-void OLED_draw_pixel(uint8_t bit, uint8_t x, uint8_t y){	// x and y are cartesian coordinates, not page and column
+
+void OLED_draw_pixel(uint8_t bit, uint8_t x, uint8_t y){	
 	if (x < MAX_COLUMNS && y < MAX_ROWS){
 			uint8_t page = y / 8;					// Rounds down to find page
 			uint8_t setbit = y % 8;					// Finds which bit in a column it should set to 1
 			if (bit){
-				frame[page][x] |= (1 << setbit);	// Only set bit in correct position to 1, leave rest unchanged
+				frame[page][x] |= (1 << setbit);	// Only set bit in correct position to 1
 			} else {
-				frame[page][x] &= ~(1 << setbit);	// Only set bit in correct position to 0, leave rest unchanged
+				frame[page][x] &= ~(1 << setbit);	// Only set bit in correct position to 0
 			}
 	}
 }
 
-void OLED_draw_cursor(uint8_t x0, uint8_t y0){	// Draw cross for cursor
-	uint8_t page = y0 / 8;						// See OLED_draw_pixel			
+
+void OLED_draw_cursor(uint8_t x0, uint8_t y0){	
+	uint8_t page = y0 / 8;								
 	uint8_t setbit = y0 % 8;					
 
 	for (uint8_t x = x0-3; x <= (x0 + 3); x++){	// Draw horizontal line
 		if (!(frame[page][x] & (1 << setbit))){	
-			clear_bits_x |= (1 << (x - x0 + 3));// Bit in this position should be cleared later if nothing was drawn there beforehans (except cursor)
+			clear_bits_x |= (1 << (x - x0 + 3));// Bit should be cleared later if nothing was drawn there beforehans (except cursor)
 		} else {
 			clear_bits_x &= ~(1 << (x - x0 + 3));
 		}
@@ -262,9 +283,9 @@ void OLED_draw_cursor(uint8_t x0, uint8_t y0){	// Draw cross for cursor
 	}
 
 	for (uint8_t y = y0-3; y <= (y0 + 3); y++){	// Draw vertical line
-		page = y / 8;							// Update vertical variables
+		page = y / 8;							
 		setbit = y % 8;
-		if (!(frame[page][x0] & (1 << setbit))){// Same as above
+		if (!(frame[page][x0] & (1 << setbit))){
 			clear_bits_y |= (1 << (y - y0 + 3));
 		} else {
 			clear_bits_y &= ~(1 << (y - y0 + 3));
@@ -273,9 +294,10 @@ void OLED_draw_cursor(uint8_t x0, uint8_t y0){	// Draw cross for cursor
 	}
 }
 
-void OLED_clear_cursor(uint8_t x0, uint8_t y0){	// Removes the cursor from its previous position	
+
+void OLED_clear_cursor(uint8_t x0, uint8_t y0){		
 	for (uint8_t x = x0-3; x <= (x0 + 3); x++){	// Uses the clear_bits_x/y byte to decide which pixels to set to 0 again
-		if (clear_bits_x & (1<< (x - x0 + 3))){	// Only draws black pixels on bits that were set by cursor, not by other functions
+		if (clear_bits_x & (1<< (x - x0 + 3))){	// Only draws black pixels on bits that were set by cursor
 			OLED_draw_pixel(0, x, y0);
 		}
 	}
@@ -297,7 +319,8 @@ void OLED_draw_rectangle(uint8_t x0, uint8_t y0, uint8_t width, uint8_t height){
 	}
 }
 
-void OLED_draw_circle(uint8_t bit, uint8_t x0, uint8_t y0, uint8_t r){	// Draw circle using the midpoint circle algorithm:
+
+void OLED_draw_circle(uint8_t bit, uint8_t x0, uint8_t y0, uint8_t r){	
 	int x = r - 1;											
 	int y = 0;											
 	int dx = 1;
@@ -329,7 +352,8 @@ void OLED_draw_circle(uint8_t bit, uint8_t x0, uint8_t y0, uint8_t r){	// Draw c
 	}
 }
 
-void OLED_paint(){				// Draw things onto the oled by pressing RIGHT BUTTON
+
+void OLED_paint(){				
 	OLED_clear_all();
 	// Draw Circle option
 	OLED_draw_rectangle(1, 1, 20, 20);
@@ -350,10 +374,11 @@ void OLED_paint(){				// Draw things onto the oled by pressing RIGHT BUTTON
 		if (BUTTON_L){				
 			keep_painting = 0x00;
 		}
-		OLED_cursor();				// Handle cursor and its actions
+		OLED_cursor();				
 		OLED_update();
 	}
 }
+
 
 void OLED_cursor(){
 	cursor_x_prev = cursor_x;
@@ -413,7 +438,9 @@ void OLED_cursor(){
 	}
 }
 
-ISR(TIMER1_COMPA_vect) {	// 60 Hz refresh rate for OLED
+
+// 60 Hz refresh rate for OLED
+ISR(TIMER1_COMPA_vect) {	
 	timer1_flag = 1;
 }
 

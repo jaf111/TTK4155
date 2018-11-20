@@ -2,7 +2,7 @@
 #include <stdio.h> 
 #include <avr/interrupt.h>
 
-#include "uart.h"		//Added to use fprintf function
+#include "uart.h"		
 #include "spi.h"
 #include "can.h"
 #include "MCP2515.h"
@@ -13,7 +13,7 @@ void CAN_init() {
 	//MCP2515_init();
 	
 	//2nd element (mask) defines which numbers are allowed to change
-	//MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK);	//Set in loopback mode
+	//MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_LOOPBACK);	//Set in loopback mode (useful for testing)
 	MCP2515_bit_modify(MCP_CANCTRL, 0b11100000, MODE_NORMAL);
 	MCP2515_bit_modify(MCP_CANINTE, 0b00000001, 0xFF);				//Enabling receive buffer interrupt
 	MCP2515_bit_modify(MCP_BFPCTRL, 0b0000101, 0xFF);
@@ -40,44 +40,47 @@ void CAN_send(packet* message) {	//Everything is done only through Buffer 0
 	for (uint8_t i=0; i<message->length; i++) {
 		MCP2515_bit_modify(MCP_TXB0D0 + i, 0xFF, message->data[i]);
 	}
+
 	MCP2515_request_to_send(MCP_RTS_TX0);
 }
 
 packet CAN_read() {
-	if (CAN_error()) {				//If there is an error in the transmission
+	if (CAN_error()) {				
 		fprintf(UART_p, "RD_ER %4x\r\n", MCP2515_read(MCP_RXB0CTRL));
 	}
 
 	packet message;
-
-	//if (MCP2515_read(MCP_CANINTF) & 0x2c)
 	message.id = ((MCP2515_read(MCP_RXB0SIDH)<<3) + (MCP2515_read(MCP_RXB0SIDL)>>5)); // Store message id
 	message.length = 0x0F & (MCP2515_read(MCP_RXB0DLC)); // Length of the last received message is checked
-	//fprintf(UART_p, "RECEIVE ID: %4x \r\n", message.id);
-	
+		
 	for (uint8_t i=0; i<message.length; i++) {
-		message.data[i] = MCP2515_read(MCP_RXB0D0+i); //Store message data
-		//fprintf(UART_p, "MCP_RXB0D %4x: %4x \r\n", i, MCP2515_read(MCP_RXB0D0+i));
+		message.data[i] = MCP2515_read(MCP_RXB0D0+i); 	//Store message data
 	}
+
 	MCP2515_bit_modify(MCP_CANINTF, MCP_RX0IF, 0x00);
 	
 	return message;
 }
 
 int CAN_error() {
+	
 	return (MCP2515_read(MCP_TXB0CTRL) & (1 << TXERR) || (MCP2515_read(MCP_TXB0CTRL) & (1 << MLOA)));
 }
 
 uint8_t CAN_message_recieved(){	
 	if (recieve_flag == 1){
 		recieve_flag = 0;
-		return 1;
-	} else {
+		
+		return 1;	
+	} 
+	else {
+		
 		return 0;
 	}
 }
 
-ISR(INT1_vect) {		//Interrupt function for INT1
+//Interrupt function for INT1
+ISR(INT1_vect) {		
 	recieve_flag = 1;
 	fprintf(UART_p, "INT1_CAN\r\n", 0);
 }

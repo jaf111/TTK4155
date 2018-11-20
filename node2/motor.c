@@ -45,23 +45,23 @@ void motor_calibr_encoder() {	//Left=0	Right=Max_encoder
 	motor_encoder_max = -motor_read_encoder();
 }
 
-void motor_reset_encoder(){	//Toggles RST pin on MJ1
-	PORTH &= ~(1 << PH6);	//Clear RST pin
+void motor_reset_encoder(){					//Toggles RST pin on MJ1
+	PORTH &= ~(1 << PH6);					//Clear RST pin
 	_delay_ms(20);
-	PORTH |= (1 << PH6);	//Set RST pin to high
+	PORTH |= (1 << PH6);					//Set RST pin to high
 }
 
-int16_t motor_read_encoder() {		//Normal procedure of reading the encoder:
-   PORTH &= ~(1 << PH5);		  	// Set !OE low to enable output of encoder
-   PORTH &= ~(1 << PH3);		   	// Lower SEL to get high byte
-   _delay_ms(20);			  	  	// Wait about 20 microseconds
-   uint8_t MSB = PINK;				// Read MSB
-   PORTH |= (1 << PH3);				// Set SEL high to get low byte
-   _delay_ms(20);			   		// Wait about 20 microseconds
-   uint8_t LSB = PINK;			   	// Read LSB
-   //motor_reset_encoder();		   	// Toggle !RST to reset encoder
-   PORTH |= (1 << PH5);           	// Set !OE high to disable output of encoder
-   int16_t encoder_pos = (MSB << 8) + LSB; //Process received data.... 
+int16_t motor_read_encoder() {				//Normal procedure of reading the encoder:
+   PORTH &= ~(1 << PH5);		  			// Set !OE low to enable output of encoder
+   PORTH &= ~(1 << PH3);		   			// Lower SEL to get high byte
+   _delay_ms(20);			  	  			// Wait about 20 microseconds
+   uint8_t MSB = PINK;						// Read MSB
+   PORTH |= (1 << PH3);						// Set SEL high to get low byte
+   _delay_ms(20);			   				// Wait about 20 microseconds
+   uint8_t LSB = PINK;			   			// Read LSB
+   //motor_reset_encoder();		   			// Toggle !RST to reset encoder
+   PORTH |= (1 << PH5);           			// Set !OE high to disable output of encoder
+   int16_t encoder_pos = (MSB << 8) + LSB; 	//Process received data.... 
 
    return encoder_pos;
 }

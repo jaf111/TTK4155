@@ -3,8 +3,9 @@
 
 #include <avr/pgmspace.h>
 
-// This file stores the strings for the menu names in PROGMEM in order to save some space in the internal RAM
-
+/****************************************************************************
+This file stores the strings for the menu names in PROGMEM in order to save some space in the internal RAM
+****************************************************************************/
 const char PROGMEM main_menu_string[] = "---Main Menu---";
 
 const char PROGMEM game_string[] = "Game";
@@ -27,8 +28,13 @@ const char PROGMEM low_string[] = "Low";
 
 const char PROGMEM high_string[] = "High";
 
-PGM_P const PROGMEM string_table[] = {		// Pointer table stored in PROGMEM
-	main_menu_string,					// These are used in order to fetch data to working memory
+
+/****************************************************************************
+Pointer table stored in PROGMEM
+These are used in order to fetch data to working memory
+****************************************************************************/
+PGM_P const PROGMEM string_table[] = {		
+	main_menu_string,					
 	game_string,
 	highscore_string,
 	extras_string,

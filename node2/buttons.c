@@ -51,13 +51,16 @@ void buttons_update_joy_coord() {
 	if (index >= n_readings){
 		index = 0;
 	}
-	uint8_t joyX_avg = joyX_sum / n_readings;	//Calculate and update joystick position with the average of the 4 last measurements
+
+	//Calculate and update joystick position with the average of the 4 last measurements
+	uint8_t joyX_avg = joyX_sum / n_readings;	
 	uint8_t joyY_avg = joyY_sum / n_readings;
 
 	//Make sure coordinates dont change when joystick is centered
 	if (joyX_avg != (joy_coord.XX_init + 1) && joyX_avg != (joy_coord.XX_init -1)){
 		joy_coord.XX = joyX_avg;													
 	}
+	
 	if (joyY_avg != (joy_coord.YY_init + 1) && joyY_avg != (joy_coord.YY_init -1)){
 		joy_coord.YY = joyY_avg;
 	}
@@ -87,17 +90,19 @@ void buttons_update_joy_coord() {
 
 joy_position_t buttons_get_joy_coord(){
 	buttons_update_joy_coord();
+	
 	return joy_coord;
 }
 
 void buttons_update_slider_positions(){
-	uint8_t slider_right_read = ADC_read(SLIDER_R);	//Read raw data from sliders
+	uint8_t slider_right_read = ADC_read(SLIDER_R);	
 	uint8_t slider_left_read = ADC_read(SLIDER_L);
 
 	//Too much high frequency noise on sliders => reduce resolution
 	if (slider_left_read <= (slider_pos.left - 4) || slider_left_read >= (slider_pos.left + 4)){
 		slider_pos.left = ADC_read(SLIDER_L);
 	}
+	
 	if (slider_right_read <= (slider_pos.right - 4) || slider_right_read >= (slider_pos.right + 4)){
 		slider_pos.right = ADC_read(SLIDER_R);
 	}
@@ -105,34 +110,40 @@ void buttons_update_slider_positions(){
 
 slider_position_t buttons_get_slider_positions() {
 	buttons_update_slider_positions(); 		//Make sure the newest positions are returned
+	
 	return slider_pos;
 }
 
 joy_direction_t buttons_get_joy_direction(int16_t X_coord, int16_t Y_coord) {	//Current joystick direction
-	if (X_coord>Mov23_Pos) {			//More than 2/3 right
-		if (Y_coord>Mov23_Pos) {		//More than 2/3 up
+	if (X_coord>Mov23_Pos) {			
+		if (Y_coord>Mov23_Pos) {		
 			if (X_coord>Y_coord) {direction = JOY_RIGHT;}	//The biggest number determines final position
 			else {direction = JOY_UP;}
-		} else if (Y_coord<Mov23_Neg) {
+		} 
+		else if (Y_coord<Mov23_Neg) {
 			if (X_coord>2*Y_coord) {direction = JOY_RIGHT;}
 			else {direction = JOY_DOWN;}
-		} else {direction = JOY_RIGHT;}
+		} 
+		else {direction = JOY_RIGHT;}
 	}
 	else if (X_coord<Mov23_Neg) {
 		if (Y_coord>Mov23_Pos) {
 			if (2*X_coord>Y_coord) {direction = JOY_LEFT;}
 			else {direction = JOY_UP;}
-		} else if (Y_coord<Mov23_Neg) {
+		} 
+		else if (Y_coord<Mov23_Neg) {
 			if (X_coord>Y_coord) {direction = JOY_LEFT;}
 			else {direction = JOY_DOWN;}
-		} else {direction = JOY_LEFT;}
+		} 
+		else {direction = JOY_LEFT;}
 	}
 	else if (Y_coord>Mov23_Pos) {
 			direction = JOY_UP;
-		} else if (Y_coord<Mov23_Neg) {
+		} 
+	else if (Y_coord<Mov23_Neg) {
 			direction = JOY_DOWN;
 		}
-	else {direction = JOY_NEUTRAL;}		//If nothing is pushed, then neutral position
+	else {direction = JOY_NEUTRAL;}		
 
 	return direction;
 }

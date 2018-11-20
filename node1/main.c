@@ -1,9 +1,9 @@
 #ifndef F_CPU
-#define F_CPU 4915200	//Clock Speed (Oscillator)
+#define F_CPU 4915200	
 
-#include <util/delay.h>	//Functions for busy-wait delay loops
-#include <stdio.h>		//Standard constants and functions for C (printf..., scanf...) 
-#include <avr/io.h> 	//Specific IO for AVR micro (all registers defined inside)
+#include <util/delay.h>	
+#include <stdio.h>		
+#include <avr/io.h> 	
 #include <avr/interrupt.h>
 
 #include "led.h"
@@ -44,7 +44,7 @@ int main() {
 	sei();
 
 	while(1) {
-		cursor_move();
+		menu_move();
 		OLED_update();
 
 

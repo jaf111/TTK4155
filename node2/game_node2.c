@@ -23,29 +23,22 @@ joy_position_t joy_recieved_coords;
 slider_position_t sliders_recieved;
 buttons_value_t buttons_recieved;
 
+//CAN message for score
 packet send_score = {.id = CAN_SCORE_ID, .length = 0x01, .data = {0x00}};
 packet CAN_recieved;
 
 pidData_t pidData2;
 
-ISR(TIMER5_COMPA_vect){
-	time_score++;		// Increment time score once every seond
-}
 
-/*
-void game_can_test(){
-	send_score.data[0] = time_score;
-	CAN_send(&send_score);
-	fprintf(UART_p, "score: %d \r\n", time_score);
-}*/
+// Interrupt increments time score once every seond
+ISR(TIMER5_COMPA_vect){
+	time_score++;		
+}
 
 void game_node2_init() {
 	time_score = 0;
-
 	pid_init(&pidData2, 20);//PID controller with frequency of 20Hz
-
 	motor_calibr_encoder();
-	
 	PWM_PL3_init(256, 1);	//Interrupt of 1Hz (1s) to count the score time
 }
 
@@ -54,6 +47,7 @@ uint8_t game_node2_over() {
 		fprintf(UART_p, "IR trig \r\n", 0);
 		return 1;
 	}
+	
 	return 0;
 }
 
@@ -84,13 +78,16 @@ void game_node2_play() {
 
 		if (buttons_recieved.right != 0) {
 			solenoid_ON();
-		} else {
+		} 
+		else {
 			solenoid_OFF();
 		}
 		
-		if (game_node2_over() /*|| (CAN_recieved.id == CAN_END_GAME_ID)*/){		// End game if node 1 sends message telling node 2 to stop
+		if (game_node2_over() || (CAN_recieved.id == CAN_END_GAME_ID)){		
 			fprintf(UART_p, "GAME OVER \r\n", 0);
 			send_score.data[0] = time_score;
+			fprintf(UART_p, "SCORE: %d\n", send_score.data[0]);
+			_delay_ms(10000);
 			CAN_send(&send_score);
 			bool_game_play = 0;
 		}
