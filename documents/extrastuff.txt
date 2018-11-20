@@ -1,8 +1,0 @@
-Optional:
-
-
-- Something weird on the menu print
-- Print from sram not ready
-- The buttons are not optimal
-
-
