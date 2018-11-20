@@ -56,8 +56,8 @@ uint8_t game_node2_over() {
 
 void game_node2_play() {
 	game_node2_init();
-	_delay_ms(2000);
 	bool_game_play = 1;
+	IR_init();
 	while(bool_game_play){
 		CAN_recieved = CAN_read();
 		fprintf(UART_p, "score: %d \r\n", time_score);
@@ -72,8 +72,8 @@ void game_node2_play() {
 		}
 
 		motor_pos = -motor_read_encoder();
-		setpoint = sliders_recieved.right;
-		//setpoint = joy_recieved_coords.XX;
+		//setpoint = sliders_recieved.right;
+		setpoint = joy_recieved_coords.XX;
 
 
 		motor_move(pid_controller(&pidData2, setpoint, motor_pos));
@@ -90,9 +90,10 @@ void game_node2_play() {
 			fprintf(UART_p, "GAME OVER \r\n", 0);
 			send_score.data[0] = time_score;
 			fprintf(UART_p, "SCORE: %d\n", send_score.data[0]);
-			_delay_ms(10000);
 			CAN_send(&send_score);
 			bool_game_play = 0;
+			motor_move(0);
+			move_servo(128);
 		}
 	}
 }

@@ -12,11 +12,12 @@ uint8_t IR_index = 0;
 uint8_t IR_init_val = 0;
 uint8_t n_IR_readings = 4;
 uint8_t IR_readings[4];
-uint16_t IR_sum = 0;
+uint16_t IR_sum;
 
 
 void IR_init(){
 	_delay_ms(100);
+	IR_sum = 0;
 	for (uint8_t i = 0; i < n_IR_readings; i++){
 		IR_readings[i] = ADC_read();		// Fill readings with IR initial values
 		_delay_ms(100);
@@ -32,7 +33,7 @@ uint8_t IR_triggered() {
 
 	fprintf(UART_p, "IR avg: %d \r\n", IR_val);
 
-	if (IR_val < (IR_init_val-50)){		// Cutoff for deciding if player missed the ball
+	if (IR_val < 80){		// Cutoff for deciding if player missed the ball
 
 		return 1;						
 	}
